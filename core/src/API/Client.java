@@ -5,14 +5,16 @@ import java.net.URI;
 
 import javax.websocket.*;
 
-;
+
 
 
 @ClientEndpoint
 public class Client  {
+
     Session userSession = null;
     private MessageHandler messageHandler;
-    URI uri = URI.create("ws://localhost:8081/");
+    //URI uri = URI.create("ws://localhost:8081/");
+    URI uri = URI.create("ws://10.0.2.2:8081/");
 
     public Client() throws IOException, DeploymentException {
         WebSocketContainer container = ContainerProvider.getWebSocketContainer();

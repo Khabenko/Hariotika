@@ -11,13 +11,6 @@ import javax.websocket.DeploymentException;
 public class Main {
     public static void main(String[] args)
     {
-        try {
-            Client client = new Client();
-            client.sendMessage("ANDROID");
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (DeploymentException e) {
-            e.printStackTrace();
-        }
+
     }
 }
