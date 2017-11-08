@@ -18,20 +18,29 @@ import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.google.gson.Gson;
 import com.hariotika.Hariotika;
 
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.Properties;
 
 import javax.websocket.DeploymentException;
 
 import API.Client;
+import API.Reconect;
 
+import static API.Reconect.client;
 import static com.hariotika.Hariotika.HEIGHT;
 import static com.hariotika.Hariotika.WIDTH;
 
 
 
 public class FirstState extends State {
+    Reconect reconect;
     Stage stage;
     SpriteBatch batch;
     TextField textField;
@@ -40,20 +49,23 @@ public class FirstState extends State {
     Texture player;
     private Texture background;
     private Texture playBtn;
-    Client client;
     BitmapFont font;
     Skin skin;
     TextureAtlas buttonAtlas;
     ImageButton.ImageButtonStyle textButtonStyle;
+    Gson gson;
     //  private ImageButton button = new ImageButton();
+
 
     public FirstState(final StateManager sm) {
         super(sm);
+        reconect = new Reconect();
+        reconect.start();
+        gson = new Gson();
         background = new Texture("bgr.png");
         playBtn = new Texture("playbutton.png");
         SocketHints socketHints = new SocketHints();
         socketHints.connectTimeout =10000;
-
         img = new Texture("fon2.png");
         player = new Texture("data/Player.png");
         batch = new SpriteBatch();
@@ -73,22 +85,20 @@ public class FirstState extends State {
    //     Socket socket = Gdx.net.newClientSocket(Net.Protocol.TCP, "ws://localhost/", 8081, socketHints);
 
 
-        try {
-            client = new Client();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (DeploymentException e) {
-            e.printStackTrace();
-        }
 
+
+      //  System.out.printf(gson.toJson(client));
 
         button.addListener( new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 System.out.println("Button work");
-                sm.set(new MainState(sm));
-                if (client!=null)
-                client.sendMessage("login");
+            //    sm.set(new MainState(sm));
+                if (client!=null) {
+                    client.loginRead();
+                    client.sendMessage("login#" + client.getLogin() + "#" + client.getPass());
+
+                }
             };
         });
     }
@@ -124,5 +134,9 @@ public class FirstState extends State {
         background.dispose();
         playBtn.dispose();
 
+
+
     }
+
+
 }
