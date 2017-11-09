@@ -7,6 +7,7 @@ package State;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Net;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -59,6 +60,7 @@ public class MainState extends State {
     TextureAtlas buttonAtlas;
     ImageButton.ImageButtonStyle avaButtonStyle;
     ImageButton.ImageButtonStyle imgButtonStyle;
+    private OrthographicCamera cam;
 
     //  private ImageButton button = new ImageButton();
 
@@ -136,7 +138,7 @@ public class MainState extends State {
         //----------Панель друзей
         FriendslistWindow friendslistWindow = new FriendslistWindow(skin2);
         friendslistWindow.setPosition(800,500);
-        stage.addActor(friendslistWindow);
+      //  stage.addActor(friendslistWindow);
 
         avaButton.addListener( new ClickListener() {
             @Override
