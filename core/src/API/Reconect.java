@@ -14,6 +14,7 @@ public class Reconect extends Thread{
     public Reconect() {
         try {
             client = new Client();
+            client.sendMessage("login#" + client.getLogin() + "#" + client.getPass());
         } catch (IOException e) {
             e.printStackTrace();
         } catch (DeploymentException e) {
@@ -27,6 +28,7 @@ public class Reconect extends Thread{
             if (getClient()==null){
                 try {
                     client = new Client();
+                    client.sendMessage("login#" + client.getLogin() + "#" + client.getPass());
                     Thread.sleep(1000);
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -44,6 +46,7 @@ public class Reconect extends Thread{
                 System.out.println(String.valueOf(getClient().getUserSession().isOpen()));
                 try {
                     setClient(new Client());
+                    client.sendMessage("login#" + client.getLogin() + "#" + client.getPass());
                     Thread.sleep(1000);
                     System.out.println("-----------------------------------------");
                 } catch (IOException e) {

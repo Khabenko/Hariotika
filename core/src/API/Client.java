@@ -10,19 +10,17 @@ import java.util.Properties;
 
 import javax.websocket.*;
 
-import State.FirstState;
-
 
 @ClientEndpoint
-public class Client  {
+public  class Client  {
 
     Properties prop;
-    String login;
-    String pass;
-    Session userSession = null;
+    static String login;
+    static String pass;
+    static Session userSession = null;
 
     private MessageHandler messageHandler;
-    URI uri = URI.create("ws://localhost:8081/");
+      URI uri = URI.create("ws://localhost:8081/");
  //   URI uri = URI.create("ws://10.0.2.2:8081/");
 
     public Client() throws IOException, DeploymentException {

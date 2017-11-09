@@ -10,9 +10,9 @@ import static com.hariotika.Hariotika.WIDTH;
  * Created by Maka on 06.11.2017.
  */
 
-public class FirstState extends State {
+public class BattleState extends State {
     private Texture background;
-    public FirstState(StateManager sm) {
+    public BattleState(StateManager sm) {
         super(sm);
         background = new Texture("fon2.png");
     }
