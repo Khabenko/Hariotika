@@ -40,11 +40,22 @@ public class CharState extends State {
     @Override
     protected void handleInput() {
 
+        if (Gdx.input.justTouched())
+        {  camera.update();
+            try {
+                Thread.sleep(5000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            sm.set(new MainState(sm));
+
+        }
     }
 
     @Override
     public void update(float dt) {
 
+ handleInput();
     }
 
     @Override
@@ -52,7 +63,7 @@ public class CharState extends State {
         Gdx.gl.glClearColor(1, 1, 1, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         sb.begin();
-        sb.draw(background, 0, 0, WIDTH, HEIGHT);
+        sb.draw(background, 0, 0, camera.viewportWidth, camera.viewportHeight);
         sb.draw(ava, 10, 440, 120, 100);
         sb.end();
         stage.draw();

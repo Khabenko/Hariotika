@@ -16,12 +16,16 @@ public class Hariotika extends ApplicationAdapter {
 	public static final int HEIGHT = 1080;
 	public static final String TITLE = "Hariotika";
 
+
 	@Override
 	public void create () {
 
+		System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"+Gdx.app.getGraphics().getWidth());
+		System.out.println();
 		batch = new SpriteBatch();
 		sm = new StateManager();
 		sm.push(new MainState(sm));
+
 	}
 
 	@Override
@@ -29,12 +33,19 @@ public class Hariotika extends ApplicationAdapter {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		sm.update(Gdx.graphics.getDeltaTime());
 		sm.render(batch);
+
+
 	}
 
 	@Override
 	public void dispose () {
 		batch.dispose();
 
+	}
+
+	@Override
+	public void resize(int width, int height) {
+		super.resize(width, height);
 	}
 
 }

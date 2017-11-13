@@ -7,7 +7,9 @@ package State;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Net;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -23,15 +25,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.google.gson.Gson;
 import com.hariotika.Hariotika;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.Properties;
+
 
 import javax.websocket.DeploymentException;
 
@@ -60,7 +59,6 @@ public class MainState extends State {
     TextureAtlas buttonAtlas;
     ImageButton.ImageButtonStyle avaButtonStyle;
     ImageButton.ImageButtonStyle imgButtonStyle;
-    private OrthographicCamera cam;
 
     //  private ImageButton button = new ImageButton();
 
@@ -125,20 +123,22 @@ public class MainState extends State {
         sp.setColor(Color.CHARTREUSE);
         status.add(sp).width(500);
         status.setPosition(400,500);
-
         avaButton.setPosition(10,440);
         stage.addActor(status);
         //------------------
 
         //---------Спел панель
         SpellWindow spellWindow = new SpellWindow(skin2);
-        spellWindow.setPosition(200,30);
-        stage.addActor(spellWindow);
+       // spellWindow.setPosition(200,30);
+        spellWindow.setPosition(camera.viewportWidth/2,30);
+      //  stage.addActor(spellWindow);
 
         //----------Панель друзей
         FriendslistWindow friendslistWindow = new FriendslistWindow(skin2);
         friendslistWindow.setPosition(800,500);
       //  stage.addActor(friendslistWindow);
+
+
 
         avaButton.addListener( new ClickListener() {
             @Override
@@ -149,6 +149,7 @@ public class MainState extends State {
 
             };
         });
+
 
 
 
@@ -165,7 +166,6 @@ public class MainState extends State {
                 // client.sendMessage("login");
         }
 
-
     }
 
     @Override
@@ -175,8 +175,10 @@ public class MainState extends State {
 
     @Override
     public void render(SpriteBatch sb) {
+        Gdx.gl.glClearColor(1, 1, 1, 1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         sb.begin();
-        sb.draw(background, 0, 0, WIDTH, HEIGHT);
+        sb.draw(background, 0, 0, camera.viewportWidth, camera.viewportHeight);
         sb.end();
         stage.draw();
 
