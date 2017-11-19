@@ -5,12 +5,20 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.ButtonGroup;
+import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
+import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+
+
+import java.awt.Checkbox;
+import java.awt.CheckboxGroup;
 
 import Domain.CharacteristicsWindows;
 import State.State;
 
+import static API.Reconect.client;
 import static com.hariotika.Hariotika.HEIGHT;
 import static com.hariotika.Hariotika.WIDTH;
 
@@ -20,12 +28,16 @@ import static com.hariotika.Hariotika.WIDTH;
 
 public class CharState extends State {
     Stage stage;
+    Table table;
     Texture ava;
+    ProgressBar health;
 
     private Texture background;
 
-    public CharState(StateManager sm , Skin skin, Table table ) {
+    public CharState(StateManager sm , Skin skin, ProgressBar health) {
         super(sm);
+        this.health = health;
+        this.table = MainState.status;
         ava= new Texture("avatar/ava.png");
         stage = new Stage();
         Gdx.input.setInputProcessor(stage);
@@ -35,6 +47,12 @@ public class CharState extends State {
         stage.addActor(characteristics);
         stage.addActor(table);
 
+
+
+
+
+
+
     }
 
     @Override
@@ -42,18 +60,15 @@ public class CharState extends State {
 
         if (Gdx.input.justTouched())
         {  camera.update();
-            try {
-                Thread.sleep(5000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            sm.set(new MainState(sm));
+           sm.set(new MainState(sm));
 
         }
     }
 
     @Override
     public void update(float dt) {
+        health.setValue(client.getCharacter().getHP());
+
 
  handleInput();
     }
@@ -64,7 +79,7 @@ public class CharState extends State {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         sb.begin();
         sb.draw(background, 0, 0, camera.viewportWidth, camera.viewportHeight);
-        sb.draw(ava, 10, 440, 120, 100);
+        sb.draw(ava, 10,camera.viewportHeight/1.10f, 120, 100);
         sb.end();
         stage.draw();
     }

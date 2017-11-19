@@ -1,5 +1,7 @@
 package API;
 
+import com.google.gson.Gson;
+
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -10,18 +12,22 @@ import java.util.Properties;
 
 import javax.websocket.*;
 
+import Domain.Character;
+
 
 @ClientEndpoint
-public  class Client  {
+public class Client  {
 
-    Properties prop;
+    static Properties prop;
     static String login;
     static String pass;
     static Session userSession = null;
+    static Gson gson = new Gson();
+    static Character character = new Character();
 
     private MessageHandler messageHandler;
- //     URI uri = URI.create("ws://localhost:8081/");
-    URI uri = URI.create("ws://10.0.2.2:8081/");
+      URI uri = URI.create("ws://localhost:8081/");
+   // URI uri = URI.create("ws://10.0.2.2:8081/");
 
     public Client() throws IOException, DeploymentException {
         WebSocketContainer container = ContainerProvider.getWebSocketContainer();
@@ -107,7 +113,7 @@ public  class Client  {
 
     }
 
-    public Properties loginRead () {
+    public Properties loginRead() {
 
         //Вычитываемы проперти log i pass
         //Вызываем конкшен для получения карты характеристик
@@ -162,8 +168,11 @@ public  class Client  {
         String[] comand = message.split("#");
         if (comand[0].equals("login"))
         {
-            if (comand[1].equals("1"))
-            System.out.printf("Тут нам прислали данные по чару");
+            if (comand[1].equals("1")) {
+                character = gson.fromJson(comand[2], Character.class);
+                System.out.printf("Тут нам прислали данные по чару "+character.getName());
+
+            }
             else if (comand[1].equals("2"))
                 System.out.printf("Неверный логин и пароль");
             else {
@@ -174,4 +183,12 @@ public  class Client  {
         }
     }
 
+
+    public  Character getCharacter() {
+        return character;
+    }
+
+    public  void setCharacter(Character character) {
+        Client.character = character;
+    }
 }

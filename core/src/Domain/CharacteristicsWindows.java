@@ -7,6 +7,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ArrayMap;
 
+import static API.Reconect.client;
+
 /**
  * Created by M.Khabenko on 09.11.2017.
  */
@@ -17,8 +19,9 @@ public class CharacteristicsWindows extends Window {
         Array<String> namesArray = new Array<String>();
         ArrayMap<String,Integer> characteristics = new ArrayMap();
 
-        characteristics.put("Strange",10);
+        characteristics.put("Strange",client.getCharacter().getStrength());
         characteristics.put("Intelegence",1);
+
 
         for (int i = 0; i < characteristics.size; i++) {
             String key = characteristics.getKeyAt(i);

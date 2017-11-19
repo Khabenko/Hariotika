@@ -23,6 +23,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
@@ -47,6 +48,7 @@ import static com.hariotika.Hariotika.WIDTH;
 
 
 public class MainState extends State {
+    static Table status;
     Reconect reconect;
     Gson gson;
     Stage stage;
@@ -59,14 +61,14 @@ public class MainState extends State {
     TextureAtlas buttonAtlas;
     ImageButton.ImageButtonStyle avaButtonStyle;
     ImageButton.ImageButtonStyle imgButtonStyle;
+    TextButton battleButton;
+    ProgressBar health;
 
     //  private ImageButton button = new ImageButton();
 
 
     public MainState(final StateManager sm) {
         super(sm);
-        reconect = new Reconect();
-        reconect.start();
         gson = new Gson(); //Передать дальше
         background = new Texture("darckbgr.png");
         batch = new SpriteBatch();
@@ -95,14 +97,14 @@ public class MainState extends State {
         avaButtonStyle.imageDown = skin.getDrawable("ava");
         ImageButton avaButton = new ImageButton(avaButtonStyle);
         avaButton.setSize(120,100);
+        avaButton.setPosition(10,camera.viewportHeight/1.10f);
         stage.addActor(avaButton);
         //-----------------
         //--------Статусбар
-        final Table status = new Table(skin2);
-
+        status = new Table(skin2);
         status.add(new Label("HP", skin2));
-        ProgressBar health = new ProgressBar(0, 100, 1, false, skin2);
-        health.setValue(75);
+        health = new ProgressBar(0, 100, 1, false, skin2);
+        health.setValue(0);
         health.setColor(Color.FOREST);
         status.add(health).width(500);
 
@@ -122,8 +124,7 @@ public class MainState extends State {
         sp.setValue(50);
         sp.setColor(Color.CHARTREUSE);
         status.add(sp).width(500);
-        status.setPosition(400,500);
-        avaButton.setPosition(10,440);
+        status.setPosition(400,camera.viewportHeight/1.05f);
         stage.addActor(status);
         //------------------
 
@@ -135,8 +136,15 @@ public class MainState extends State {
 
         //----------Панель друзей
         FriendslistWindow friendslistWindow = new FriendslistWindow(skin2);
-        friendslistWindow.setPosition(800,500);
+        friendslistWindow.setPosition(50,camera.viewportHeight/10);
       //  stage.addActor(friendslistWindow);
+
+        //----- Батл кнопка
+        battleButton = new TextButton("Battle",skin2);
+        battleButton.setPosition(camera.viewportWidth/20,camera.viewportHeight/10);
+        battleButton.setSize(150,80);
+        stage.addActor(battleButton);
+
 
 
 
@@ -144,13 +152,20 @@ public class MainState extends State {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 System.out.println("Open PlayerState");
-                CharState charState = new  CharState(sm,skin2,status);
+                CharState charState = new  CharState(sm,skin2,health);
                 sm.set(charState);
 
             };
         });
 
-
+        battleButton.addListener( new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                client.sendMessage("RegToBattle");
+                sm.set(new BattleState(sm,skin2) );
+                //  client.sendMessage("Battle#"+client.getLogin());
+            };
+        });
 
 
       //  System.out.printf(gson.toJson(client));
@@ -171,6 +186,7 @@ public class MainState extends State {
     @Override
     public void update(float dt) {
         handleInput();
+        health.setValue(client.getCharacter().getHP());
     }
 
     @Override
@@ -181,6 +197,7 @@ public class MainState extends State {
         sb.draw(background, 0, 0, camera.viewportWidth, camera.viewportHeight);
         sb.end();
         stage.draw();
+
 
     }
 

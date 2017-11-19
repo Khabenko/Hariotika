@@ -5,16 +5,22 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
+import API.Reconect;
 import State.MainState;
+import State.State;
 import State.StateManager;
 
 public class Hariotika extends ApplicationAdapter {
 	private SpriteBatch batch;
 	private StateManager sm;
+	Reconect reconect = new Reconect();
+
+
 
 	public static final int WIDTH = 1920;
 	public static final int HEIGHT = 1080;
 	public static final String TITLE = "Hariotika";
+
 
 
 	@Override
@@ -25,6 +31,7 @@ public class Hariotika extends ApplicationAdapter {
 		batch = new SpriteBatch();
 		sm = new StateManager();
 		sm.push(new MainState(sm));
+		reconect.start();
 
 	}
 
