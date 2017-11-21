@@ -7,15 +7,14 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import API.Reconect;
 import Domain.GlobalUpdate;
-import State.MainState;
-import State.State;
+import State.*;
+import State.LoadState;
 import State.StateManager;
 
 public class Hariotika extends ApplicationAdapter {
 	private SpriteBatch batch;
 	private StateManager sm;
 	Reconect reconect;
-    GlobalUpdate globalUpdate;
 
 
 	public static final int WIDTH = 1920;
@@ -27,15 +26,15 @@ public class Hariotika extends ApplicationAdapter {
 	@Override
 	public void create () {
 
-		System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"+Gdx.app.getGraphics().getWidth());
+		System.out.println("+++++++++++++++++++++++++++++++++++++++++++"+Gdx.app.getGraphics().getWidth());
 		System.out.println();
 		batch = new SpriteBatch();
 		sm = new StateManager();
 		sm.push(new MainState(sm));
+		sm.push(new LoadState(sm));
 		reconect= new Reconect();
 		reconect.start();
-		globalUpdate = new GlobalUpdate();
-		globalUpdate.start();
+
 
 	}
 
@@ -58,5 +57,8 @@ public class Hariotika extends ApplicationAdapter {
 	public void resize(int width, int height) {
 		super.resize(width, height);
 	}
+
+
+
 
 }

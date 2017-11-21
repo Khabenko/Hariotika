@@ -40,6 +40,7 @@ import API.Reconect;
 import Domain.FriendslistWindow;
 import Domain.SpellWindow;
 
+import static API.Client.load;
 import static API.Reconect.client;
 import static com.badlogic.gdx.graphics.Color.BLUE;
 import static com.hariotika.Hariotika.HEIGHT;
@@ -48,8 +49,8 @@ import static com.hariotika.Hariotika.WIDTH;
 
 
 public class MainState extends State {
+
     static Table status;
-    Reconect reconect;
     Gson gson;
     Stage stage;
     SpriteBatch batch;
@@ -192,7 +193,6 @@ public class MainState extends State {
 
       //  System.out.printf(gson.toJson(client));
 
-
     }
 
     @Override
@@ -208,9 +208,10 @@ public class MainState extends State {
     @Override
     public void update(float dt) {
         handleInput();
-        health.setValue(client.getCharacter().getHP());
-        playerName.setText(client.getCharacter().getName());
-
+        if (load) {
+            health.setValue(client.getCharacter().getHP());
+            playerName.setText(client.getCharacter().getName());
+        }
 
     }
 
@@ -239,4 +240,5 @@ public class MainState extends State {
     public static void setHealth(ProgressBar health) {
         MainState.health = health;
     }
+
 }

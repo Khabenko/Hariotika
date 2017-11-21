@@ -14,11 +14,14 @@ import javax.websocket.*;
 
 import Domain.Battle;
 import Domain.Character;
+import Domain.GlobalUpdate;
 
 
 @ClientEndpoint
 public class Client  {
 
+    GlobalUpdate globalUpdate;
+    public static boolean load = false;
     Properties prop;
     static String login;
     static String pass;
@@ -173,6 +176,9 @@ public class Client  {
             if (comand[1].equals("1")) {
                 character = gson.fromJson(comand[2], Character.class);
                // System.out.printf("Тут нам прислали данные по чару "+character.getName());
+                globalUpdate = new GlobalUpdate();
+                globalUpdate.start();
+                load =true;
 
             }
             else if (comand[1].equals("2"))
