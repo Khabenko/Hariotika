@@ -38,6 +38,7 @@ import javax.websocket.DeploymentException;
 import API.Client;
 import API.Reconect;
 import Domain.FriendslistWindow;
+import Domain.ReconectWindows;
 import Domain.SpellWindow;
 
 import static API.Client.load;
@@ -159,9 +160,12 @@ public class MainState extends State {
         backButton = new TextButton("Back",skin2);
         backButton.setPosition(camera.viewportWidth-camera.viewportWidth*0.05f,camera.viewportHeight-camera.viewportWidth*0.05f);
         backButton.setSize(80,60);
-        stage.addActor(backButton);
 
-
+        /*
+        ReconectWindows reconectWindows = new ReconectWindows(skin2);
+        reconectWindows.setSize(200,200);
+        stage.addActor(reconectWindows);
+        */
 
 
         avaButton.addListener( new ClickListener() {

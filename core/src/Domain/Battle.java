@@ -7,6 +7,8 @@ package Domain;
 public class Battle {
 
     long number;
+    boolean finished = false;
+    String log;
     private Character player1;
     private Character player2;
 
@@ -98,5 +100,21 @@ public class Battle {
 
     public void setNumber(long number) {
         this.number = number;
+    }
+
+    public boolean isFinished() {
+        return finished;
+    }
+
+    public void setFinished(boolean finished) {
+        this.finished = finished;
+    }
+
+    public String getLog() {
+        return log;
+    }
+
+    public void setLog(String log) {
+        this.log = log;
     }
 }

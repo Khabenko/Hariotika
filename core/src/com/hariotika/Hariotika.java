@@ -30,10 +30,10 @@ public class Hariotika extends ApplicationAdapter {
 		System.out.println();
 		batch = new SpriteBatch();
 		sm = new StateManager();
-		sm.push(new MainState(sm));
-		sm.push(new LoadState(sm));
 		reconect= new Reconect();
 		reconect.start();
+		//	sm.push(new MainState(sm));
+		sm.push(new LoadState(sm));
 
 
 	}

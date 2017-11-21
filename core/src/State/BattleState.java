@@ -23,6 +23,7 @@ import Domain.Battle;
 import Domain.Character;
 
 import static API.Client.getBattle;
+import static API.Client.setBattle;
 import static API.Reconect.client;
 import static State.MainState.getHealth;
 import static com.badlogic.gdx.graphics.Color.BLUE;
@@ -39,6 +40,7 @@ public class BattleState extends State {
     static Character enemy;
     Skin skin;
     private Texture background;
+    private Texture backgroundLoading;
     private Stage stage;
     TextButton battleButton;
     Table table;
@@ -56,7 +58,7 @@ public class BattleState extends State {
         this.table = MainState.status;
         createEnemyBar();
         initEnemy();
-
+        backgroundLoading = new Texture("loadBattl1.png");
         background = new Texture("fon2.png");
         Gdx.input.setInputProcessor(stage);
         stage.addActor(backButton);
@@ -133,20 +135,39 @@ public class BattleState extends State {
         getHealth().setValue(client.getCharacter().getHP());
         if (enemy.getName()!=null) {
             enemyhealth.setValue(enemy.getHP());
-           // System.out.println(enemy.getName());
+            // System.out.println(enemy.getName());
             enemyName.setText(enemy.getName());
+
+            if (getBattle().isFinished()) {
+                setBattle(null);
+                sm.set(new MainState(sm));
+            }
         }
 
     }
 
     @Override
     public void render(SpriteBatch sb) {
-        Gdx.gl.glClearColor(1, 1, 1, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        sb.begin();
-        sb.draw(background, 0, 0, camera.viewportWidth, camera.viewportHeight);
-        sb.end();
-        stage.draw();
+        if (getBattle()== null) {
+            Gdx.gl.glClearColor(1, 1, 1, 1);
+            Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+            sb.begin();
+            sb.draw(backgroundLoading, 0, 0, camera.viewportWidth, camera.viewportHeight);
+            sb.end();
+
+        }
+        else {
+            Gdx.gl.glClearColor(1, 1, 1, 1);
+            Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+            sb.begin();
+            sb.draw(background, 0, 0, camera.viewportWidth, camera.viewportHeight);
+            sb.end();
+            stage.draw();
+
+
+
+
+        }
 
     }
 

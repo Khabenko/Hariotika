@@ -3,6 +3,8 @@ package State;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
+import Domain.GlobalUpdate;
+
 import static API.Client.load;
 import static com.hariotika.Hariotika.HEIGHT;
 import static com.hariotika.Hariotika.WIDTH;
@@ -13,9 +15,11 @@ import static com.hariotika.Hariotika.WIDTH;
 
 public class LoadState extends State {
     private Texture background;
+    GlobalUpdate globalUpdate = new GlobalUpdate();
     public LoadState(StateManager sm) {
         super(sm);
         background = new Texture("loading.png");
+        globalUpdate.start();
     }
 
     @Override
@@ -25,8 +29,9 @@ public class LoadState extends State {
 
     @Override
     public void update(float dt) {
+
         if (load)
-        sm.push(new MainState(sm));
+        sm.set(new MainState(sm));
     }
 
     @Override
