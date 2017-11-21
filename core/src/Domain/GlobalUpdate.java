@@ -9,6 +9,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
 import static API.Reconect.client;
+import static State.MainState.getHealth;
+import static State.MainState.setHealth;
 import static com.badlogic.gdx.graphics.Color.BLUE;
 
 /**
@@ -24,6 +26,7 @@ public class GlobalUpdate extends Thread {
     Skin skin;
 
     public GlobalUpdate() {
+        /*
         skin = new Skin(Gdx.files.internal("data/visui/uiskin.json"));
         this.camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
@@ -51,11 +54,16 @@ public class GlobalUpdate extends Thread {
         sp.setColor(Color.CHARTREUSE);
         status.add(sp).width(500);
         status.setPosition(400,camera.viewportHeight/1.05f);
+        */
     }
 
     @Override
     public void run() {
+     while (true){
 
+             getHealth().setValue(client.getCharacter().getHP());
+
+     }
 
     }
 }

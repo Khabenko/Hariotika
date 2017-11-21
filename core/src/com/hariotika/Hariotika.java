@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import API.Reconect;
+import Domain.GlobalUpdate;
 import State.MainState;
 import State.State;
 import State.StateManager;
@@ -13,8 +14,8 @@ import State.StateManager;
 public class Hariotika extends ApplicationAdapter {
 	private SpriteBatch batch;
 	private StateManager sm;
-	Reconect reconect = new Reconect();
-
+	Reconect reconect;
+    GlobalUpdate globalUpdate;
 
 
 	public static final int WIDTH = 1920;
@@ -31,7 +32,10 @@ public class Hariotika extends ApplicationAdapter {
 		batch = new SpriteBatch();
 		sm = new StateManager();
 		sm.push(new MainState(sm));
+		reconect= new Reconect();
 		reconect.start();
+		globalUpdate = new GlobalUpdate();
+		globalUpdate.start();
 
 	}
 

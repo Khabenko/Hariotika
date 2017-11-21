@@ -12,22 +12,24 @@ import java.util.Properties;
 
 import javax.websocket.*;
 
+import Domain.Battle;
 import Domain.Character;
 
 
 @ClientEndpoint
 public class Client  {
 
-    static Properties prop;
+    Properties prop;
     static String login;
     static String pass;
     static Session userSession = null;
     static Gson gson = new Gson();
-    static Character character = new Character();
+    public static Character character = new Character();
+    public static Battle battle;
 
     private MessageHandler messageHandler;
-      URI uri = URI.create("ws://localhost:8081/");
-   // URI uri = URI.create("ws://10.0.2.2:8081/");
+            URI uri = URI.create("ws://localhost:8081/");
+     //        URI uri = URI.create("ws://10.0.2.2:8081/");
 
     public Client() throws IOException, DeploymentException {
         WebSocketContainer container = ContainerProvider.getWebSocketContainer();
@@ -39,7 +41,7 @@ public class Client  {
     public void onOpen(Session server) throws IOException {
         System.out.println("Open Connection ..." + server);
         this.userSession = server;
-        this.userSession.setMaxIdleTimeout(600000);
+        this.userSession.setMaxIdleTimeout(30000);
     }
     @OnClose
     public void onClose(){
@@ -51,7 +53,7 @@ public class Client  {
         if (this.messageHandler != null) {
             this.messageHandler.handleMessage(message);
         }
-        System.out.println(message);
+     //   System.out.println(message);
            //loginWrite(message,null);
         parsingMessage(message);
 
@@ -170,7 +172,7 @@ public class Client  {
         {
             if (comand[1].equals("1")) {
                 character = gson.fromJson(comand[2], Character.class);
-                System.out.printf("Тут нам прислали данные по чару "+character.getName());
+               // System.out.printf("Тут нам прислали данные по чару "+character.getName());
 
             }
             else if (comand[1].equals("2"))
@@ -181,6 +183,28 @@ public class Client  {
                 loginWrite();
             }
         }
+
+        if (comand[0].equals("Battle")){
+            System.out.println(message);
+            System.out.println(gson.fromJson(comand[1],Battle.class).getPlayer1().getHP());
+            setBattle(gson.fromJson(comand[1],Battle.class));
+            System.out.println("Прислали батл"+comand[1]);
+
+            if (getBattle()!=null)
+                System.out.println(battle.getPlayer1().getHP()+"++++++++++++++++++++++++++++++++++++++"+getBattle().getPlayer1().getName().equals(Client.character.getName()));
+                System.out.println(battle.getPlayer2().getHP()+"++++++++++++++++++++++++++++++++++++++"+getBattle().getPlayer2().getName().equals(Client.character.getName()));
+                if (getBattle().getPlayer1().getName().equals(Client.character.getName())){
+                    character = getBattle().getPlayer1();
+
+
+                }
+                else if (getBattle().getPlayer2().getName().equals(Client.character.getName())){
+                    character = getBattle().getPlayer2();
+                }
+
+        }
+
+
     }
 
 
@@ -191,4 +215,14 @@ public class Client  {
     public  void setCharacter(Character character) {
         Client.character = character;
     }
+
+    public static Battle getBattle() {
+        return battle;
+    }
+
+    public static void setBattle(Battle battle) {
+        System.out.println("Засетл батл");
+        Client.battle = battle;
+    }
+
 }

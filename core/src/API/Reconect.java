@@ -18,9 +18,11 @@ public class Reconect extends Thread{
             client.sendMessage("login#" + client.getLogin() + "#" + client.getPass());
             finalize();
         } catch (IOException e) {
-            e.printStackTrace();
+          //  e.printStackTrace();
+            System.out.println("Переподключение");
         } catch (DeploymentException e) {
-            e.printStackTrace();
+           // e.printStackTrace();
+            System.out.println("Переподключение");
         } catch (Throwable throwable) {
             throwable.printStackTrace();
         }
@@ -29,7 +31,7 @@ public class Reconect extends Thread{
     @Override
     public void run() {
         while (true){
-            if (getClient()==null){
+            if (getClient()== null){
                 try {
                     client = new Client();
                     client.loginRead();
@@ -37,9 +39,11 @@ public class Reconect extends Thread{
                     Thread.sleep(1000);
                     finalize();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                   // e.printStackTrace();
+                    System.out.println("Переподключение");
                 } catch (DeploymentException e) {
-                    e.printStackTrace();
+                  //  e.printStackTrace();
+                    System.out.println("Переподключение");
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 } catch (Throwable throwable) {

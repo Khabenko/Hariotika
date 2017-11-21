@@ -10,6 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 
 
 import java.awt.Checkbox;
@@ -19,6 +20,7 @@ import Domain.CharacteristicsWindows;
 import State.State;
 
 import static API.Reconect.client;
+import static State.MainState.getHealth;
 import static com.hariotika.Hariotika.HEIGHT;
 import static com.hariotika.Hariotika.WIDTH;
 
@@ -32,11 +34,12 @@ public class CharState extends State {
     Texture ava;
     ProgressBar health;
 
+
     private Texture background;
 
-    public CharState(StateManager sm , Skin skin, ProgressBar health) {
+    public CharState(StateManager sm , Skin skin, TextButton backButton) {
         super(sm);
-        this.health = health;
+
         this.table = MainState.status;
         ava= new Texture("avatar/ava.png");
         stage = new Stage();
@@ -45,12 +48,8 @@ public class CharState extends State {
         CharacteristicsWindows characteristics = new CharacteristicsWindows(skin);
         characteristics.setPosition(200,200);
         stage.addActor(characteristics);
-        stage.addActor(table);
-
-
-
-
-
+        stage.addActor(MainState.status);
+        stage.addActor(backButton);
 
 
     }
@@ -58,17 +57,19 @@ public class CharState extends State {
     @Override
     protected void handleInput() {
 
+/*
         if (Gdx.input.justTouched())
         {  camera.update();
            sm.set(new MainState(sm));
 
         }
+ */
     }
 
     @Override
     public void update(float dt) {
-        health.setValue(client.getCharacter().getHP());
 
+        getHealth().setValue(client.getCharacter().getHP());
 
  handleInput();
     }

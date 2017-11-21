@@ -62,7 +62,11 @@ public class MainState extends State {
     ImageButton.ImageButtonStyle avaButtonStyle;
     ImageButton.ImageButtonStyle imgButtonStyle;
     TextButton battleButton;
-    ProgressBar health;
+    TextButton backButton;
+    static Label playerName;
+    static ProgressBar health;
+    static ProgressBar mana;
+    static ProgressBar sp;
 
     //  private ImageButton button = new ImageButton();
 
@@ -102,6 +106,11 @@ public class MainState extends State {
         //-----------------
         //--------Статусбар
         status = new Table(skin2);
+        playerName = new Label("Player",skin2);
+
+        status.add(playerName);
+        status.row();
+
         status.add(new Label("HP", skin2));
         health = new ProgressBar(0, 100, 1, false, skin2);
         health.setValue(0);
@@ -111,7 +120,7 @@ public class MainState extends State {
         status.row();
 
         status.add(new Label("MP", skin2));
-        ProgressBar mana = new ProgressBar(0, 100, 1, false, skin2);
+        mana = new ProgressBar(0, 100, 1, false, skin2);
         mana.setValue(24);
         mana.setColor(BLUE);
         status.add(mana).width(500);
@@ -120,7 +129,7 @@ public class MainState extends State {
         status.row();
 
         status.add(new Label("SP", skin2));
-        ProgressBar sp = new ProgressBar(0, 100, 1, false, skin2);
+        sp = new ProgressBar(0, 100, 1, false, skin2);
         sp.setValue(50);
         sp.setColor(Color.CHARTREUSE);
         status.add(sp).width(500);
@@ -145,6 +154,12 @@ public class MainState extends State {
         battleButton.setSize(150,80);
         stage.addActor(battleButton);
 
+        //----- Батл кнопка
+        backButton = new TextButton("Back",skin2);
+        backButton.setPosition(camera.viewportWidth-camera.viewportWidth*0.05f,camera.viewportHeight-camera.viewportWidth*0.05f);
+        backButton.setSize(80,60);
+        stage.addActor(backButton);
+
 
 
 
@@ -152,7 +167,7 @@ public class MainState extends State {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 System.out.println("Open PlayerState");
-                CharState charState = new  CharState(sm,skin2,health);
+                CharState charState = new  CharState(sm,skin2,backButton);
                 sm.set(charState);
 
             };
@@ -162,8 +177,15 @@ public class MainState extends State {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 client.sendMessage("RegToBattle");
-                sm.set(new BattleState(sm,skin2) );
+                sm.set(new BattleState(sm,skin2,backButton) );
                 //  client.sendMessage("Battle#"+client.getLogin());
+            };
+        });
+
+        backButton.addListener( new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                sm.set(new MainState(sm));
             };
         });
 
@@ -187,6 +209,9 @@ public class MainState extends State {
     public void update(float dt) {
         handleInput();
         health.setValue(client.getCharacter().getHP());
+        playerName.setText(client.getCharacter().getName());
+
+
     }
 
     @Override
@@ -207,6 +232,11 @@ public class MainState extends State {
         stage.dispose();
     }
 
+    public static ProgressBar getHealth() {
+        return health;
+    }
 
-
+    public static void setHealth(ProgressBar health) {
+        MainState.health = health;
+    }
 }
