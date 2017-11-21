@@ -11,6 +11,8 @@ public class Character {
 
     private UUID id;
     private String name;
+    private boolean inBattle;
+
     private int strength;
     private int agility;
     private int intuition;
@@ -18,6 +20,7 @@ public class Character {
     private int intelligence;
     private int wisdom;
     private int armor;
+
     private int maxHP;
     private int HP;
     private String login;

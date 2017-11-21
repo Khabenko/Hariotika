@@ -60,6 +60,7 @@ public class GlobalUpdate extends Thread {
     @Override
     public void run() {
           while (true){
+
              getHealth().setValue(client.getCharacter().getHP());
 
      }

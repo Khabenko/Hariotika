@@ -20,7 +20,7 @@ public class CharacteristicsWindows extends Window {
         ArrayMap<String,Integer> characteristics = new ArrayMap();
 
         characteristics.put("Strange",client.getCharacter().getStrength());
-        characteristics.put("Intelegence",1);
+        characteristics.put("Agility",client.getCharacter().getAgility());
 
 
         for (int i = 0; i < characteristics.size; i++) {
