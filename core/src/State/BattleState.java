@@ -49,19 +49,23 @@ public class BattleState extends State {
     static ProgressBar enemyhealth;
     static ProgressBar enemymana;
     static ProgressBar enemysp;
+    TextButton backButton;
 
     public BattleState(StateManager sm, Skin skin, TextButton backButton) {
         super(sm);
+        this.backButton = backButton;
         this.skin = skin;
         stage = new Stage();
+        Gdx.input.setInputProcessor(stage);
+
         enemy= new Character();
         this.table = MainState.status;
         createEnemyBar();
         initEnemy();
         backgroundLoading = new Texture("loadBattl1.png");
         background = new Texture("fon2.png");
-        Gdx.input.setInputProcessor(stage);
-        stage.addActor(backButton);
+
+
         stage.addActor(table);
 
         final ButtonGroup checkboxGroupHit = new ButtonGroup();
@@ -113,14 +117,18 @@ public class BattleState extends State {
         battleButton.setSize(150,80);
         stage.addActor(battleButton);
 
+         stage.addActor(backButton);
+       // backButton.setVisible(false);
 
         battleButton.addListener( new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                        client.sendMessage("Battle#"+ getBattle().getNumber()+"#"+client.getCharacter().getName()+"#"+checkboxGroupHit.getChecked().getName()+"#"+checkboxGroupDef.getChecked().getName());
+            client.sendMessage("Battle#"+ getBattle().getNumber()+"#"+client.getCharacter().getName()+"#"+checkboxGroupHit.getChecked().getName()+"#"+checkboxGroupDef.getChecked().getName());
 
             };
         });
+
+
 
     }
 
@@ -149,6 +157,7 @@ public class BattleState extends State {
     @Override
     public void render(SpriteBatch sb) {
         if (getBattle()== null) {
+
             Gdx.gl.glClearColor(1, 1, 1, 1);
             Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
             sb.begin();
@@ -157,15 +166,13 @@ public class BattleState extends State {
 
         }
         else {
+
             Gdx.gl.glClearColor(1, 1, 1, 1);
             Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
             sb.begin();
             sb.draw(background, 0, 0, camera.viewportWidth, camera.viewportHeight);
             sb.end();
             stage.draw();
-
-
-
 
         }
 

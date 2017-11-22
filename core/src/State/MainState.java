@@ -12,6 +12,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.net.Socket;
@@ -26,6 +27,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.google.gson.Gson;
@@ -37,6 +39,7 @@ import javax.websocket.DeploymentException;
 
 import API.Client;
 import API.Reconect;
+import Domain.AvatarWindow;
 import Domain.FriendslistWindow;
 import Domain.ReconectWindows;
 import Domain.SpellWindow;
@@ -161,11 +164,18 @@ public class MainState extends State {
         backButton.setPosition(camera.viewportWidth-camera.viewportWidth*0.05f,camera.viewportHeight-camera.viewportWidth*0.05f);
         backButton.setSize(80,60);
 
-        /*
+/*
         ReconectWindows reconectWindows = new ReconectWindows(skin2);
         reconectWindows.setSize(200,200);
+        reconectWindows.setPosition(400,400);
+        reconectWindows.setBackground(new SpriteDrawable(new Sprite(background)));
         stage.addActor(reconectWindows);
         */
+
+        AvatarWindow avatarWindow = new AvatarWindow(skin2);
+        avatarWindow.setPosition(200,200);
+        stage.addActor(avatarWindow);
+
 
 
         avaButton.addListener( new ClickListener() {
@@ -191,6 +201,7 @@ public class MainState extends State {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 sm.set(new MainState(sm));
+                client.sendMessage("CancelRegBattle");
             };
         });
 

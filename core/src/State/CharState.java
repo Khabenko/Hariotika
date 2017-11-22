@@ -3,6 +3,7 @@ package State;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ButtonGroup;
@@ -11,6 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 
 
 import java.awt.Checkbox;
@@ -33,13 +35,14 @@ public class CharState extends State {
     Table table;
     Texture ava;
     ProgressBar health;
+    Texture skilBgr;
 
 
     private Texture background;
 
     public CharState(StateManager sm , Skin skin, TextButton backButton) {
         super(sm);
-
+        skilBgr = new Texture("darckbgr.png");
         this.table = MainState.status;
         ava= new Texture("avatar/ava.png");
         stage = new Stage();
@@ -47,6 +50,7 @@ public class CharState extends State {
         background = new Texture("fon2.png");
         CharacteristicsWindows characteristics = new CharacteristicsWindows(skin);
         characteristics.setPosition(200,200);
+        characteristics.setBackground(new SpriteDrawable(new Sprite(skilBgr)));
         stage.addActor(characteristics);
         stage.addActor(MainState.status);
         stage.addActor(backButton);

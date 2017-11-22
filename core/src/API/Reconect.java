@@ -2,6 +2,9 @@ package API;
 
 
 
+import com.badlogic.gdx.Gdx;
+
+
 import java.io.IOException;
 
 import javax.websocket.DeploymentException;
@@ -16,15 +19,16 @@ public class Reconect extends Thread{
             client = new Client();
             client.loginRead();
             client.sendMessage("login#" + client.getLogin() + "#" + client.getPass());
-            finalize();
+         //   finalize();
         } catch (IOException e) {
           //  e.printStackTrace();
             System.out.println("Переподключение");
         } catch (DeploymentException e) {
-           // e.printStackTrace();
+            Gdx.app.error("MyTag", "my error message", e);
+            // e.printStackTrace();
             System.out.println("Переподключение");
-        } catch (Throwable throwable) {
-            throwable.printStackTrace();
+            Gdx.app.error("MyTag", "my error message", e);
+
         }
     }
 
@@ -37,7 +41,7 @@ public class Reconect extends Thread{
                     client.loginRead();
                     client.sendMessage("login#" + client.getLogin() + "#" + client.getPass());
                     Thread.sleep(1000);
-                    finalize();
+
                 } catch (IOException e) {
                    // e.printStackTrace();
                     System.out.println("Переподключение");
@@ -46,8 +50,6 @@ public class Reconect extends Thread{
                     System.out.println("Переподключение");
                 } catch (InterruptedException e) {
                     e.printStackTrace();
-                } catch (Throwable throwable) {
-                    throwable.printStackTrace();
                 }
 
             }

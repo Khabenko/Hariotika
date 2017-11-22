@@ -8,6 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
+import static API.Client.load;
 import static API.Reconect.client;
 import static State.MainState.getHealth;
 import static State.MainState.setHealth;
@@ -60,8 +61,8 @@ public class GlobalUpdate extends Thread {
     @Override
     public void run() {
           while (true){
-
-             getHealth().setValue(client.getCharacter().getHP());
+           //   if (load)
+           //  getHealth().setValue(client.getCharacter().getHP());
 
      }
 
