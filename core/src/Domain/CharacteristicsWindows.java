@@ -21,12 +21,14 @@ public class CharacteristicsWindows extends Window {
 
         characteristics.put("Strange",client.getCharacter().getStrength());
         characteristics.put("Agility",client.getCharacter().getAgility());
+        characteristics.put("Vitality",client.getCharacter().getVitality());
+        characteristics.put("Armor",client.getCharacter().getArmor());
 
 
         for (int i = 0; i < characteristics.size; i++) {
             String key = characteristics.getKeyAt(i);
             String value = String.valueOf(characteristics.getValueAt(i));
-            namesArray.add(key+" : "+value);
+            namesArray.add(key+"  "+value);
 
         }
 
@@ -34,7 +36,7 @@ public class CharacteristicsWindows extends Window {
         names.setItems(namesArray);
         ScrollPane scroller = new ScrollPane(names, skin);
 
-        add(scroller).height(200).width(200);
+        add(scroller).height(300).width(300);
 
         pack();
         setKeepWithinStage(true);

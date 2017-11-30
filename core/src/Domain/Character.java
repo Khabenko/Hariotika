@@ -1,10 +1,13 @@
 package Domain;
 
 
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.UUID;
 
-
+import javax.imageio.ImageIO;
 
 
 public class Character {
@@ -12,6 +15,7 @@ public class Character {
     private UUID id;
     private String name;
     private boolean inBattle;
+    private byte[] avatar;
 
     private int strength;
     private int agility;
@@ -30,6 +34,7 @@ public class Character {
     public Character(String name, String login) {
         this.name = name;
         this.login = login;
+
     }
 
     public Character() {
@@ -148,6 +153,11 @@ public class Character {
         this.experience = experience;
     }
 
+    public byte[] getAvatar() {
+        return avatar;
+    }
 
-
+    public void setAvatar(byte[] avatar) {
+        this.avatar = avatar;
+    }
 }

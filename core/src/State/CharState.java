@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ButtonGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -19,6 +20,8 @@ import java.awt.Checkbox;
 import java.awt.CheckboxGroup;
 
 import Domain.CharacteristicsWindows;
+import Domain.EquipmentWindows;
+import Domain.InventoryWindows;
 import State.State;
 
 import static API.Reconect.client;
@@ -31,37 +34,47 @@ import static com.hariotika.Hariotika.WIDTH;
  */
 
 public class CharState extends State {
-    Stage stage;
+    static Stage stage;
     Table table;
-    Texture ava;
+    public static Texture ava;
     ProgressBar health;
     Texture skilBgr;
+    EquipmentWindows equipmentWindows;
 
 
     private Texture background;
 
     public CharState(StateManager sm , Skin skin, TextButton backButton) {
         super(sm);
-        skilBgr = new Texture("darckbgr.png");
+        skilBgr = new Texture("new.png");
         this.table = MainState.status;
         ava= new Texture("avatar/ava.png");
         stage = new Stage();
         Gdx.input.setInputProcessor(stage);
-        background = new Texture("fon2.png");
+        background = new Texture("playerFon.png");
         CharacteristicsWindows characteristics = new CharacteristicsWindows(skin);
-        characteristics.setPosition(200,200);
+        characteristics.setPosition(camera.viewportWidth*0.7f,camera.viewportHeight/3);
         characteristics.setBackground(new SpriteDrawable(new Sprite(skilBgr)));
         stage.addActor(characteristics);
         stage.addActor(MainState.status);
         stage.addActor(backButton);
+
+        equipmentWindows = new EquipmentWindows(skin);
+        equipmentWindows.setBackground(new SpriteDrawable(new Sprite(skilBgr)));
+        equipmentWindows.setPosition(50,600);
+        stage.addActor(equipmentWindows);
+
+        InventoryWindows inventoryWindows = new InventoryWindows(skin);
+        inventoryWindows.setBackground(new SpriteDrawable(new Sprite(skilBgr)));
+        inventoryWindows.setPosition(50,200);
+        stage.addActor(inventoryWindows);
 
 
     }
 
     @Override
     protected void handleInput() {
-
-/*
+            /*
         if (Gdx.input.justTouched())
         {  camera.update();
            sm.set(new MainState(sm));
@@ -72,8 +85,7 @@ public class CharState extends State {
 
     @Override
     public void update(float dt) {
-
-        getHealth().setValue(client.getCharacter().getHP());
+         getHealth().setValue(client.getCharacter().getHP());
 
  handleInput();
     }
@@ -84,7 +96,7 @@ public class CharState extends State {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         sb.begin();
         sb.draw(background, 0, 0, camera.viewportWidth, camera.viewportHeight);
-        sb.draw(ava, 10,camera.viewportHeight/1.10f, 120, 100);
+        sb.draw(ava, 120,618, 300, 220);
         sb.end();
         stage.draw();
     }
@@ -92,6 +104,9 @@ public class CharState extends State {
     @Override
     public void dispose() {
         background.dispose();
+        stage.dispose();
 
     }
+
+
 }

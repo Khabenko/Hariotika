@@ -170,8 +170,8 @@ public class MainState extends State {
         reconectWindows.setPosition(400,400);
         reconectWindows.setBackground(new SpriteDrawable(new Sprite(background)));
         stage.addActor(reconectWindows);
-        */
 
+*/
         AvatarWindow avatarWindow = new AvatarWindow(skin2);
         avatarWindow.setPosition(200,200);
         stage.addActor(avatarWindow);
