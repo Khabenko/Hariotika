@@ -15,6 +15,7 @@ import javax.websocket.DeploymentException;
 public class Reconect extends Thread{
     public static Client client;
     public Reconect() {
+       // Gdx.app.log("HariotikaLogsInfo", "ReconectedLoaded"+client.getUri());
         try {
             client = new Client();
             client.loginRead();
@@ -24,10 +25,10 @@ public class Reconect extends Thread{
           //  e.printStackTrace();
             System.out.println("Переподключение");
         } catch (DeploymentException e) {
-            Gdx.app.error("MyTag", "my error message", e);
+            Gdx.app.error("Hariotika Conection", "my error message", e);
             // e.printStackTrace();
             System.out.println("Переподключение");
-            Gdx.app.error("MyTag", "my error message", e);
+            Gdx.app.error("Hariotika Conection", "my error message", e);
 
         }
     }
@@ -41,15 +42,17 @@ public class Reconect extends Thread{
                     client.loginRead();
                     client.sendMessage("login#" + client.getLogin() + "#" + client.getPass());
                     Thread.sleep(1000);
-
+                    Gdx.app.log("HariotikaLogsInfo", "Try Reconected "+client.getUri());
                 } catch (IOException e) {
                    // e.printStackTrace();
                     System.out.println("Переподключение");
+                    Gdx.app.error("Hariotika Conection", "my error message", e);
                 } catch (DeploymentException e) {
                   //  e.printStackTrace();
                     System.out.println("Переподключение");
                 } catch (InterruptedException e) {
                     e.printStackTrace();
+                    Gdx.app.error("Hariotika Conection", "my error message", e);
                 }
 
             }
@@ -57,6 +60,7 @@ public class Reconect extends Thread{
             if(getClient()!=null)
             if (!(getClient().getUserSession().isOpen()))
             {
+                Gdx.app.log("HariotikaLogsInfo", "Try Reconected "+client.getUri());
                 System.out.println(String.valueOf(getClient().getUserSession().isOpen()));
                 try {
                     setClient(new Client());

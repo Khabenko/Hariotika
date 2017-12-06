@@ -1,5 +1,6 @@
 package API;
 
+import com.badlogic.gdx.Gdx;
 import com.google.gson.Gson;
 
 import java.io.FileInputStream;
@@ -30,10 +31,12 @@ public class Client  {
     public static Battle battle;
 
     private MessageHandler messageHandler;
-              URI uri = URI.create("ws://localhost:8081/");
-      //       URI uri = URI.create("ws://10.0.2.2:8081/");
+          //    URI uri = URI.create("ws://localhost:8081/");
+                 URI uri = URI.create("ws://64.250.115.155");
+        //        URI uri = URI.create("ws://10.0.2.2:8081/");
 
     public Client() throws IOException, DeploymentException {
+         Gdx.app.log("HariotikaLogsInfo", "Reconected to  "+uri);
         WebSocketContainer container = ContainerProvider.getWebSocketContainer();
         container.connectToServer(this, uri);
 
@@ -55,6 +58,7 @@ public class Client  {
         if (this.messageHandler != null) {
             this.messageHandler.handleMessage(message);
         }
+        Gdx.app.log("HariotikaLogsInfo", "Server sended  "+message);
      //   System.out.println(message);
            //loginWrite(message,null);
         parsingMessage(message);
@@ -172,10 +176,10 @@ public class Client  {
         String[] comand = message.split("#");
         if (comand[0].equals("login"))
         {
+            load =true;
             if (comand[1].equals("1")) {
                 character = gson.fromJson(comand[2], Character.class);
                // System.out.printf("Тут нам прислали данные по чару "+character.getName());
-                load =true;
 
             }
             else if (comand[1].equals("2"))
@@ -228,4 +232,11 @@ public class Client  {
         Client.battle = battle;
     }
 
+    public URI getUri() {
+        return uri;
+    }
+
+    public void setUri(URI uri) {
+        this.uri = uri;
+    }
 }

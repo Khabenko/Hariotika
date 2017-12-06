@@ -26,8 +26,8 @@ public class Hariotika extends ApplicationAdapter {
 	@Override
 	public void create () {
 
-		System.out.println("+++++++++++++++++++++++++++++++++++++++++++"+Gdx.app.getGraphics().getWidth());
-		System.out.println();
+		System.out.println("+++++++"+Gdx.app.getGraphics().getWidth());
+		Gdx.app.log("HariotikaLogsInfo", "HariotikaLoaded");
 		batch = new SpriteBatch();
 		sm = new StateManager();
 		reconect= new Reconect();

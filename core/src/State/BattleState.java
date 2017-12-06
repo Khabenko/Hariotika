@@ -71,13 +71,13 @@ public class BattleState extends State {
         final ButtonGroup checkboxGroupHit = new ButtonGroup();
         CheckBox checkboxHeadHit = new CheckBox("HEAD",skin);
         checkboxHeadHit.setName("HEAD");
-        checkboxHeadHit.setPosition(10,camera.viewportHeight*0.85f);
+        checkboxHeadHit.setPosition(camera.viewportWidth*0.95f,camera.viewportHeight*0.85f);
         final CheckBox checkboxBodyHit = new CheckBox("BODY",skin);
         checkboxBodyHit.setName("BODY");
-        checkboxBodyHit.setPosition(10,checkboxHeadHit.getY()-20);
+        checkboxBodyHit.setPosition(camera.viewportWidth*0.95f,checkboxHeadHit.getY()-20);
         CheckBox checkboxLegsHit = new CheckBox("LEGS",skin);
         checkboxLegsHit.setName("LEGS");
-        checkboxLegsHit.setPosition(10,checkboxBodyHit.getY()-20);
+        checkboxLegsHit.setPosition(camera.viewportWidth*0.95f,checkboxBodyHit.getY()-20);
         checkboxGroupHit.add(checkboxBodyHit);
         checkboxGroupHit.add(checkboxHeadHit);
         checkboxGroupHit.add(checkboxLegsHit);
@@ -90,16 +90,17 @@ public class BattleState extends State {
 
 
 
+
         final ButtonGroup checkboxGroupDef = new ButtonGroup();
         CheckBox checkboxHeadDef = new CheckBox("HEAD",skin);
         checkboxHeadDef.setName("HEAD");
-        checkboxHeadDef.setPosition(camera.viewportWidth*0.95f,camera.viewportHeight*0.85f);
+        checkboxHeadDef.setPosition(10,camera.viewportHeight*0.85f);
         final CheckBox checkboxBodyDef = new CheckBox("BODY",skin);
         checkboxBodyDef.setName("BODY");
-        checkboxBodyDef.setPosition(camera.viewportWidth*0.95f,checkboxHeadDef.getY()-20);
+        checkboxBodyDef.setPosition(10,checkboxHeadDef.getY()-20);
         CheckBox checkboxLegsDef = new CheckBox("LEGS",skin);
         checkboxLegsDef.setName("LEGS");
-        checkboxLegsDef.setPosition(camera.viewportWidth*0.95f,checkboxBodyDef.getY()-20);
+        checkboxLegsDef.setPosition(10,checkboxBodyDef.getY()-20);
 
         checkboxGroupDef.add(checkboxBodyDef);
         checkboxGroupDef.add(checkboxHeadDef);
