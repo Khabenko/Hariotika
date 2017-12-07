@@ -106,7 +106,7 @@ public class MainState extends State {
         avaButtonStyle.imageDown = skin.getDrawable("ava");
         ImageButton avaButton = new ImageButton(avaButtonStyle);
         avaButton.setSize(120,100);
-        avaButton.setPosition(10,camera.viewportHeight/1.10f);
+        avaButton.setPosition(10,camera.viewportHeight/1.15f);
         stage.addActor(avaButton);
         //-----------------
         //--------Статусбар
@@ -138,7 +138,7 @@ public class MainState extends State {
         sp.setValue(50);
         sp.setColor(Color.CHARTREUSE);
         status.add(sp).width(500);
-        status.setPosition(400,camera.viewportHeight/1.05f);
+        status.setPosition(400,camera.viewportHeight/1.08f);
         stage.addActor(status);
         //------------------
 

@@ -71,13 +71,13 @@ public class BattleState extends State {
         final ButtonGroup checkboxGroupHit = new ButtonGroup();
         CheckBox checkboxHeadHit = new CheckBox("HEAD",skin);
         checkboxHeadHit.setName("HEAD");
-        checkboxHeadHit.setPosition(camera.viewportWidth*0.95f,camera.viewportHeight*0.85f);
+        checkboxHeadHit.setPosition(camera.viewportWidth*0.95f,camera.viewportHeight*0.80f);
         final CheckBox checkboxBodyHit = new CheckBox("BODY",skin);
         checkboxBodyHit.setName("BODY");
-        checkboxBodyHit.setPosition(camera.viewportWidth*0.95f,checkboxHeadHit.getY()-20);
+        checkboxBodyHit.setPosition(camera.viewportWidth*0.95f,checkboxHeadHit.getY()-40);
         CheckBox checkboxLegsHit = new CheckBox("LEGS",skin);
         checkboxLegsHit.setName("LEGS");
-        checkboxLegsHit.setPosition(camera.viewportWidth*0.95f,checkboxBodyHit.getY()-20);
+        checkboxLegsHit.setPosition(camera.viewportWidth*0.95f,checkboxBodyHit.getY()-40);
         checkboxGroupHit.add(checkboxBodyHit);
         checkboxGroupHit.add(checkboxHeadHit);
         checkboxGroupHit.add(checkboxLegsHit);
@@ -94,13 +94,14 @@ public class BattleState extends State {
         final ButtonGroup checkboxGroupDef = new ButtonGroup();
         CheckBox checkboxHeadDef = new CheckBox("HEAD",skin);
         checkboxHeadDef.setName("HEAD");
-        checkboxHeadDef.setPosition(10,camera.viewportHeight*0.85f);
+        checkboxHeadDef.setPosition(10,camera.viewportHeight*0.80f);
         final CheckBox checkboxBodyDef = new CheckBox("BODY",skin);
         checkboxBodyDef.setName("BODY");
-        checkboxBodyDef.setPosition(10,checkboxHeadDef.getY()-20);
+        checkboxBodyDef.setPosition(10,checkboxHeadDef.getY()-40);
         CheckBox checkboxLegsDef = new CheckBox("LEGS",skin);
         checkboxLegsDef.setName("LEGS");
-        checkboxLegsDef.setPosition(10,checkboxBodyDef.getY()-20);
+        checkboxLegsDef.setPosition(10,checkboxBodyDef.getY()-40);
+
 
         checkboxGroupDef.add(checkboxBodyDef);
         checkboxGroupDef.add(checkboxHeadDef);
@@ -115,7 +116,7 @@ public class BattleState extends State {
 
         battleButton = new TextButton("Battle",skin);
         battleButton.setPosition(camera.viewportWidth/2,camera.viewportHeight/2);
-        battleButton.setSize(150,80);
+        battleButton.setSize(50,50);
         stage.addActor(battleButton);
 
          stage.addActor(backButton);
@@ -213,7 +214,7 @@ public class BattleState extends State {
         enemysp.setValue(50);
         enemysp.setColor(Color.CHARTREUSE);
         statusEnemy.add(enemysp).width(500);
-        statusEnemy.setPosition(camera.viewportWidth/2+400,camera.viewportHeight/1.05f);
+        statusEnemy.setPosition(camera.viewportWidth/2+400,camera.viewportHeight/1.08f);
         stage.addActor(statusEnemy);
 
 
