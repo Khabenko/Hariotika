@@ -74,10 +74,10 @@ public class BattleState extends State {
         checkboxHeadHit.setPosition(camera.viewportWidth*0.95f,camera.viewportHeight*0.80f);
         final CheckBox checkboxBodyHit = new CheckBox("BODY",skin);
         checkboxBodyHit.setName("BODY");
-        checkboxBodyHit.setPosition(camera.viewportWidth*0.95f,checkboxHeadHit.getY()-40);
+        checkboxBodyHit.setPosition(camera.viewportWidth*0.95f,checkboxHeadHit.getY()-60);
         CheckBox checkboxLegsHit = new CheckBox("LEGS",skin);
         checkboxLegsHit.setName("LEGS");
-        checkboxLegsHit.setPosition(camera.viewportWidth*0.95f,checkboxBodyHit.getY()-40);
+        checkboxLegsHit.setPosition(camera.viewportWidth*0.95f,checkboxBodyHit.getY()-60);
         checkboxGroupHit.add(checkboxBodyHit);
         checkboxGroupHit.add(checkboxHeadHit);
         checkboxGroupHit.add(checkboxLegsHit);
@@ -97,10 +97,10 @@ public class BattleState extends State {
         checkboxHeadDef.setPosition(10,camera.viewportHeight*0.80f);
         final CheckBox checkboxBodyDef = new CheckBox("BODY",skin);
         checkboxBodyDef.setName("BODY");
-        checkboxBodyDef.setPosition(10,checkboxHeadDef.getY()-40);
+        checkboxBodyDef.setPosition(10,checkboxHeadDef.getY()-60);
         CheckBox checkboxLegsDef = new CheckBox("LEGS",skin);
         checkboxLegsDef.setName("LEGS");
-        checkboxLegsDef.setPosition(10,checkboxBodyDef.getY()-40);
+        checkboxLegsDef.setPosition(10,checkboxBodyDef.getY()-60);
 
 
         checkboxGroupDef.add(checkboxBodyDef);
