@@ -31,8 +31,8 @@ public class Client  {
     public static Battle battle;
 
     private MessageHandler messageHandler;
-          //    URI uri = URI.create("ws://localhost:8081/");
-                 URI uri = URI.create("ws://64.250.115.155");
+             URI uri = URI.create("ws://localhost:8081/");
+          //       URI uri = URI.create("ws://64.250.115.155");
         //        URI uri = URI.create("ws://10.0.2.2:8081/");
 
     public Client() throws IOException, DeploymentException {
@@ -46,7 +46,9 @@ public class Client  {
     public void onOpen(Session server) throws IOException {
         System.out.println("Open Connection ..." + server);
         this.userSession = server;
-        this.userSession.setMaxIdleTimeout(30000);
+        this.userSession.setMaxIdleTimeout(10000);
+
+
     }
     @OnClose
     public void onClose(){
