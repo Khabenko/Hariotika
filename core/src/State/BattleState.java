@@ -17,10 +17,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 import java.awt.Checkbox;
+import java.awt.Window;
 
 import API.Client;
 import Domain.Battle;
 import Domain.Character;
+import Domain.LogWindow;
 
 import static API.Client.getBattle;
 import static API.Client.setBattle;
@@ -39,6 +41,7 @@ public class BattleState extends State {
 
     static Character enemy;
     Skin skin;
+    Skin skinChebox;
     private Texture background;
     private Texture backgroundLoading;
     private Stage stage;
@@ -50,6 +53,8 @@ public class BattleState extends State {
     static ProgressBar enemymana;
     static ProgressBar enemysp;
     TextButton backButton;
+    LogWindow logWindow;
+
 
     public BattleState(StateManager sm, Skin skin, TextButton backButton) {
         super(sm);
@@ -64,20 +69,22 @@ public class BattleState extends State {
         initEnemy();
         backgroundLoading = new Texture("loadBattl1.png");
         background = new Texture("fon2.png");
+        Gdx.app.log("HariotikaBattleState", "Loaded background");
 
+        skinChebox = new Skin(Gdx.files.internal("data/visui1/uiskin.json"));
 
         stage.addActor(table);
 
         final ButtonGroup checkboxGroupHit = new ButtonGroup();
-        CheckBox checkboxHeadHit = new CheckBox("HEAD",skin);
+        CheckBox checkboxHeadHit = new CheckBox("HEAD",skinChebox);
         checkboxHeadHit.setName("HEAD");
-        checkboxHeadHit.setPosition(camera.viewportWidth*0.95f,camera.viewportHeight*0.80f);
-        final CheckBox checkboxBodyHit = new CheckBox("BODY",skin);
+        checkboxHeadHit.setPosition(camera.viewportWidth*0.85f,camera.viewportHeight*0.70f);
+        final CheckBox checkboxBodyHit = new CheckBox("BODY",skinChebox);
         checkboxBodyHit.setName("BODY");
-        checkboxBodyHit.setPosition(camera.viewportWidth*0.95f,checkboxHeadHit.getY()-60);
-        CheckBox checkboxLegsHit = new CheckBox("LEGS",skin);
+        checkboxBodyHit.setPosition(camera.viewportWidth*0.85f,checkboxHeadHit.getY()-80);
+        CheckBox checkboxLegsHit = new CheckBox("LEGS",skinChebox);
         checkboxLegsHit.setName("LEGS");
-        checkboxLegsHit.setPosition(camera.viewportWidth*0.95f,checkboxBodyHit.getY()-60);
+        checkboxLegsHit.setPosition(camera.viewportWidth*0.85f,checkboxBodyHit.getY()-80);
         checkboxGroupHit.add(checkboxBodyHit);
         checkboxGroupHit.add(checkboxHeadHit);
         checkboxGroupHit.add(checkboxLegsHit);
@@ -92,15 +99,15 @@ public class BattleState extends State {
 
 
         final ButtonGroup checkboxGroupDef = new ButtonGroup();
-        CheckBox checkboxHeadDef = new CheckBox("HEAD",skin);
+        CheckBox checkboxHeadDef = new CheckBox("HEAD",skinChebox);
         checkboxHeadDef.setName("HEAD");
-        checkboxHeadDef.setPosition(10,camera.viewportHeight*0.80f);
-        final CheckBox checkboxBodyDef = new CheckBox("BODY",skin);
+        checkboxHeadDef.setPosition(10,camera.viewportHeight*0.70f);
+        final CheckBox checkboxBodyDef = new CheckBox("BODY",skinChebox);
         checkboxBodyDef.setName("BODY");
-        checkboxBodyDef.setPosition(10,checkboxHeadDef.getY()-60);
-        CheckBox checkboxLegsDef = new CheckBox("LEGS",skin);
+        checkboxBodyDef.setPosition(10,checkboxHeadDef.getY()-80);
+        CheckBox checkboxLegsDef = new CheckBox("LEGS",skinChebox);
         checkboxLegsDef.setName("LEGS");
-        checkboxLegsDef.setPosition(10,checkboxBodyDef.getY()-60);
+        checkboxLegsDef.setPosition(10,checkboxBodyDef.getY()-80);
 
 
         checkboxGroupDef.add(checkboxBodyDef);
@@ -112,11 +119,20 @@ public class BattleState extends State {
         stage.addActor(checkboxHeadDef);
         stage.addActor(checkboxLegsDef);
 
+        Gdx.app.log("HariotikaBattleState", "Loaded ChekBox");
+
+        logWindow = new LogWindow(skin);
+        logWindow .setPosition(10,10);
+        logWindow.setSize(camera.viewportWidth,300);
+        stage.addActor(logWindow );
+
+
+
 
 
         battleButton = new TextButton("Battle",skin);
         battleButton.setPosition(camera.viewportWidth/2,camera.viewportHeight/2);
-        battleButton.setSize(50,50);
+        battleButton.setSize(250,150);
         stage.addActor(battleButton);
 
          stage.addActor(backButton);
@@ -141,13 +157,16 @@ public class BattleState extends State {
 
     @Override
     public void update(float dt) {
+
         initEnemy();
         getHealth().setValue(client.getCharacter().getHP());
         if (enemy.getName()!=null) {
             enemyhealth.setValue(enemy.getHP());
             // System.out.println(enemy.getName());
             enemyName.setText(enemy.getName());
-
+            logWindow.clear();
+            logWindow.add(client.getBattle().getLog());
+            System.out.println(client.getBattle().getLog());
             if (getBattle().isFinished()) {
                 setBattle(null);
                 sm.set(new MainState(sm));
@@ -216,6 +235,7 @@ public class BattleState extends State {
         statusEnemy.add(enemysp).width(500);
         statusEnemy.setPosition(camera.viewportWidth/2+400,camera.viewportHeight/1.08f);
         stage.addActor(statusEnemy);
+        Gdx.app.log("HariotikaBattleState", "createEnemyBar");
 
 
     }
@@ -235,7 +255,7 @@ public class BattleState extends State {
                 setEnemy(getBattle().getPlayer2());
              }
         }
-
+    //    Gdx.app.log("HariotikaBattleState", "initEnemy()");
 
     }
 

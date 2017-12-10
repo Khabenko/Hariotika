@@ -1,7 +1,9 @@
 package API;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
 import com.google.gson.Gson;
+
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -15,7 +17,7 @@ import javax.websocket.*;
 
 import Domain.Battle;
 import Domain.Character;
-import Domain.GlobalUpdate;
+
 
 
 @ClientEndpoint
@@ -31,9 +33,9 @@ public class Client  {
     public static Battle battle;
 
     private MessageHandler messageHandler;
-          //   URI uri = URI.create("ws://localhost:8081/");
-                URI uri = URI.create("ws://64.250.115.155");
-        //        URI uri = URI.create("ws://10.0.2.2:8081/");
+        URI uri = URI.create("ws://localhost:8081/");
+           //   URI uri = URI.create("ws://64.250.115.155");
+            //    URI uri = URI.create("ws://10.0.2.2:8081/");
 
     public Client() throws IOException, DeploymentException {
          Gdx.app.log("HariotikaLogsInfo", "Reconected to  "+uri);
@@ -101,14 +103,30 @@ public class Client  {
 
         Properties prop = new Properties();
         OutputStream output = null;
+        FileHandle fileHandle = null;
         try {
-            output = new FileOutputStream("config.properties");
+/*
+            fileHandle = Gdx.files.local("src/config.properties");
+      //      this.login = prop.getProperty("login");
+    //        this.pass = prop.getProperty("password");
+            fileHandle.writeString("login="+login+"\npassword="+pass, false);
+
+/**/
+
+            output = new FileOutputStream("src/config.properties");
             // set the properties value
             prop.setProperty("login", login);
             prop.setProperty("password", pass);
+            Gdx.app.log("HRWrite", "Login "+ login);
+            Gdx.app.log("HRWrite", "Pass "+ pass);
+            Gdx.app.log("HRWrite", "Path config ");
+
+
+
+
             // save properties to project root folder
-            prop.store(output, null);
-        } catch (IOException io) {
+           prop.store(output, null);
+        } catch (Exception io) {
             io.printStackTrace();
         } finally {
             if (output != null) {
@@ -124,24 +142,49 @@ public class Client  {
     }
 
     public Properties loginRead() {
-
+        Gdx.app.log("HRRead", "Login Read started");
         //Вычитываемы проперти log i pass
         //Вызываем конкшен для получения карты характеристик
         //Есди проперти пустые - сохраняем login который вернул нам сервре.
         Properties prop = new Properties();
         InputStream input = null;
+        FileHandle fileHandle = null;
 
         try {
 
-            input = new FileInputStream("config.properties");
+
+            fileHandle = Gdx.files.local("src/config.properties");
+
+        //    input2 = new FileHandle("config.properties");
             // load a properties file
+
+
+            input = fileHandle.read();
             prop.load(input);
             this.login = prop.getProperty("login");
             this.pass = prop.getProperty("password");
+
+            /*
+
+            Gdx.app.log("HRRead", "1");
+            input = new FileInputStream("config.properties");
+            // load a properties file
+            Gdx.app.log("HRRead", "2");
+            prop.load(input);
+            Gdx.app.log("HRRead", "3");
+
+            this.login = prop.getProperty("login");
+            this.pass = prop.getProperty("password");
+*/
+
             // get the property value and print it out
-            System.out.println(prop.getProperty("login"));
-            System.out.println(prop.getProperty("password"));
+            Gdx.app.log("HRRead", "Login "+ login);
+            Gdx.app.log("HRRead", "Pass "+ pass);
+            Gdx.app.log("HRRead", "Path config ");
+
+
         } catch (IOException ex) {
+            Gdx.app.error("HRRead", ex.toString());
             ex.printStackTrace();
         } finally {
             if (input != null) {
@@ -200,8 +243,8 @@ public class Client  {
             System.out.println("Прислали батл"+comand[1]);
 
             if (getBattle()!=null)
-                System.out.println(battle.getPlayer1().getHP()+"++++++++++++++++++++++++++++++++++++++"+getBattle().getPlayer1().getName().equals(Client.character.getName()));
-                System.out.println(battle.getPlayer2().getHP()+"++++++++++++++++++++++++++++++++++++++"+getBattle().getPlayer2().getName().equals(Client.character.getName()));
+                System.out.println(battle.getPlayer1().getHP()+"++++++++"+getBattle().getPlayer1().getName().equals(Client.character.getName()));
+                System.out.println(battle.getPlayer2().getHP()+"++++++++"+getBattle().getPlayer2().getName().equals(Client.character.getName()));
                 if (getBattle().getPlayer1().getName().equals(Client.character.getName())){
                     character = getBattle().getPlayer1();
 

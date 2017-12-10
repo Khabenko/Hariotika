@@ -8,7 +8,7 @@ public class Battle {
 
     long number;
     boolean finished = false;
-    String log;
+    String log =null;
     private Character player1;
     private Character player2;
 

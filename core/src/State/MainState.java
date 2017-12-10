@@ -193,6 +193,7 @@ public class MainState extends State {
             public void clicked(InputEvent event, float x, float y) {
                 client.sendMessage("RegToBattle");
                 sm.set(new BattleState(sm,skin2,backButton) );
+                Gdx.app.log("HariotikaMain", "RegToBattle");
                 //  client.sendMessage("Battle#"+client.getLogin());
             };
         });
