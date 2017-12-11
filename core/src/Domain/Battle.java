@@ -8,6 +8,7 @@ public class Battle {
 
     long number;
     boolean finished = false;
+    long timer =30;
     String log =null;
     private Character player1;
     private Character player2;
@@ -116,5 +117,9 @@ public class Battle {
 
     public void setLog(String log) {
         this.log = log;
+    }
+
+    public long getTimer() {
+        return timer;
     }
 }

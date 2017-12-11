@@ -14,6 +14,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField;
+import com.badlogic.gdx.scenes.scene2d.ui.TextTooltip;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 import java.awt.Checkbox;
@@ -24,6 +26,7 @@ import Domain.Battle;
 import Domain.Character;
 import Domain.LogWindow;
 
+import static API.Client.battle;
 import static API.Client.getBattle;
 import static API.Client.setBattle;
 import static API.Reconect.client;
@@ -40,6 +43,7 @@ public class BattleState extends State {
 
 
     static Character enemy;
+    Label timer;
     Skin skin;
     Skin skinChebox;
     private Texture background;
@@ -62,6 +66,12 @@ public class BattleState extends State {
         this.skin = skin;
         stage = new Stage();
         Gdx.input.setInputProcessor(stage);
+
+        timer = new Label("30",skin);
+        timer.setPosition(camera.viewportWidth/2,camera.viewportHeight*0.70f);
+
+        stage.addActor(timer);
+
 
         enemy= new Character();
         this.table = MainState.status;
@@ -135,6 +145,8 @@ public class BattleState extends State {
         battleButton.setSize(250,150);
         stage.addActor(battleButton);
 
+
+
          stage.addActor(backButton);
        // backButton.setVisible(false);
 
@@ -157,7 +169,7 @@ public class BattleState extends State {
 
     @Override
     public void update(float dt) {
-
+        if (battle!=null) timer.setText(String.valueOf(battle.getTimer()));
         initEnemy();
         getHealth().setValue(client.getCharacter().getHP());
         if (enemy.getName()!=null) {
@@ -166,7 +178,6 @@ public class BattleState extends State {
             enemyName.setText(enemy.getName());
             logWindow.clear();
             logWindow.add(client.getBattle().getLog());
-            System.out.println(client.getBattle().getLog());
             if (getBattle().isFinished()) {
                 setBattle(null);
                 sm.set(new MainState(sm));
@@ -235,7 +246,7 @@ public class BattleState extends State {
         statusEnemy.add(enemysp).width(500);
         statusEnemy.setPosition(camera.viewportWidth/2+400,camera.viewportHeight/1.08f);
         stage.addActor(statusEnemy);
-        Gdx.app.log("HariotikaBattleState", "createEnemyBar");
+      //Gdx.app.log("HariotikaBattleState", "createEnemyBar");
 
 
     }

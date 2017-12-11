@@ -15,6 +15,7 @@ import javax.websocket.DeploymentException;
 public class Reconect extends Thread{
     public static Client client;
     public Reconect() {
+
        // Gdx.app.log("HariotikaLogsInfo", "ReconectedLoaded"+client.getUri());
         try {
             client = new Client();

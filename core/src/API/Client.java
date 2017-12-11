@@ -1,6 +1,7 @@
 package API;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.files.FileHandle;
 import com.google.gson.Gson;
 
@@ -31,11 +32,12 @@ public class Client  {
     static Gson gson = new Gson();
     public static Character character = new Character();
     public static Battle battle;
+    
 
     private MessageHandler messageHandler;
-        URI uri = URI.create("ws://localhost:8081/");
+                URI uri = URI.create("ws://localhost:8081/");
            //   URI uri = URI.create("ws://64.250.115.155");
-            //    URI uri = URI.create("ws://10.0.2.2:8081/");
+            //  URI uri = URI.create("ws://10.0.2.2:8081/");
 
     public Client() throws IOException, DeploymentException {
          Gdx.app.log("HariotikaLogsInfo", "Reconected to  "+uri);
@@ -101,42 +103,19 @@ public class Client  {
         //Вызываем конкшен для получения карты характеристик
         //Есди проперти пустые - сохраняем login который вернул нам сервре.
 
-        Properties prop = new Properties();
-        OutputStream output = null;
-        FileHandle fileHandle = null;
+        Preferences prefs = Gdx.app.getPreferences("loginprop");
+
         try {
-/*
-            fileHandle = Gdx.files.local("src/config.properties");
-      //      this.login = prop.getProperty("login");
-    //        this.pass = prop.getProperty("password");
-            fileHandle.writeString("login="+login+"\npassword="+pass, false);
 
-/**/
-
-            output = new FileOutputStream("src/config.properties");
-            // set the properties value
-            prop.setProperty("login", login);
-            prop.setProperty("password", pass);
+            prefs.putString("login", login);
+            prefs.putString("password", pass);
+            prefs.flush();
             Gdx.app.log("HRWrite", "Login "+ login);
             Gdx.app.log("HRWrite", "Pass "+ pass);
             Gdx.app.log("HRWrite", "Path config ");
-
-
-
-
             // save properties to project root folder
-           prop.store(output, null);
         } catch (Exception io) {
             io.printStackTrace();
-        } finally {
-            if (output != null) {
-                try {
-                    output.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-
         }
 
     }
@@ -147,35 +126,13 @@ public class Client  {
         //Вызываем конкшен для получения карты характеристик
         //Есди проперти пустые - сохраняем login который вернул нам сервре.
         Properties prop = new Properties();
-        InputStream input = null;
-        FileHandle fileHandle = null;
+        Preferences prefs ;
 
         try {
 
-
-            fileHandle = Gdx.files.local("src/config.properties");
-
-        //    input2 = new FileHandle("config.properties");
-            // load a properties file
-
-
-            input = fileHandle.read();
-            prop.load(input);
-            this.login = prop.getProperty("login");
-            this.pass = prop.getProperty("password");
-
-            /*
-
-            Gdx.app.log("HRRead", "1");
-            input = new FileInputStream("config.properties");
-            // load a properties file
-            Gdx.app.log("HRRead", "2");
-            prop.load(input);
-            Gdx.app.log("HRRead", "3");
-
-            this.login = prop.getProperty("login");
-            this.pass = prop.getProperty("password");
-*/
+                prefs = Gdx.app.getPreferences("loginprop");
+                this.login = prefs.getString("login", "null");
+                this.pass = prefs.getString("password", "null");
 
             // get the property value and print it out
             Gdx.app.log("HRRead", "Login "+ login);
@@ -183,20 +140,14 @@ public class Client  {
             Gdx.app.log("HRRead", "Path config ");
 
 
-        } catch (IOException ex) {
+        } catch (Exception ex) {
             Gdx.app.error("HRRead", ex.toString());
             ex.printStackTrace();
-        } finally {
-            if (input != null) {
-                try {
-                    input.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
         }
+
+
         return prop;
-    }
+}
 
 
     public String getLogin() {
