@@ -24,25 +24,33 @@ import Domain.Character;
 @ClientEndpoint
 public class Client  {
 
+
     public static boolean load = false;
-    Properties prop;
-    static String login;
-    static String pass;
-    static Session userSession = null;
+    public Properties prop;
+    private String login;
+    private String pass;
+    static Session userSession;
     static Gson gson = new Gson();
     public static Character character = new Character();
     public static Battle battle;
-    
+    public WebSocketContainer container;
+    private HariotikaMessage hariotikaMessage;
+
 
     private MessageHandler messageHandler;
                 URI uri = URI.create("ws://localhost:8081/");
-           //   URI uri = URI.create("ws://64.250.115.155");
-            //  URI uri = URI.create("ws://10.0.2.2:8081/");
+             // URI uri = URI.create("ws://64.250.115.155");
+            // URI uri = URI.create("ws://10.0.2.2:8081/");
 
-    public Client() throws IOException, DeploymentException {
-         Gdx.app.log("HariotikaLogsInfo", "Reconected to  "+uri);
-        WebSocketContainer container = ContainerProvider.getWebSocketContainer();
+    protected Client() throws IOException, DeploymentException {
+        Gdx.app.log("HariotikaLogsInfo", "Conection to  "+uri);
+        container = ContainerProvider.getWebSocketContainer();
         container.connectToServer(this, uri);
+        loginRead();
+
+        hariotikaMessage = new HariotikaMessage(Command.Login,WsCode.Authorithation,login,pass);
+        sendMessage(gson.toJson(hariotikaMessage));
+     //   sendMessage("login#" + getLogin() + "#" + getPass());
 
     }
 
@@ -50,8 +58,7 @@ public class Client  {
     public void onOpen(Session server) throws IOException {
         System.out.println("Open Connection ..." + server);
         this.userSession = server;
-        this.userSession.setMaxIdleTimeout(10000);
-
+        this.userSession.setMaxIdleTimeout(30000);
 
     }
     @OnClose
@@ -64,49 +71,37 @@ public class Client  {
         if (this.messageHandler != null) {
             this.messageHandler.handleMessage(message);
         }
-        Gdx.app.log("HariotikaLogsInfo", "Server sended  "+message);
-     //   System.out.println(message);
-           //loginWrite(message,null);
-        parsingMessage(message);
+       //   Gdx.app.log("HariotikaLogsInfo", "Server sended  "+message);
 
-         //   return echoMsg;
+        parsingHariotikaMessage(message);
+
     }
 
     @OnError
     public void onError(Throwable e){
-        e.printStackTrace();
+        System.out.println("Error Connection ...");
+
     }
 
     public Session getUserSession() {
         return userSession;
     }
-
     public void addMessageHandler(MessageHandler msgHandler) {
         this.messageHandler = msgHandler;
     }
     public void sendMessage(String message) {
         this.userSession.getAsyncRemote().sendText(message);
     }
-
-
-
-
     public static interface MessageHandler {
 
         public void handleMessage(String message);
     }
-
-
     public void loginWrite () {
-
         //Вычитываемы проперти log i pass
         //Вызываем конкшен для получения карты характеристик
         //Есди проперти пустые - сохраняем login который вернул нам сервре.
-
         Preferences prefs = Gdx.app.getPreferences("loginprop");
-
         try {
-
             prefs.putString("login", login);
             prefs.putString("password", pass);
             prefs.flush();
@@ -117,98 +112,117 @@ public class Client  {
         } catch (Exception io) {
             io.printStackTrace();
         }
-
     }
-
-    public Properties loginRead() {
+    public void loginRead() {
         Gdx.app.log("HRRead", "Login Read started");
         //Вычитываемы проперти log i pass
         //Вызываем конкшен для получения карты характеристик
         //Есди проперти пустые - сохраняем login который вернул нам сервре.
         Properties prop = new Properties();
         Preferences prefs ;
-
         try {
-
                 prefs = Gdx.app.getPreferences("loginprop");
                 this.login = prefs.getString("login", "null");
                 this.pass = prefs.getString("password", "null");
-
             // get the property value and print it out
             Gdx.app.log("HRRead", "Login "+ login);
             Gdx.app.log("HRRead", "Pass "+ pass);
             Gdx.app.log("HRRead", "Path config ");
-
-
         } catch (Exception ex) {
             Gdx.app.error("HRRead", ex.toString());
             ex.printStackTrace();
         }
-
-
-        return prop;
 }
-
-
     public String getLogin() {
         return login;
     }
-
     public void setLogin(String login) {
         this.login = login;
     }
-
     public String getPass() {
         return pass;
     }
-
     public void setPass(String pass) {
         this.pass = pass;
     }
 
 
-    public  void parsingMessage(String message)
-    {
-        String[] comand = message.split("#");
-        if (comand[0].equals("login"))
-        {
-            load =true;
-            if (comand[1].equals("1")) {
-                character = gson.fromJson(comand[2], Character.class);
-               // System.out.printf("Тут нам прислали данные по чару "+character.getName());
 
-            }
-            else if (comand[1].equals("2"))
-                System.out.printf("Неверный логин и пароль");
-            else {
-                this.setLogin(comand[1]);
-                this.setPass("null");
-                loginWrite();
-            }
+   private void parsingHariotikaMessage(String message){
+        try {
+            hariotikaMessage = gson.fromJson(message,HariotikaMessage.class);
+
+
+        switch (hariotikaMessage.getCommand()){
+            case Login: commandLoginCode(hariotikaMessage);
+                break;
+            case Battle: commandBattleCode(hariotikaMessage);
+                break;
+            default:
+                 Gdx.app.error("Invalid command","Server sended "+message);
+                break;
         }
+        }
+        catch (Exception e){
+            Gdx.app.error("Error convert message from json ",message);
+        }
+   }
 
-        if (comand[0].equals("Battle")){
-            System.out.println(message);
-            System.out.println(gson.fromJson(comand[1],Battle.class).getPlayer1().getHP());
-            setBattle(gson.fromJson(comand[1],Battle.class));
-            System.out.println("Прислали батл"+comand[1]);
 
-            if (getBattle()!=null)
-                System.out.println(battle.getPlayer1().getHP()+"++++++++"+getBattle().getPlayer1().getName().equals(Client.character.getName()));
-                System.out.println(battle.getPlayer2().getHP()+"++++++++"+getBattle().getPlayer2().getName().equals(Client.character.getName()));
+   private void commandLoginCode(HariotikaMessage message){
+       load =true;
+       switch (message.getCode()){
+           case Success:
+               character = message.getCharacter();
+               break;
+           case Reject:
+               Gdx.app.error("Wrong login or password ", pass);
+               break;
+           case New:
+               this.setLogin(message.getCharacter().getName());
+               this.setPass("null");
+               loginWrite();
+               break;
+           default:
+               Gdx.app.error("Invalid command","Server sended "+message);
+               break;
+       }
+
+   }
+
+    private void commandBattleCode(HariotikaMessage message){
+
+        switch (message.getCode()){
+            case RegistrationToBattle:
+                break;
+            case CancelRegistrationToBattle:
+                break;
+            case UpdateBattle:
+                setBattle(message.getBattle());
                 if (getBattle().getPlayer1().getName().equals(Client.character.getName())){
                     character = getBattle().getPlayer1();
-
-
                 }
                 else if (getBattle().getPlayer2().getName().equals(Client.character.getName())){
                     character = getBattle().getPlayer2();
                 }
-
+                break;
+            case Success:
+                Gdx.app.log("Command Battle Code ",message.getCode().toString());
+                break;
+            case Reject:
+                Gdx.app.log("Command Battle Code ",message.getCode().toString());
+                break;
+            case UpdateTimer:
+                battle.setTimer(message.getTimer());
+                break;
+            default:
+                System.out.println("Invalid Command Battle Code "+message.getCode());
+                break;
         }
 
-
     }
+
+
 
 
     public  Character getCharacter() {
@@ -224,7 +238,7 @@ public class Client  {
     }
 
     public static void setBattle(Battle battle) {
-        System.out.println("Засетл батл");
+        System.out.println("Обновился батл");
         Client.battle = battle;
     }
 
@@ -235,4 +249,6 @@ public class Client  {
     public void setUri(URI uri) {
         this.uri = uri;
     }
+
+
 }

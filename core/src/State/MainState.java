@@ -38,12 +38,18 @@ import com.hariotika.Hariotika;
 import javax.websocket.DeploymentException;
 
 import API.Client;
+import API.Command;
+import API.HariotikaMessage;
 import API.Reconect;
+import API.WsCode;
 import Domain.AvatarWindow;
 import Domain.FriendslistWindow;
 import Domain.ReconectWindows;
+import Domain.SearchBattleWindow;
 import Domain.SpellWindow;
 
+import static API.Client.character;
+import static API.Client.getBattle;
 import static API.Client.load;
 import static API.Reconect.client;
 import static com.badlogic.gdx.graphics.Color.BLUE;
@@ -72,6 +78,8 @@ public class MainState extends State {
     static ProgressBar health;
     static ProgressBar mana;
     static ProgressBar sp;
+    HariotikaMessage hariotikaMessage;
+    private boolean registrationInBattl =false;
 
     //  private ImageButton button = new ImageButton();
 
@@ -176,6 +184,11 @@ public class MainState extends State {
         avatarWindow.setPosition(200,200);
         stage.addActor(avatarWindow);
 
+        SearchBattleWindow searchBattleWindow = new SearchBattleWindow(skin2,backButton);
+        searchBattleWindow.setPosition(400,400);
+        searchBattleWindow.setSize(400,300);
+        stage.addActor(searchBattleWindow);
+
 
 
         avaButton.addListener( new ClickListener() {
@@ -191,9 +204,12 @@ public class MainState extends State {
         battleButton.addListener( new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                client.sendMessage("RegToBattle");
-                sm.set(new BattleState(sm,skin2,backButton) );
-                Gdx.app.log("HariotikaMain", "RegToBattle");
+                 hariotikaMessage = new HariotikaMessage(Command.Battle, WsCode.RegistrationToBattle);
+                 client.sendMessage(gson.toJson(hariotikaMessage));
+           //     sm.set(new BattleState(sm, skin2, backButton));
+               // client.sendMessage("RegToBattle");
+                 registrationInBattl =true;
+//                Gdx.app.log("Hariotika Main", "Registration To Battle");
                 //  client.sendMessage("Battle#"+client.getLogin());
             };
         });
@@ -201,8 +217,11 @@ public class MainState extends State {
         backButton.addListener( new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                sm.set(new MainState(sm));
-                client.sendMessage("CancelRegBattle");
+           //     sm.set(new MainState(sm));
+                hariotikaMessage = new HariotikaMessage(Command.Battle, WsCode.CancelRegistrationToBattle);
+                client.sendMessage(gson.toJson(hariotikaMessage));
+                 registrationInBattl =false;
+              //  client.sendMessage("CancelRegBattle");
             };
         });
 
@@ -223,12 +242,17 @@ public class MainState extends State {
 
     @Override
     public void update(float dt) {
+        if (registrationInBattl) {
+            if(getBattle() != null) {
+                sm.set(new BattleState(sm, skin2, backButton));
+            }
+        }
+
         handleInput();
         if (load) {
             health.setValue(client.getCharacter().getHP());
             playerName.setText(client.getCharacter().getName());
         }
-
     }
 
     @Override

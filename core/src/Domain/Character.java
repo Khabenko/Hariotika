@@ -160,4 +160,12 @@ public class Character {
     public void setAvatar(byte[] avatar) {
         this.avatar = avatar;
     }
+
+    public boolean isInBattle() {
+        return inBattle;
+    }
+
+    public void setInBattle(boolean inBattle) {
+        this.inBattle = inBattle;
+    }
 }

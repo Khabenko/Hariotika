@@ -8,7 +8,7 @@ public class Battle {
 
     long number;
     boolean finished = false;
-    long timer =30;
+    long timer = 30;
     String log =null;
     private Character player1;
     private Character player2;
@@ -30,6 +30,9 @@ public class Battle {
     }
 
 
+    public void setTimer(long timer) {
+        this.timer = timer;
+    }
 
     public boolean isPlayer1IsReady() {
         return player1IsReady;

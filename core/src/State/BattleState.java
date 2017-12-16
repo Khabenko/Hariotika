@@ -1,10 +1,14 @@
 package State;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Net;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.net.HttpRequestBuilder;
+import com.badlogic.gdx.net.HttpStatus;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ButtonGroup;
@@ -17,16 +21,31 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.ui.TextTooltip;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.google.gson.Gson;
 
 import java.awt.Checkbox;
 import java.awt.Window;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.Writer;
+
+import javax.imageio.ImageIO;
+import javax.imageio.ImageWriter;
 
 import API.Client;
+import API.Command;
+import API.HariotikaMessage;
+import API.WsCode;
 import Domain.Battle;
 import Domain.Character;
 import Domain.LogWindow;
 
 import static API.Client.battle;
+import static API.Client.character;
 import static API.Client.getBattle;
 import static API.Client.setBattle;
 import static API.Reconect.client;
@@ -41,7 +60,8 @@ import static com.hariotika.Hariotika.WIDTH;
 
 public class BattleState extends State {
 
-
+    HariotikaMessage hariotikaMessage;
+    Gson gson;
     static Character enemy;
     Label timer;
     Skin skin;
@@ -59,18 +79,23 @@ public class BattleState extends State {
     TextButton backButton;
     LogWindow logWindow;
 
+    private Texture playerAvatar;
+    private Texture enemyAvatar;
+
 
     public BattleState(StateManager sm, Skin skin, TextButton backButton) {
         super(sm);
+        skinChebox = new Skin(Gdx.files.internal("data/visui1/uiskin.json"));
+        gson = new Gson();
         this.backButton = backButton;
         this.skin = skin;
         stage = new Stage();
         Gdx.input.setInputProcessor(stage);
 
-        timer = new Label("30",skin);
-        timer.setPosition(camera.viewportWidth/2,camera.viewportHeight*0.70f);
-
+        timer = new Label("30",  skinChebox);
+        timer.setPosition(camera.viewportWidth/2,camera.viewportHeight*0.30f);
         stage.addActor(timer);
+
 
 
         enemy= new Character();
@@ -131,7 +156,7 @@ public class BattleState extends State {
 
         Gdx.app.log("HariotikaBattleState", "Loaded ChekBox");
 
-        logWindow = new LogWindow(skin);
+        logWindow = new LogWindow(skinChebox);
         logWindow .setPosition(10,10);
         logWindow.setSize(camera.viewportWidth,300);
         stage.addActor(logWindow );
@@ -141,19 +166,35 @@ public class BattleState extends State {
 
 
         battleButton = new TextButton("Battle",skin);
-        battleButton.setPosition(camera.viewportWidth/2,camera.viewportHeight/2);
         battleButton.setSize(250,150);
+        battleButton.setPosition(camera.viewportWidth/6-battleButton.getWidth(),camera.viewportHeight/7);
+
         stage.addActor(battleButton);
 
+        HttpRequestBuilder requestBuilder = new HttpRequestBuilder();
+        Net.HttpRequest httpRequest = requestBuilder.newRequest().method(Net.HttpMethods.GET).url("http://localhost:8081?name="+character.getName()).build();
+        Gdx.net.sendHttpRequest(httpRequest, listener);
+
+        httpRequest = requestBuilder.newRequest().method(Net.HttpMethods.GET).url("http://localhost:8081?name="+enemyName).build();
+        Gdx.net.sendHttpRequest(httpRequest, enemyListener);
 
 
-         stage.addActor(backButton);
+
+
+        // stage.addActor(backButton);
        // backButton.setVisible(false);
 
         battleButton.addListener( new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-            client.sendMessage("Battle#"+ getBattle().getNumber()+"#"+client.getCharacter().getName()+"#"+checkboxGroupHit.getChecked().getName()+"#"+checkboxGroupDef.getChecked().getName());
+                
+            hariotikaMessage = new HariotikaMessage(Command.Battle, WsCode.UpdateBattle,battle);
+            hariotikaMessage.setCharName(character.getName());
+            hariotikaMessage.setHit(checkboxGroupHit.getChecked().getName());
+            hariotikaMessage.setDef(checkboxGroupDef.getChecked().getName());
+            client.sendMessage(gson.toJson(hariotikaMessage));
+
+        //   client.sendMessage("Battle#"+ getBattle().getNumber()+"#"+client.getCharacter().getName()+"#"+checkboxGroupHit.getChecked().getName()+"#"+checkboxGroupDef.getChecked().getName());
 
             };
         });
@@ -169,6 +210,16 @@ public class BattleState extends State {
 
     @Override
     public void update(float dt) {
+        if(Gdx.files.local("avatar/"+character.getName()+".png").exists() && Gdx.files.local("avatar/"+enemy.getName()+".png").exists()){
+            try {
+           playerAvatar = new Texture("avatar/"+character.getName()+".png");
+           enemyAvatar = new Texture("avatar/"+enemy.getName()+".png");
+               }
+            catch (Exception e){
+                Gdx.app.log("Battle","Can't load avatar");
+            }
+        }
+
         if (battle!=null) timer.setText(String.valueOf(battle.getTimer()));
         initEnemy();
         getHealth().setValue(client.getCharacter().getHP());
@@ -188,7 +239,7 @@ public class BattleState extends State {
 
     @Override
     public void render(SpriteBatch sb) {
-        if (getBattle()== null) {
+        if (getBattle()== null || playerAvatar == null || enemyAvatar == null) {
 
             Gdx.gl.glClearColor(1, 1, 1, 1);
             Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -203,6 +254,9 @@ public class BattleState extends State {
             Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
             sb.begin();
             sb.draw(background, 0, 0, camera.viewportWidth, camera.viewportHeight);
+            sb.draw(playerAvatar, camera.viewportWidth/2-400,580, 250, 220);
+            sb.draw(enemyAvatar, camera.viewportWidth/2,580, 250, 220);
+
             sb.end();
             stage.draw();
 
@@ -278,4 +332,100 @@ public class BattleState extends State {
     public void setEnemy(Character enemy) {
         this.enemy = enemy;
     }
+
+
+
+
+    final Net.HttpResponseListener listener = new Net.HttpResponseListener() {
+        public void handleHttpResponse (Net.HttpResponse httpResponse) {
+            HttpStatus status = httpResponse.getStatus();
+            if (status.getStatusCode() >= 200 && status.getStatusCode() < 300) {
+                // it was successful
+                //    System.out.println(httpResponse.getResult());
+              //  client.getCharacter().setAvatar(httpResponse.getResult());
+                try {
+                    InputStream in = new ByteArrayInputStream(httpResponse.getResult());
+                    BufferedImage bImageFromConvert = ImageIO.read(in);
+                    System.out.println("Пришла картинка");
+                    FileHandle handle = Gdx.files.local("avatar/"+character.getName()+".png");
+                    System.out.println(handle.path());
+                    OutputStream outputStream = handle.write(false);
+                    ImageIO.write(bImageFromConvert, "png", outputStream);
+
+               //     File outputfile = new File("avatar/"+character.getName()+".png");
+               //     ImageIO.write(bImageFromConvert, "png", outputfile);
+                    outputStream.close();
+                    System.out.println(playerAvatar);
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            } else {
+                // do something else
+                System.out.println(status.getStatusCode());
+            }
+
+        }
+
+
+        @Override
+        public void failed(Throwable throwable) {
+
+        }
+
+        @Override
+        public void cancelled() {
+
+        }
+    };
+
+
+    final Net.HttpResponseListener enemyListener = new Net.HttpResponseListener() {
+        public void handleHttpResponse (Net.HttpResponse httpResponse) {
+            HttpStatus status = httpResponse.getStatus();
+            if (status.getStatusCode() >= 200 && status.getStatusCode() < 300) {
+                // it was successful
+                //    System.out.println(httpResponse.getResult());
+                //  client.getCharacter().setAvatar(httpResponse.getResult());
+                try {
+                    InputStream in = new ByteArrayInputStream(httpResponse.getResult());
+                    BufferedImage bImageFromConvert = ImageIO.read(in);
+                    System.out.println("Пришла картинка");
+                    FileHandle handle = Gdx.files.local("avatar/"+enemy.getName()+".png");
+                    System.out.println(handle.path());
+                    OutputStream outputStream = handle.write(false);
+                    ImageIO.write(bImageFromConvert, "png", outputStream);
+
+                    //     File outputfile = new File("avatar/"+character.getName()+".png");
+                    //     ImageIO.write(bImageFromConvert, "png", outputfile);
+                    outputStream.close();
+                    System.out.println(playerAvatar);
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            } else {
+                // do something else
+                System.out.println(status.getStatusCode());
+            }
+
+        }
+
+
+        @Override
+        public void failed(Throwable throwable) {
+
+        }
+
+        @Override
+        public void cancelled() {
+
+        }
+    };
+
+
+
+
 }
