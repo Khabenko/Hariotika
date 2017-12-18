@@ -8,7 +8,7 @@ public class Battle {
 
     long number;
     boolean finished = false;
-    long timer = 30;
+    long timer;
     String log =null;
     private Character player1;
     private Character player2;
@@ -24,6 +24,7 @@ public class Battle {
 
 
     public Battle(long number,Character player1, Character player2) {
+        this.timer = 30;
         this.number = number;
         this.player1 = player1;
         this.player2 = player2;

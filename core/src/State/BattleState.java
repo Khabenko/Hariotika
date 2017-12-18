@@ -18,29 +18,25 @@ import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.TextField;
-import com.badlogic.gdx.scenes.scene2d.ui.TextTooltip;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.google.gson.Gson;
 
-import java.awt.Checkbox;
-import java.awt.Window;
+
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.Writer;
+
 
 import javax.imageio.ImageIO;
-import javax.imageio.ImageWriter;
+
 
 import API.Client;
 import API.Command;
 import API.HariotikaMessage;
 import API.WsCode;
-import Domain.Battle;
 import Domain.Character;
 import Domain.LogWindow;
 
@@ -51,8 +47,7 @@ import static API.Client.setBattle;
 import static API.Reconect.client;
 import static State.MainState.getHealth;
 import static com.badlogic.gdx.graphics.Color.BLUE;
-import static com.hariotika.Hariotika.HEIGHT;
-import static com.hariotika.Hariotika.WIDTH;
+
 
 /**
  * Created by Maka on 06.11.2017.
@@ -61,6 +56,7 @@ import static com.hariotika.Hariotika.WIDTH;
 public class BattleState extends State {
 
     HariotikaMessage hariotikaMessage;
+    String uri;
     Gson gson;
     static Character enemy;
     Label timer;
@@ -98,7 +94,7 @@ public class BattleState extends State {
 
 
 
-        enemy= new Character();
+        enemy = new Character();
         this.table = MainState.status;
         createEnemyBar();
         initEnemy();
@@ -170,19 +166,26 @@ public class BattleState extends State {
         battleButton.setPosition(camera.viewportWidth/6-battleButton.getWidth(),camera.viewportHeight/7);
 
         stage.addActor(battleButton);
+       // uri = "http://10.0.2.2:8081?name=";
+         uri = "http://localhost:8081?name=";
+       // uri = "http://64.250.115.155?name=";
 
+        System.out.println(character.getName());
         HttpRequestBuilder requestBuilder = new HttpRequestBuilder();
-        Net.HttpRequest httpRequest = requestBuilder.newRequest().method(Net.HttpMethods.GET).url("http://localhost:8081?name="+character.getName()).build();
+        Net.HttpRequest httpRequest = requestBuilder.newRequest().method(Net.HttpMethods.GET).url(uri+character.getName()).build();
         Gdx.net.sendHttpRequest(httpRequest, listener);
 
-        httpRequest = requestBuilder.newRequest().method(Net.HttpMethods.GET).url("http://localhost:8081?name="+enemyName).build();
+        System.out.println(enemy.getName());
+        httpRequest = requestBuilder.newRequest().method(Net.HttpMethods.GET).url(uri+enemy.getName()).build();
         Gdx.net.sendHttpRequest(httpRequest, enemyListener);
-
 
 
 
         // stage.addActor(backButton);
        // backButton.setVisible(false);
+
+
+
 
         battleButton.addListener( new ClickListener() {
             @Override
@@ -194,11 +197,9 @@ public class BattleState extends State {
             hariotikaMessage.setDef(checkboxGroupDef.getChecked().getName());
             client.sendMessage(gson.toJson(hariotikaMessage));
 
-        //   client.sendMessage("Battle#"+ getBattle().getNumber()+"#"+client.getCharacter().getName()+"#"+checkboxGroupHit.getChecked().getName()+"#"+checkboxGroupDef.getChecked().getName());
 
             };
         });
-
 
 
     }
@@ -210,6 +211,9 @@ public class BattleState extends State {
 
     @Override
     public void update(float dt) {
+
+
+        if (playerAvatar == null || enemyAvatar==null)
         if(Gdx.files.local("avatar/"+character.getName()+".png").exists() && Gdx.files.local("avatar/"+enemy.getName()+".png").exists()){
             try {
            playerAvatar = new Texture("avatar/"+character.getName()+".png");
@@ -220,7 +224,8 @@ public class BattleState extends State {
             }
         }
 
-        if (battle!=null) timer.setText(String.valueOf(battle.getTimer()));
+        if (battle!=null)
+        timer.setText(String.valueOf(battle.getTimer()));
         initEnemy();
         getHealth().setValue(client.getCharacter().getHP());
         if (enemy.getName()!=null) {
@@ -336,52 +341,56 @@ public class BattleState extends State {
 
 
 
-    final Net.HttpResponseListener listener = new Net.HttpResponseListener() {
-        public void handleHttpResponse (Net.HttpResponse httpResponse) {
-            HttpStatus status = httpResponse.getStatus();
-            if (status.getStatusCode() >= 200 && status.getStatusCode() < 300) {
-                // it was successful
-                //    System.out.println(httpResponse.getResult());
-              //  client.getCharacter().setAvatar(httpResponse.getResult());
-                try {
-                    InputStream in = new ByteArrayInputStream(httpResponse.getResult());
-                    BufferedImage bImageFromConvert = ImageIO.read(in);
-                    System.out.println("Пришла картинка");
-                    FileHandle handle = Gdx.files.local("avatar/"+character.getName()+".png");
-                    System.out.println(handle.path());
-                    OutputStream outputStream = handle.write(false);
-                    ImageIO.write(bImageFromConvert, "png", outputStream);
+        Net.HttpResponseListener listener = new Net.HttpResponseListener() {
+            public void handleHttpResponse (Net.HttpResponse httpResponse) {
+                HttpStatus status = httpResponse.getStatus();
+                if (status.getStatusCode() >= 200 && status.getStatusCode() < 300) {
+                    // it was successful
+                    //    System.out.println(httpResponse.getResult());
+                    //  client.getCharacter().setAvatar(httpResponse.getResult());
+                    try {
 
-               //     File outputfile = new File("avatar/"+character.getName()+".png");
-               //     ImageIO.write(bImageFromConvert, "png", outputfile);
-                    outputStream.close();
-                    System.out.println(playerAvatar);
+                        String locRoot = Gdx.files.getLocalStoragePath();
+                        Gdx.app.log("Hariotika API","Get Player avatar "+locRoot);
+                        InputStream in = new ByteArrayInputStream(httpResponse.getResult());
 
-                } catch (IOException e) {
-                    e.printStackTrace();
+                       // BufferedImage  bImageFromConvert = ImageIO.read(in);
+                        FileHandle handle = Gdx.files.local("/avatar/"+character.getName()+".png");
+                        OutputStream outputStream = handle.write(false);
+                        ImageIO.write(ImageIO.read(in), "png", outputStream);
+
+
+
+                        Gdx.app.log("Hariotika API","Save Player avatart");
+
+                    } catch (Exception e) {
+                        Gdx.app.error("Hariotika API ", e.toString());
+                        e.printStackTrace();
+                    }
+
+                } else {
+                    // do something else
+                    System.out.println("Код "+status.getStatusCode());
+                    Gdx.app.log("Hariotika API","Bad coe "+status.getStatusCode());
                 }
 
-            } else {
-                // do something else
-                System.out.println(status.getStatusCode());
             }
 
-        }
 
+            @Override
+            public void failed(Throwable throwable) {
+                Gdx.app.error("Hariotika API ", throwable.toString());
+                System.out.println(throwable);
+            }
 
-        @Override
-        public void failed(Throwable throwable) {
-
-        }
-
-        @Override
-        public void cancelled() {
-
-        }
+            @Override
+            public void cancelled() {
+                System.out.println("Cancel");
+            }
     };
 
 
-    final Net.HttpResponseListener enemyListener = new Net.HttpResponseListener() {
+        Net.HttpResponseListener enemyListener = new Net.HttpResponseListener() {
         public void handleHttpResponse (Net.HttpResponse httpResponse) {
             HttpStatus status = httpResponse.getStatus();
             if (status.getStatusCode() >= 200 && status.getStatusCode() < 300) {
@@ -389,26 +398,28 @@ public class BattleState extends State {
                 //    System.out.println(httpResponse.getResult());
                 //  client.getCharacter().setAvatar(httpResponse.getResult());
                 try {
+                    String locRoot = Gdx.files.getLocalStoragePath();
+                    Gdx.app.log("Hariotika API","Get Enemy Avatar ");
                     InputStream in = new ByteArrayInputStream(httpResponse.getResult());
                     BufferedImage bImageFromConvert = ImageIO.read(in);
-                    System.out.println("Пришла картинка");
-                    FileHandle handle = Gdx.files.local("avatar/"+enemy.getName()+".png");
-                    System.out.println(handle.path());
-                    OutputStream outputStream = handle.write(false);
-                    ImageIO.write(bImageFromConvert, "png", outputStream);
 
-                    //     File outputfile = new File("avatar/"+character.getName()+".png");
-                    //     ImageIO.write(bImageFromConvert, "png", outputfile);
+                    FileHandle handle = Gdx.files.local("/avatar/"+enemy.getName()+".png");
+                    Gdx.app.log("Hariotika API","Path "+ handle.path());
+                   OutputStream outputStream = handle.write(false);
+                   ImageIO.write(bImageFromConvert, "png", outputStream);
+
                     outputStream.close();
-                    System.out.println(playerAvatar);
-
+                    Gdx.app.log("Hariotika API","Save Enemy Avatar ");
                 } catch (IOException e) {
+
+                    Gdx.app.error("Hariotika API ", e.toString());
                     e.printStackTrace();
                 }
 
             } else {
                 // do something else
-                System.out.println(status.getStatusCode());
+                System.out.println("Код "+status.getStatusCode());
+                Gdx.app.log("Hariotika API","Bad code "+status.getStatusCode());
             }
 
         }
@@ -416,12 +427,13 @@ public class BattleState extends State {
 
         @Override
         public void failed(Throwable throwable) {
-
+            Gdx.app.log("Hariotika API","Bad code "+throwable.toString());
+            System.out.println(throwable);
         }
 
         @Override
         public void cancelled() {
-
+            System.out.println("Cancel");
         }
     };
 
