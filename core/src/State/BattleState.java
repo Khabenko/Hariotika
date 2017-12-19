@@ -75,6 +75,9 @@ public class BattleState extends State {
     TextButton backButton;
     LogWindow logWindow;
 
+    String avatarUri = "http://localhost:8081/getAvatar/?name=";
+
+
     private Texture playerAvatar;
     private Texture enemyAvatar;
 
@@ -165,19 +168,18 @@ public class BattleState extends State {
         battleButton.setSize(250,150);
         battleButton.setPosition(camera.viewportWidth/6-battleButton.getWidth(),camera.viewportHeight/7);
 
+
         stage.addActor(battleButton);
-       // uri = "http://10.0.2.2:8081?name=";
-         uri = "http://localhost:8081?name=";
-       // uri = "http://64.250.115.155?name=";
+         avatarUri = "http://10.0.2.2:8081?name=";
+        // avatarUri = "http://localhost:8081/getAvatar/?name=";
+        //  avatarUri = "http://64.250.115.155?name=";
 
         System.out.println(character.getName());
         HttpRequestBuilder requestBuilder = new HttpRequestBuilder();
-        Net.HttpRequest httpRequest = requestBuilder.newRequest().method(Net.HttpMethods.GET).url(uri+character.getName()).build();
-        Gdx.net.sendHttpRequest(httpRequest, listener);
-
-        System.out.println(enemy.getName());
-        httpRequest = requestBuilder.newRequest().method(Net.HttpMethods.GET).url(uri+enemy.getName()).build();
+        Net.HttpRequest httpRequest = requestBuilder.newRequest().method(Net.HttpMethods.GET).url(avatarUri +enemy.getName()).build();
         Gdx.net.sendHttpRequest(httpRequest, enemyListener);
+
+
 
 
 
@@ -213,16 +215,40 @@ public class BattleState extends State {
     public void update(float dt) {
 
 
-        if (playerAvatar == null || enemyAvatar==null)
-        if(Gdx.files.local("avatar/"+character.getName()+".png").exists() && Gdx.files.local("avatar/"+enemy.getName()+".png").exists()){
+    //    Gdx.app.log("Hariotika",character.getName()+" "+Gdx.files.local("avatar/"+character.getName()+".png").exists());
+    //    Gdx.app.log("Hariotika",enemy.getName()+" "+Gdx.files.local("avatar/"+enemy.getName()+".png").exists());
+
+
+
+     //   Gdx.app.log("Hariotika", String.valueOf(character.getAvatar()== null));
+     //   Gdx.app.log("Hariotika", String.valueOf(enemyAvatar==null));
+
+
+        if (enemyAvatar==null)
+        if(Gdx.files.local("avatar/"+enemy.getName()+".png").exists() && enemyAvatar==null){
             try {
-           playerAvatar = new Texture("avatar/"+character.getName()+".png");
-           enemyAvatar = new Texture("avatar/"+enemy.getName()+".png");
+            enemyAvatar = new Texture("avatar/"+enemy.getName()+".png");
                }
             catch (Exception e){
                 Gdx.app.log("Battle","Can't load avatar");
             }
         }
+
+
+
+        if(Gdx.files.local("avatar/"+character.getName()+".png").exists() && character.getAvatar() == null){
+            try {
+                character.setAvatar( new Texture("avatar/"+character.getName()+".png"));
+            }
+            catch (Exception e){
+                Gdx.app.log("Hariotika mainState","Can't load avatar "+character.getName());
+            }
+        }
+
+
+
+
+
 
         if (battle!=null)
         timer.setText(String.valueOf(battle.getTimer()));
@@ -244,7 +270,7 @@ public class BattleState extends State {
 
     @Override
     public void render(SpriteBatch sb) {
-        if (getBattle()== null || playerAvatar == null || enemyAvatar == null) {
+        if (battle == null || character.getAvatar()==null || enemyAvatar == null) {
 
             Gdx.gl.glClearColor(1, 1, 1, 1);
             Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -259,7 +285,7 @@ public class BattleState extends State {
             Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
             sb.begin();
             sb.draw(background, 0, 0, camera.viewportWidth, camera.viewportHeight);
-            sb.draw(playerAvatar, camera.viewportWidth/2-400,580, 250, 220);
+            sb.draw(character.getAvatar(), camera.viewportWidth/2-400,580, 250, 220);
             sb.draw(enemyAvatar, camera.viewportWidth/2,580, 250, 220);
 
             sb.end();
@@ -353,12 +379,11 @@ public class BattleState extends State {
                         String locRoot = Gdx.files.getLocalStoragePath();
                         Gdx.app.log("Hariotika API","Get Player avatar "+locRoot);
                         InputStream in = new ByteArrayInputStream(httpResponse.getResult());
+                        BufferedImage  bImageFromConvert = ImageIO.read(in);
 
-                       // BufferedImage  bImageFromConvert = ImageIO.read(in);
                         FileHandle handle = Gdx.files.local("/avatar/"+character.getName()+".png");
                         OutputStream outputStream = handle.write(false);
-                        ImageIO.write(ImageIO.read(in), "png", outputStream);
-
+                        ImageIO.write(bImageFromConvert, "png", outputStream);
 
 
                         Gdx.app.log("Hariotika API","Save Player avatart");
@@ -403,7 +428,7 @@ public class BattleState extends State {
                     InputStream in = new ByteArrayInputStream(httpResponse.getResult());
                     BufferedImage bImageFromConvert = ImageIO.read(in);
 
-                    FileHandle handle = Gdx.files.local("/avatar/"+enemy.getName()+".png");
+                   FileHandle handle = Gdx.files.local("/avatar/"+enemy.getName()+".png");
                     Gdx.app.log("Hariotika API","Path "+ handle.path());
                    OutputStream outputStream = handle.write(false);
                    ImageIO.write(bImageFromConvert, "png", outputStream);

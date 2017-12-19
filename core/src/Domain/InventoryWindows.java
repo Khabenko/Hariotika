@@ -57,10 +57,10 @@ public class InventoryWindows  extends Window {
                     if (status.getStatusCode() >= 200 && status.getStatusCode() < 300) {
                         // it was successful
                     //    System.out.println(httpResponse.getResult());
-                        client.getCharacter().setAvatar(httpResponse.getResult());
+                        byte [] avatar = httpResponse.getResult();
                         try {
 
-                            InputStream in = new ByteArrayInputStream(client.getCharacter().getAvatar());
+                            InputStream in = new ByteArrayInputStream(avatar);
                             BufferedImage bImageFromConvert = ImageIO.read(in);
                             File outputfile = new File("avatar/ava.png");
                             ImageIO.write(bImageFromConvert, "png", outputfile);

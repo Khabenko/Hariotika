@@ -6,6 +6,7 @@ package State;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Net;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -15,6 +16,8 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.net.HttpRequestBuilder;
+import com.badlogic.gdx.net.HttpStatus;
 import com.badlogic.gdx.net.Socket;
 import com.badlogic.gdx.net.SocketHints;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -34,7 +37,13 @@ import com.google.gson.Gson;
 import com.hariotika.Hariotika;
 
 
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 
+import javax.imageio.ImageIO;
 import javax.websocket.DeploymentException;
 
 import API.Client;
@@ -80,6 +89,11 @@ public class MainState extends State {
     static ProgressBar sp;
     HariotikaMessage hariotikaMessage;
     private boolean registrationInBattl =false;
+
+    //String avatarUri = "http://localhost:8081/getAvatar/?name=";
+     String avatarUri = "http://10.0.2.2:8081/getAvatar/?name=";
+    //String avatarUri = "http://localhost:8081/getAvatar/?name=";
+
 
     //  private ImageButton button = new ImageButton();
 
@@ -191,6 +205,15 @@ public class MainState extends State {
 
 
 
+
+            System.out.println(character.getName());
+            HttpRequestBuilder requestBuilder = new HttpRequestBuilder();
+            Net.HttpRequest httpRequest = requestBuilder.newRequest().method(Net.HttpMethods.GET).url(avatarUri+character.getName()).build();
+            Gdx.net.sendHttpRequest(httpRequest, listener);
+
+
+
+
         avaButton.addListener( new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -242,7 +265,20 @@ public class MainState extends State {
 
     @Override
     public void update(float dt) {
-        if (registrationInBattl) {
+      //  if (character.getAvatar() == null)
+     //   Gdx.app.log("Hariotika", String.valueOf(character.getAvatar() == null));
+
+
+            if(Gdx.files.local("avatar/"+character.getName()+".png").exists() && character.getAvatar() == null){
+                try {
+                    character.setAvatar( new Texture("avatar/"+character.getName()+".png"));
+                }
+                catch (Exception e){
+                    Gdx.app.log("Hariotika mainState","Can't load avatar "+character.getName());
+                }
+            }
+
+        if (registrationInBattl  && character.getAvatar() != null ) {
             if(getBattle() != null) {
                 sm.set(new BattleState(sm, skin2, backButton));
             }
@@ -261,6 +297,8 @@ public class MainState extends State {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         sb.begin();
         sb.draw(background, 0, 0, camera.viewportWidth, camera.viewportHeight);
+        if (character.getAvatar()!=null)
+        sb.draw(character.getAvatar(), 501, 500, 500, 500);
         sb.end();
         stage.draw();
 
@@ -272,6 +310,64 @@ public class MainState extends State {
         background.dispose();
         stage.dispose();
     }
+
+
+
+
+    Net.HttpResponseListener listener = new Net.HttpResponseListener() {
+        public void handleHttpResponse (Net.HttpResponse httpResponse) {
+            HttpStatus status = httpResponse.getStatus();
+            if (status.getStatusCode() >= 200 && status.getStatusCode() < 300) {
+                // it was successful
+                //    System.out.println(httpResponse.getResult());
+                //  client.getCharacter().setAvatar(httpResponse.getResult());
+                try {
+
+                                        
+
+                    String locRoot = Gdx.files.getLocalStoragePath();
+                    Gdx.app.log("Hariotika API","Get Player avatar "+locRoot);
+                    InputStream in = new ByteArrayInputStream(httpResponse.getResult());
+
+                    BufferedImage  bImageFromConvert = ImageIO.read(in);
+
+                    FileHandle handle = Gdx.files.local("/avatar/"+character.getName()+".png");
+                    OutputStream outputStream = handle.write(false);
+                    ImageIO.write(bImageFromConvert, "png", outputStream);
+                    Gdx.app.log("Hariotika API","Save Player avatart");
+                    outputStream.close();
+
+                } catch (Exception e) {
+                    Gdx.app.error("Hariotika API ", e.toString());
+                    e.printStackTrace();
+                }
+
+            } else {
+                // do something else
+                System.out.println("Код "+status.getStatusCode());
+                Gdx.app.log("Hariotika API","Bad coe "+status.getStatusCode());
+            }
+
+        }
+
+
+        @Override
+        public void failed(Throwable throwable) {
+            Gdx.app.error("Hariotika API ", throwable.toString());
+            System.out.println(throwable);
+        }
+
+        @Override
+        public void cancelled() {
+            System.out.println("Cancel");
+        }
+    };
+
+
+
+
+
+
 
     public static ProgressBar getHealth() {
         return health;

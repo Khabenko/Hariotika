@@ -1,6 +1,9 @@
 package Domain;
 
 
+
+import com.badlogic.gdx.graphics.Texture;
+
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -15,7 +18,7 @@ public class Character {
     private UUID id;
     private String name;
     private boolean inBattle;
-    private byte[] avatar;
+    private Texture avatar;
 
     private int strength;
     private int agility;
@@ -38,6 +41,7 @@ public class Character {
     }
 
     public Character() {
+
     }
 
 
@@ -153,11 +157,11 @@ public class Character {
         this.experience = experience;
     }
 
-    public byte[] getAvatar() {
+    public Texture getAvatar() {
         return avatar;
     }
 
-    public void setAvatar(byte[] avatar) {
+    public void setAvatar(Texture avatar) {
         this.avatar = avatar;
     }
 
@@ -168,4 +172,7 @@ public class Character {
     public void setInBattle(boolean inBattle) {
         this.inBattle = inBattle;
     }
+
+
+
 }

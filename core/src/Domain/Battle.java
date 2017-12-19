@@ -9,7 +9,7 @@ public class Battle {
     long number;
     boolean finished = false;
     long timer;
-    String log =null;
+    String log = null;
     private Character player1;
     private Character player2;
 

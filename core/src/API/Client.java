@@ -1,11 +1,17 @@
 package API;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Net;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.net.HttpRequestBuilder;
+import com.badlogic.gdx.net.HttpStatus;
 import com.google.gson.Gson;
 
 
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -14,6 +20,7 @@ import java.io.OutputStream;
 import java.net.URI;
 import java.util.Properties;
 
+import javax.imageio.ImageIO;
 import javax.websocket.*;
 
 import Domain.Battle;
@@ -38,19 +45,21 @@ public class Client  {
 
 
     private MessageHandler messageHandler;
-                URI uri = URI.create("ws://localhost:8081/");
+              //  URI uri = URI.create("ws://localhost:8081/");
            //  URI uri = URI.create("ws://64.250.115.155");
-         //  URI uri = URI.create("ws://10.0.2.2:8081/");
+           URI uri = URI.create("ws://10.0.2.2:8081/");
+
+
+
 
     protected Client() throws IOException, DeploymentException {
         Gdx.app.log("HariotikaLogsInfo", "Conection to  "+uri);
         container = ContainerProvider.getWebSocketContainer();
         container.connectToServer(this, uri);
         loginRead();
-
         hariotikaMessage = new HariotikaMessage(Command.Login,WsCode.Authorithation,login,pass);
         sendMessage(gson.toJson(hariotikaMessage));
-     //   sendMessage("login#" + getLogin() + "#" + getPass());
+
 
     }
 
@@ -71,7 +80,7 @@ public class Client  {
         if (this.messageHandler != null) {
             this.messageHandler.handleMessage(message);
         }
-       //   Gdx.app.log("HariotikaLogsInfo", "Server sended  "+message);
+       //  Gdx.app.log("HariotikaLogsInfo", "Server sended  "+message);
 
         parsingHariotikaMessage(message);
 
@@ -90,7 +99,9 @@ public class Client  {
         this.messageHandler = msgHandler;
     }
     public void sendMessage(String message) {
-        this.userSession.getAsyncRemote().sendText(message);
+        synchronized (userSession) {
+            this.userSession.getAsyncRemote().sendText(message);
+        }
     }
     public static interface MessageHandler {
 
@@ -157,6 +168,7 @@ public class Client  {
             case Login: commandLoginCode(hariotikaMessage);
                 break;
             case Battle: commandBattleCode(hariotikaMessage);
+                Gdx.app.log("HariotikaLogsInfo", "Server sended  "+message);
                 break;
             default:
                  Gdx.app.error("Invalid command","Server sended "+message);
@@ -201,8 +213,7 @@ public class Client  {
                 setBattle(message.getBattle());
                 if (getBattle().getPlayer1().getName().equals(Client.character.getName())){
                     character = getBattle().getPlayer1();
-                }
-                else if (getBattle().getPlayer2().getName().equals(Client.character.getName())){
+                } else if (getBattle().getPlayer2().getName().equals(Client.character.getName())){
                     character = getBattle().getPlayer2();
                 }
                 break;
@@ -221,6 +232,7 @@ public class Client  {
         }
 
     }
+
 
 
 
@@ -249,6 +261,7 @@ public class Client  {
     public void setUri(URI uri) {
         this.uri = uri;
     }
+
 
 
 }
