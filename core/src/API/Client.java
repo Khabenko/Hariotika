@@ -45,9 +45,9 @@ public class Client  {
 
 
     private MessageHandler messageHandler;
-              //  URI uri = URI.create("ws://localhost:8081/");
-           //  URI uri = URI.create("ws://64.250.115.155");
-           URI uri = URI.create("ws://10.0.2.2:8081/");
+             //   URI uri = URI.create("ws://localhost:8081/");
+             URI uri = URI.create("ws://64.250.115.155");
+          //URI uri = URI.create("ws://10.0.2.2:8081/");
 
 
 
@@ -107,6 +107,8 @@ public class Client  {
 
         public void handleMessage(String message);
     }
+
+
     public void loginWrite () {
         //Вычитываемы проперти log i pass
         //Вызываем конкшен для получения карты характеристик
@@ -129,7 +131,6 @@ public class Client  {
         //Вычитываемы проперти log i pass
         //Вызываем конкшен для получения карты характеристик
         //Есди проперти пустые - сохраняем login который вернул нам сервре.
-        Properties prop = new Properties();
         Preferences prefs ;
         try {
                 prefs = Gdx.app.getPreferences("loginprop");
@@ -162,7 +163,6 @@ public class Client  {
    private void parsingHariotikaMessage(String message){
         try {
             hariotikaMessage = gson.fromJson(message,HariotikaMessage.class);
-
 
         switch (hariotikaMessage.getCommand()){
             case Login: commandLoginCode(hariotikaMessage);

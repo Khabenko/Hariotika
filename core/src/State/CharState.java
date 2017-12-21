@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ButtonGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
@@ -13,12 +14,16 @@ import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 
 
 import java.awt.Checkbox;
 import java.awt.CheckboxGroup;
 
+import API.Command;
+import API.HariotikaMessage;
+import API.WsCode;
 import Domain.CharacteristicsWindows;
 import Domain.EquipmentWindows;
 import Domain.InventoryWindows;
@@ -40,11 +45,12 @@ public class CharState extends State {
     ProgressBar health;
     Texture skilBgr;
     EquipmentWindows equipmentWindows;
+    TextButton  backButton;
 
 
     private Texture background;
 
-    public CharState(StateManager sm , Skin skin, TextButton backButton) {
+    public CharState(final StateManager sm , Skin skin) {
         super(sm);
         skilBgr = new Texture("new.png");
         this.table = MainState.status;
@@ -57,7 +63,7 @@ public class CharState extends State {
         characteristics.setBackground(new SpriteDrawable(new Sprite(skilBgr)));
         stage.addActor(characteristics);
         stage.addActor(MainState.status);
-        stage.addActor(backButton);
+
 
         equipmentWindows = new EquipmentWindows(skin);
         equipmentWindows.setBackground(new SpriteDrawable(new Sprite(skilBgr)));
@@ -68,6 +74,23 @@ public class CharState extends State {
         inventoryWindows.setBackground(new SpriteDrawable(new Sprite(skilBgr)));
         inventoryWindows.setPosition(50,200);
         stage.addActor(inventoryWindows);
+
+        backButton = new TextButton("Back",skin);
+        backButton.setPosition(camera.viewportWidth-camera.viewportWidth*0.05f,camera.viewportHeight-camera.viewportWidth*0.05f);
+        backButton.setSize(80,60);
+        stage.addActor(backButton);
+
+
+
+        backButton.addListener( new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                     sm.set(new MainState(sm));
+
+
+            };
+        });
+
 
 
     }

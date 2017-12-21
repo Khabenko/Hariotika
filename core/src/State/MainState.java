@@ -22,6 +22,7 @@ import com.badlogic.gdx.net.Socket;
 import com.badlogic.gdx.net.SocketHints;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
@@ -89,10 +90,12 @@ public class MainState extends State {
     static ProgressBar sp;
     HariotikaMessage hariotikaMessage;
     private boolean registrationInBattl =false;
+    String locRoot = Gdx.files.getLocalStoragePath();
+    private Texture playerAvatar;
 
-    //String avatarUri = "http://localhost:8081/getAvatar/?name=";
-     String avatarUri = "http://10.0.2.2:8081/getAvatar/?name=";
-    //String avatarUri = "http://localhost:8081/getAvatar/?name=";
+    //   String avatarUri = "http://localhost:8081/getAvatar/?name=";
+    //String avatarUri = "http://10.0.2.2:8081/getAvatar/?name=";
+    String avatarUri = "http://64.250.115.155/getAvatar/?name=";
 
 
     //  private ImageButton button = new ImageButton();
@@ -196,20 +199,27 @@ public class MainState extends State {
 */
         AvatarWindow avatarWindow = new AvatarWindow(skin2);
         avatarWindow.setPosition(200,200);
-        stage.addActor(avatarWindow);
+      //  stage.addActor(avatarWindow);
 
-        SearchBattleWindow searchBattleWindow = new SearchBattleWindow(skin2,backButton);
+        final SearchBattleWindow searchBattleWindow = new SearchBattleWindow(skin2,backButton);
         searchBattleWindow.setPosition(400,400);
         searchBattleWindow.setSize(400,300);
-        stage.addActor(searchBattleWindow);
 
 
 
 
-            System.out.println(character.getName());
+
+
+
+        while (character.getName() ==null){
+         //Ждем что приде нам character
+        }
+
+            Gdx.app.log("Hariotika mainState", "Send to server avatar " + character.getName());
             HttpRequestBuilder requestBuilder = new HttpRequestBuilder();
-            Net.HttpRequest httpRequest = requestBuilder.newRequest().method(Net.HttpMethods.GET).url(avatarUri+character.getName()).build();
+            Net.HttpRequest httpRequest = requestBuilder.newRequest().method(Net.HttpMethods.GET).url(avatarUri + character.getName()).build();
             Gdx.net.sendHttpRequest(httpRequest, listener);
+
 
 
 
@@ -218,7 +228,7 @@ public class MainState extends State {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 System.out.println("Open PlayerState");
-                CharState charState = new  CharState(sm,skin2,backButton);
+                CharState charState = new  CharState(sm,skin2);
                 sm.set(charState);
 
             };
@@ -227,13 +237,15 @@ public class MainState extends State {
         battleButton.addListener( new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                 hariotikaMessage = new HariotikaMessage(Command.Battle, WsCode.RegistrationToBattle);
-                 client.sendMessage(gson.toJson(hariotikaMessage));
-           //     sm.set(new BattleState(sm, skin2, backButton));
-               // client.sendMessage("RegToBattle");
-                 registrationInBattl =true;
+                 if (character.getHP()>0) {
+                     hariotikaMessage = new HariotikaMessage(Command.Battle, WsCode.RegistrationToBattle);
+                     client.sendMessage(gson.toJson(hariotikaMessage));
+                     registrationInBattl = true;
+                     stage.addActor(searchBattleWindow);
+
+                 }
 //                Gdx.app.log("Hariotika Main", "Registration To Battle");
-                //  client.sendMessage("Battle#"+client.getLogin());
+
             };
         });
 
@@ -244,6 +256,7 @@ public class MainState extends State {
                 hariotikaMessage = new HariotikaMessage(Command.Battle, WsCode.CancelRegistrationToBattle);
                 client.sendMessage(gson.toJson(hariotikaMessage));
                  registrationInBattl =false;
+                 searchBattleWindow.remove();
               //  client.sendMessage("CancelRegBattle");
             };
         });
@@ -265,20 +278,20 @@ public class MainState extends State {
 
     @Override
     public void update(float dt) {
-      //  if (character.getAvatar() == null)
-     //   Gdx.app.log("Hariotika", String.valueOf(character.getAvatar() == null));
 
 
             if(Gdx.files.local("avatar/"+character.getName()+".png").exists() && character.getAvatar() == null){
                 try {
-                    character.setAvatar( new Texture("avatar/"+character.getName()+".png"));
-                }
+                    playerAvatar =  new Texture(Gdx.files.local("avatar/"+character.getName()+".png"));
+                           }
                 catch (Exception e){
                     Gdx.app.log("Hariotika mainState","Can't load avatar "+character.getName());
+                    Gdx.app.log("Hariotika mainState",Gdx.files.local("avatar/"+character.getName()+".png").path());
+
                 }
             }
 
-        if (registrationInBattl  && character.getAvatar() != null ) {
+        if (registrationInBattl) {
             if(getBattle() != null) {
                 sm.set(new BattleState(sm, skin2, backButton));
             }
@@ -297,8 +310,6 @@ public class MainState extends State {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         sb.begin();
         sb.draw(background, 0, 0, camera.viewportWidth, camera.viewportHeight);
-        if (character.getAvatar()!=null)
-        sb.draw(character.getAvatar(), 501, 500, 500, 500);
         sb.end();
         stage.draw();
 
@@ -323,21 +334,17 @@ public class MainState extends State {
                 //  client.getCharacter().setAvatar(httpResponse.getResult());
                 try {
 
-                                        
 
-                    String locRoot = Gdx.files.getLocalStoragePath();
-                    Gdx.app.log("Hariotika API","Get Player avatar "+locRoot);
+                    Gdx.app.log("Hariotika API"," Get Player avatar ");
                     InputStream in = new ByteArrayInputStream(httpResponse.getResult());
-
-                    BufferedImage  bImageFromConvert = ImageIO.read(in);
-
-                    FileHandle handle = Gdx.files.local("/avatar/"+character.getName()+".png");
-                    OutputStream outputStream = handle.write(false);
-                    ImageIO.write(bImageFromConvert, "png", outputStream);
+                    if (Gdx.files.local("avatar/"+character.getName()+".png").exists())
+                        Gdx.files.local("avatar/"+character.getName()+".png").delete();
+                    FileHandle handle = Gdx.files.local("avatar/"+character.getName()+".png");
+                    handle.write(in,true);
                     Gdx.app.log("Hariotika API","Save Player avatart");
-                    outputStream.close();
+                    in.close();
 
-                } catch (Exception e) {
+                  } catch (Exception e) {
                     Gdx.app.error("Hariotika API ", e.toString());
                     e.printStackTrace();
                 }
