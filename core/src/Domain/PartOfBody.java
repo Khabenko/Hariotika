@@ -6,7 +6,8 @@ package Domain;
 
 public enum  PartOfBody {
     HEAD,
-    BODY,
+    NECK,
+    CHEST,
+    BELLY,
     LEGS,
-    BELLY
 }

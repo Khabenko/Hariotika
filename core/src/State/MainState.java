@@ -93,9 +93,9 @@ public class MainState extends State {
     String locRoot = Gdx.files.getLocalStoragePath();
     private Texture playerAvatar;
 
-    //   String avatarUri = "http://localhost:8081/getAvatar/?name=";
+      // String avatarUri = "http://localhost:8081/getAvatar/?name=";
     //String avatarUri = "http://10.0.2.2:8081/getAvatar/?name=";
-    String avatarUri = "http://64.250.115.155/getAvatar/?name=";
+   String avatarUri = "http://64.250.115.155/getAvatar/?name=";
 
 
     //  private ImageButton button = new ImageButton();

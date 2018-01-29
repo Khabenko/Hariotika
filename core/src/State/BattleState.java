@@ -6,9 +6,10 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.net.HttpRequestBuilder;
 import com.badlogic.gdx.net.HttpStatus;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -22,6 +23,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.google.gson.Gson;
+import com.hariotika.Animation;
 
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
@@ -31,12 +33,11 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 
-
-
 import API.Client;
 import API.Command;
 import API.HariotikaMessage;
 import API.WsCode;
+import Domain.Battle;
 import Domain.Character;
 import Domain.LogWindow;
 
@@ -74,8 +75,12 @@ public class BattleState extends State {
     static ProgressBar enemysp;
     TextButton backButton;
     LogWindow logWindow;
+
     private Texture cartman;
     private Animation cartmanAnimatiom;
+
+
+
 
     String avatarUri;
 
@@ -84,7 +89,7 @@ public class BattleState extends State {
     private Texture enemyAvatar;
 
 
-    public BattleState(StateManager sm, Skin skin, TextButton backButton) {
+    public BattleState(final StateManager sm, Skin skin, TextButton backButton) {
         super(sm);
         skinChebox = new Skin(Gdx.files.internal("data/visui1/uiskin.json"));
         gson = new Gson();
@@ -115,45 +120,77 @@ public class BattleState extends State {
         CheckBox checkboxHeadHit = new CheckBox("HEAD",skinChebox);
         checkboxHeadHit.setName("HEAD");
         checkboxHeadHit.setPosition(camera.viewportWidth*0.80f,camera.viewportHeight*0.70f);
-        final CheckBox checkboxBodyHit = new CheckBox("BODY",skinChebox);
-        checkboxBodyHit.setName("BODY");
-        checkboxBodyHit.setPosition(camera.viewportWidth*0.80f,checkboxHeadHit.getY()-80);
+
+        CheckBox checkboxNeckHit = new CheckBox("NECK",skinChebox);
+        checkboxNeckHit.setName("NECK");
+        checkboxNeckHit.setPosition(camera.viewportWidth*0.80f,checkboxHeadHit.getY()-80);
+
+        CheckBox checkboxChestHit = new CheckBox("CHEST",skinChebox);
+        checkboxChestHit.setName("CHEST");
+        checkboxChestHit.setPosition(camera.viewportWidth*0.80f,checkboxNeckHit.getY()-80);
+
+        CheckBox checkboxBellyHit = new CheckBox("BELLY",skinChebox);
+        checkboxBellyHit.setName("BELLY");
+        checkboxBellyHit.setPosition(camera.viewportWidth*0.80f,checkboxChestHit.getY()-80);
+
         CheckBox checkboxLegsHit = new CheckBox("LEGS",skinChebox);
         checkboxLegsHit.setName("LEGS");
-        checkboxLegsHit.setPosition(camera.viewportWidth*0.80f,checkboxBodyHit.getY()-80);
-        checkboxGroupHit.add(checkboxBodyHit);
+        checkboxLegsHit.setPosition(camera.viewportWidth*0.80f,checkboxBellyHit.getY()-80);
+
+        checkboxGroupHit.add(checkboxChestHit);
         checkboxGroupHit.add(checkboxHeadHit);
         checkboxGroupHit.add(checkboxLegsHit);
+        checkboxGroupHit.add(checkboxBellyHit);
+        checkboxGroupHit.add(checkboxNeckHit);
         checkboxGroupHit.setMaxCheckCount(1);
 
 
-        stage.addActor(checkboxBodyHit);
+        stage.addActor(checkboxChestHit);
         stage.addActor(checkboxHeadHit);
         stage.addActor(checkboxLegsHit);
+        stage.addActor(checkboxNeckHit);
+        stage.addActor(checkboxBellyHit);
 
 
 
 
         final ButtonGroup checkboxGroupDef = new ButtonGroup();
+
+
         CheckBox checkboxHeadDef = new CheckBox("HEAD",skinChebox);
         checkboxHeadDef.setName("HEAD");
         checkboxHeadDef.setPosition(10,camera.viewportHeight*0.70f);
-        final CheckBox checkboxBodyDef = new CheckBox("BODY",skinChebox);
-        checkboxBodyDef.setName("BODY");
-        checkboxBodyDef.setPosition(10,checkboxHeadDef.getY()-80);
+
+        CheckBox checkboxNeckDef = new CheckBox("NECK",skinChebox);
+        checkboxNeckDef.setName("NECK");
+        checkboxNeckDef.setPosition(10,checkboxHeadDef.getY()-80);
+
+        CheckBox checkboxChestDef = new CheckBox("CHEST",skinChebox);
+        checkboxChestDef.setName("CHEST");
+        checkboxChestDef.setPosition(10,checkboxNeckDef.getY()-80);
+
+        CheckBox checkboxBellyDef = new CheckBox("BELLY",skinChebox);
+        checkboxBellyDef.setName("BELLY");
+        checkboxBellyDef.setPosition(10,checkboxChestDef.getY()-80);
+
+
         CheckBox checkboxLegsDef = new CheckBox("LEGS",skinChebox);
         checkboxLegsDef.setName("LEGS");
-        checkboxLegsDef.setPosition(10,checkboxBodyDef.getY()-80);
+        checkboxLegsDef.setPosition(10,checkboxBellyDef.getY()-80);
 
 
-        checkboxGroupDef.add(checkboxBodyDef);
+        checkboxGroupDef.add(checkboxChestDef);
         checkboxGroupDef.add(checkboxHeadDef);
         checkboxGroupDef.add(checkboxLegsDef);
+        checkboxGroupDef.add(checkboxBellyDef);
+        checkboxGroupDef.add(checkboxNeckDef);
         checkboxGroupDef.setMaxCheckCount(1);
 
-        stage.addActor(checkboxBodyDef);
+        stage.addActor(checkboxChestDef);
         stage.addActor(checkboxHeadDef);
         stage.addActor(checkboxLegsDef);
+        stage.addActor(checkboxBellyDef);
+        stage.addActor(checkboxNeckDef);
 
         Gdx.app.log("HariotikaBattleState", "Loaded ChekBox");
 
@@ -188,17 +225,41 @@ public class BattleState extends State {
                 System.out.println(battle);
             }
 
+
             };
         });
 
 
-       // cartman = new Texture("Animation/Cartman.png");
-       // cartmanAnimatiom = new Animation<TextureRegion>(0.033f, atlas.findRegions("running"), Animation.PlayMode.LOOP);
+
+        backButton = new TextButton("Back",skin);
+        backButton.setPosition(camera.viewportWidth/2+600,camera.viewportHeight/7);
+        backButton.setSize(250,150);
+        stage.addActor(backButton);
+
+
+
+
+
+        backButton.addListener( new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                setBattle(null);
+                sm.set(new MainState(sm));
+
+
+            };
+        });
+
+
+     //   cartman = new Texture("Animation/cartman.png");
+    //    cartmanAnimatiom = new Animation(new TextureRegion(cartman), 4, 0.5f);
+      //  sb.draw(cartmanAnimatiom.getFrame(), (camera.viewportWidth/2), camera.viewportHeight/2+50);
+
 
 
 
          // avatarUri = "http://10.0.2.2:8081/getAvatar/?name=";
-        // avatarUri = "http://localhost:8081/getAvatar/?name=";
+           // avatarUri = "http://localhost:8081/getAvatar/?name=";
           avatarUri = "http://64.250.115.155/getAvatar/?name=";
 
 
@@ -219,14 +280,12 @@ public class BattleState extends State {
 
     @Override
     public void update(float dt) {
-
+          //cartmanAnimatiom.update(dt);
 
      //   Gdx.app.log("Hariotika",character.getName()+" "+Gdx.files.local("avatar/"+character.getName()+".png").exists());
      //   Gdx.app.log("Hariotika",enemy.getName()+" "+Gdx.files.local("avatar/"+enemy.getName()+".png").exists());
-
-
      //   Gdx.app.log("Hariotika", String.valueOf(playerAvatar == null));
-        //  Gdx.app.log("Hariotika", String.valueOf(enemyAvatar==null));
+     //   Gdx.app.log("Hariotika", String.valueOf(enemyAvatar==null));
 
 
         if(Gdx.files.local("avatar/"+enemy.getName()+".png").exists() && enemyAvatar==null){
@@ -249,19 +308,21 @@ public class BattleState extends State {
 
 
 
-        if (battle!=null)
-        timer.setText(String.valueOf(battle.getTimer()));
-        initEnemy();
-        getHealth().setValue(client.getCharacter().getHP());
-        if (enemy.getName()!=null) {
-            enemyhealth.setValue(enemy.getHP());
-            // System.out.println(enemy.getName());
-            enemyName.setText(enemy.getName());
-            logWindow.clear();
-            logWindow.add(client.getBattle().getLog());
-            if (getBattle().isFinished()||getBattle()==null) {
-                setBattle(null);
-                sm.set(new MainState(sm));
+        if (battle!=null) {
+            timer.setText(String.valueOf(battle.getTimer()));
+            initEnemy();
+            getHealth().setValue(client.getCharacter().getHP());
+            if (enemy.getName() != null) {
+                enemyhealth.setValue(enemy.getHP());
+                // System.out.println(enemy.getName());
+                enemyName.setText(enemy.getName());
+                logWindow.clear();
+                logWindow.add(client.getBattle().getLog());
+                if (battleButton.isVisible() && (getBattle().isFinished() || getBattle() == null)) {
+                    battleButton.setVisible(false);
+
+                    // sm.set(new MainState(sm));
+                }
             }
         }
 
@@ -287,8 +348,8 @@ public class BattleState extends State {
             Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
             sb.begin();
             sb.draw(background, 0, 0, camera.viewportWidth, camera.viewportHeight);
-            sb.draw(playerAvatar, camera.viewportWidth/2-playerAvatar.getWidth(),camera.viewportHeight/2, 250, 220);
-            sb.draw(enemyAvatar, camera.viewportWidth/2+enemyAvatar.getWidth(),camera.viewportHeight/2, 250, 220);
+            sb.draw(playerAvatar, camera.viewportWidth/2-400,camera.viewportHeight/2+50, 250, 220);
+            sb.draw(enemyAvatar, (camera.viewportWidth/2),camera.viewportHeight/2+50, 250, 220);
             sb.end();
             stage.draw();
 
@@ -416,6 +477,8 @@ public class BattleState extends State {
             System.out.println("Cancel");
         }
     };
+
+
 
 
 
