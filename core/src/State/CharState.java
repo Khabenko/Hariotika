@@ -1,6 +1,7 @@
 package State;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -10,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ButtonGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -29,7 +31,9 @@ import Domain.EquipmentWindows;
 import Domain.InventoryWindows;
 import State.State;
 
+import static API.Client.character;
 import static API.Reconect.client;
+import static State.MainState.exp;
 import static State.MainState.getHealth;
 import static com.hariotika.Hariotika.HEIGHT;
 import static com.hariotika.Hariotika.WIDTH;
@@ -40,7 +44,7 @@ import static com.hariotika.Hariotika.WIDTH;
 
 public class CharState extends State {
     static Stage stage;
-    Table table;
+    Table status;
     public static Texture ava;
     ProgressBar health;
     Texture skilBgr;
@@ -53,7 +57,7 @@ public class CharState extends State {
     public CharState(final StateManager sm , Skin skin) {
         super(sm);
         skilBgr = new Texture("new.png");
-        this.table = MainState.status;
+        this.status = MainState.status;
         ava= new Texture("avatar/ava.png");
         stage = new Stage();
         Gdx.input.setInputProcessor(stage);
@@ -79,6 +83,7 @@ public class CharState extends State {
         backButton.setPosition(camera.viewportWidth-camera.viewportWidth*0.05f,camera.viewportHeight-camera.viewportWidth*0.05f);
         backButton.setSize(80,60);
         stage.addActor(backButton);
+
 
 
 

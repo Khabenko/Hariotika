@@ -1,5 +1,7 @@
 package Domain;
 
+import java.util.ArrayList;
+
 /**
  * Created by Maka on 18.11.2017.
  */
@@ -10,11 +12,17 @@ public class Battle {
     boolean finished = false;
     long timer;
     String log = null;
+    Character winner;
+
     private Character player1;
     private Character player2;
 
     private boolean player1IsReady = false;
     private boolean player2IsReady = false;
+
+    private ArrayList<PartOfBody> player1Defance;
+    private ArrayList<PartOfBody> player2Defance;
+
 
     private PartOfBody player1Def;
     private PartOfBody player2Def;
@@ -28,6 +36,8 @@ public class Battle {
         this.number = number;
         this.player1 = player1;
         this.player2 = player2;
+        this.player1Defance =  new ArrayList<PartOfBody>();
+        this.player2Defance = new ArrayList<PartOfBody>();
     }
 
 
@@ -125,5 +135,13 @@ public class Battle {
 
     public long getTimer() {
         return timer;
+    }
+
+    public ArrayList<PartOfBody> getPlayer1DefanceList() {
+        return player1Defance;
+    }
+
+    public ArrayList<PartOfBody> getPlayer2DefanceList() {
+        return player2Defance;
     }
 }

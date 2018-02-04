@@ -33,6 +33,7 @@ public class Character {
     private String login;
     private int lvl;
     private int experience;
+    private int expnextlvl;
 
     public Character(String name, String login) {
         this.name = name;
@@ -173,6 +174,11 @@ public class Character {
         this.inBattle = inBattle;
     }
 
+    public int getExpnextlvl() {
+        return expnextlvl;
+    }
 
-
+    public void setExpnextlvl(int expnextlvl) {
+        this.expnextlvl = expnextlvl;
+    }
 }

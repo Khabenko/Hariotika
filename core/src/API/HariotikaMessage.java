@@ -1,7 +1,10 @@
 package API;
 
+import java.util.ArrayList;
+
 import Domain.Battle;
 import Domain.Character;
+import Domain.PartOfBody;
 
 /**
  * Created by Maka on 13.12.2017.
@@ -24,6 +27,7 @@ public class HariotikaMessage {
     private String charName;
     private int timer;
 
+    private ArrayList<PartOfBody> playerDefance;
 
 
 
@@ -134,5 +138,13 @@ public class HariotikaMessage {
 
     public void setCharName(String charName) {
         this.charName = charName;
+    }
+
+    public ArrayList<PartOfBody> getPlayerDefance() {
+        return playerDefance;
+    }
+
+    public void setPlayerDefance(ArrayList<PartOfBody> playerDefance) {
+        this.playerDefance = playerDefance;
     }
 }

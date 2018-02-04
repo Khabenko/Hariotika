@@ -45,8 +45,9 @@ public class Client  {
 
 
     private MessageHandler messageHandler;
-             //  URI uri = URI.create("ws://localhost:8081/");
-             URI uri = URI.create("ws://64.250.115.155");
+
+          // URI uri = URI.create("ws://localhost:8081/");
+            URI uri = URI.create("ws://64.250.115.155");
           //URI uri = URI.create("ws://10.0.2.2:8081/");
 
 
@@ -67,6 +68,8 @@ public class Client  {
     public void onOpen(Session server) throws IOException {
         System.out.println("Open Connection ..." + server);
         this.userSession = server;
+        this.userSession.setMaxTextMessageBufferSize(500000);
+        this.userSession.setMaxBinaryMessageBufferSize(500000);
         this.userSession.setMaxIdleTimeout(30000);
 
     }
@@ -83,6 +86,8 @@ public class Client  {
        //  Gdx.app.log("HariotikaLogsInfo", "Server sended  "+message);
 
         parsingHariotikaMessage(message);
+        this.userSession.getMessageHandlers().clear();
+
 
     }
 
@@ -101,7 +106,12 @@ public class Client  {
     public void sendMessage(String message) {
         synchronized (userSession) {
             userSession.getMessageHandlers().clear();
-            this.userSession.getAsyncRemote().sendText(message);
+            //this.userSession.getAsyncRemote().sendText(message);
+            try {
+                this.userSession.getBasicRemote().sendText(message);
+            } catch (IOException e) {
+                System.out.println("Шота репунло++++++++++++++++++++++++++++++++++++++");
+            }
         }
     }
     public static interface MessageHandler {

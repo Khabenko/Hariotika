@@ -87,7 +87,7 @@ public class MainState extends State {
     static Label playerName;
     static ProgressBar health;
     static ProgressBar mana;
-    static ProgressBar sp;
+    static ProgressBar exp;
     HariotikaMessage hariotikaMessage;
     private boolean registrationInBattl =false;
     String locRoot = Gdx.files.getLocalStoragePath();
@@ -95,7 +95,7 @@ public class MainState extends State {
 
       // String avatarUri = "http://localhost:8081/getAvatar/?name=";
     //String avatarUri = "http://10.0.2.2:8081/getAvatar/?name=";
-   String avatarUri = "http://64.250.115.155/getAvatar/?name=";
+       String avatarUri = "http://64.250.115.155/getAvatar/?name=";
 
 
     //  private ImageButton button = new ImageButton();
@@ -142,7 +142,7 @@ public class MainState extends State {
         status.row();
 
         status.add(new Label("HP", skin2));
-        health = new ProgressBar(0, 100, 1, false, skin2);
+        health = new ProgressBar(0, character.getMaxHP(), 1, false, skin2);
         health.setValue(0);
         health.setColor(Color.FOREST);
         status.add(health).width(500);
@@ -158,12 +158,14 @@ public class MainState extends State {
 
         status.row();
 
-        status.add(new Label("SP", skin2));
-        sp = new ProgressBar(0, 100, 1, false, skin2);
-        sp.setValue(50);
-        sp.setColor(Color.CHARTREUSE);
-        status.add(sp).width(500);
-        status.setPosition(400,camera.viewportHeight/1.08f);
+        status.add(new Label("EXP (lvl "+character.getLvl()+")", skin2));
+        exp = new ProgressBar(0, character.getExpnextlvl(), 1, false, skin2);
+        exp.setValue(character.getExperience());
+        exp.setColor(Color.WHITE);
+        status.add(exp).width(500);
+        status.setPosition(450,camera.viewportHeight/1.08f);
+        status.add(new Label("("+character.getExperience()+"/"+character.getExpnextlvl()+")", skin2));
+
         stage.addActor(status);
         //------------------
 
@@ -323,8 +325,6 @@ public class MainState extends State {
     }
 
 
-
-
     Net.HttpResponseListener listener = new Net.HttpResponseListener() {
         public void handleHttpResponse (Net.HttpResponse httpResponse) {
             HttpStatus status = httpResponse.getStatus();
@@ -345,8 +345,8 @@ public class MainState extends State {
                     in.close();
 
                   } catch (Exception e) {
-                    Gdx.app.error("Hariotika API ", e.toString());
-                    e.printStackTrace();
+                    Gdx.app.error("Hariotika API  ", e.toString());
+
                 }
 
             } else {
