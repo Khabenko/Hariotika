@@ -12,7 +12,8 @@ public class Battle {
     boolean finished = false;
     long timer;
     String log = null;
-    Character winner;
+
+    private Character winner;
 
     private Character player1;
     private Character player2;
@@ -23,6 +24,8 @@ public class Battle {
     private ArrayList<PartOfBody> player1Defance;
     private ArrayList<PartOfBody> player2Defance;
 
+    private int player1Damaged;
+    private int player2Damaged;
 
     private PartOfBody player1Def;
     private PartOfBody player2Def;
@@ -135,6 +138,30 @@ public class Battle {
 
     public long getTimer() {
         return timer;
+    }
+
+    public Character getWinner() {
+        return winner;
+    }
+
+    public int getPlayer1Damaged() {
+        return player1Damaged;
+    }
+
+    public void setPlayer1Damaged(int player1Damaged) {
+        this.player1Damaged = player1Damaged;
+    }
+
+    public int getPlayer2Damaged() {
+        return player2Damaged;
+    }
+
+    public void setPlayer2Damaged(int player2Damaged) {
+        this.player2Damaged = player2Damaged;
+    }
+
+    public void setWinner(Character winner) {
+        this.winner = winner;
     }
 
     public ArrayList<PartOfBody> getPlayer1DefanceList() {

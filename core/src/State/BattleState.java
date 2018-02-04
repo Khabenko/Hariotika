@@ -47,6 +47,7 @@ import API.Client;
 import API.Command;
 import API.HariotikaMessage;
 import API.WsCode;
+import Domain.AfterBattleWindow;
 import Domain.Battle;
 import Domain.Character;
 import Domain.LogWindow;
@@ -86,9 +87,11 @@ public class BattleState extends State {
     static ProgressBar enemysp;
     TextButton backButton;
     LogWindow logWindow;
-
+    AfterBattleWindow afterBattleWindow;
     private Texture shield;
     private int checkBoxDistance = 80;
+    private float oneX = camera.viewportWidth/100;
+    private float oneY = camera.viewportWidth/100;
 
     HashMap<String,CheckBox> checkBoxMap = new HashMap<String, CheckBox>();
 
@@ -224,16 +227,7 @@ public class BattleState extends State {
         checkboxGroupDef.setMaxCheckCount(1);
 
 
-
 /*
-        stage.addListener(new ChangeListener() {
-                      @Override
-                      public void changed(ChangeEvent changeEvent, Actor actor) {
-
-                         тут вызываем любой мето, при изменеии любого поля state - вызовится лисинер.
-        }
-                  });
-
 
         checkboxHeadDef.addListener(new ChangeListener() {
             @Override
@@ -286,11 +280,11 @@ public class BattleState extends State {
         stage.addActor(logWindow);
 
         battleButton = new TextButton("Battle",skin);
-        battleButton.setSize(250,150);
-        battleButton.setPosition(camera.viewportWidth/6-battleButton.getWidth(),camera.viewportHeight/7);
+        battleButton.setSize(oneX*14,oneY*8);
+        battleButton.setPosition(oneX*75,oneY*5);
         stage.addActor(battleButton);
 
-       // stage.addActor(backButton);
+
 
         battleButton.addListener( new ClickListener() {
             @Override
@@ -311,9 +305,10 @@ public class BattleState extends State {
 
 
         backButton = new TextButton("Back",skin);
-        backButton.setPosition(camera.viewportWidth/2+600,camera.viewportHeight/7);
+        backButton.setPosition(oneX,oneY);
         backButton.setSize(250,150);
-        stage.addActor(backButton);
+       // stage.addActor(backButton);
+
 
         backButton.addListener( new ClickListener() {
             @Override
@@ -323,6 +318,27 @@ public class BattleState extends State {
 
             };
         });
+
+
+        final Skin finalSkin = skin;
+        final TextButton finalBackButton = backButton;
+
+        stage.addListener(new ChangeListener() {
+
+            @Override
+            public void changed(ChangeEvent changeEvent, Actor actor) {
+
+                if (battle.isFinished()){
+                    AfterBattleWindow afterBattleWindow = new AfterBattleWindow(finalSkin, sm);
+                    afterBattleWindow.setPosition(oneX*35,oneY*25);
+                    afterBattleWindow.setSize(400,300);
+                    stage.addActor(afterBattleWindow);
+                }
+
+
+            }
+        });
+
 
       //  cartman = new Texture("Animation/cartman.png");
        // cartmanAnimatiom = new Animation(new TextureRegion(cartman), 4, 0.5f);

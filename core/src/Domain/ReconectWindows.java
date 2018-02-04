@@ -20,7 +20,6 @@ public class ReconectWindows extends Window {
                     super("Reconect", skin);
 
 
-
             pack();
             setKeepWithinStage(true);
         }
