@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -52,12 +53,15 @@ import Domain.Battle;
 import Domain.Character;
 import Domain.LogWindow;
 import Domain.PartOfBody;
+import Domain.RoundLogs;
 
 import static API.Client.battle;
 import static API.Client.character;
 import static API.Client.getBattle;
 import static API.Client.setBattle;
 import static API.Reconect.client;
+import static State.MainState.exp;
+import static State.MainState.expLable;
 import static State.MainState.getHealth;
 import static com.badlogic.gdx.graphics.Color.BLUE;
 
@@ -124,8 +128,9 @@ public class BattleState extends State {
         Gdx.input.setInputProcessor(stage);
 
         timer = new Label("30",  skinChebox);
-        timer.setPosition(camera.viewportWidth/2,camera.viewportHeight*0.30f);
+        timer.setPosition(oneX*45,oneY*40);
         stage.addActor(timer);
+
 
 
         for (int i = 0; i < 2 ; i++) {
@@ -138,6 +143,8 @@ public class BattleState extends State {
 
         enemy = new Character();
         this.table = MainState.status;
+        this.table.removeActor(exp);
+        this.table.removeActor(expLable);
         createEnemyBar();
         initEnemy();
         backgroundLoading = new Texture("loadBattl1.png");
@@ -275,8 +282,8 @@ public class BattleState extends State {
         Gdx.app.log("HariotikaBattleState", "Loaded ChekBox");
 
         logWindow = new LogWindow(skinChebox);
-        logWindow .setPosition(400,10);
-        logWindow.setSize(camera.viewportWidth/2,300);
+        logWindow .setPosition(oneX*10,oneY*5);
+        logWindow.setSize(oneX*40,oneY*15);
         stage.addActor(logWindow);
 
         battleButton = new TextButton("Battle",skin);
@@ -318,10 +325,7 @@ public class BattleState extends State {
 
             };
         });
-
-
         final Skin finalSkin = skin;
-        final TextButton finalBackButton = backButton;
 
         stage.addListener(new ChangeListener() {
 
@@ -335,29 +339,71 @@ public class BattleState extends State {
                     stage.addActor(afterBattleWindow);
                 }
 
+                if (battle.getPlayer1LogHit()!=null && battle.getPlayer2LogHit()!=null) {
+                    logWindow.clear();
+                    printLog(battle.getPlayer1LogHit(),battle.getPlayer1().getName(),battle.getPlayer2().getName());
+                    printLog(battle.getPlayer2LogHit(),battle.getPlayer2().getName(),battle.getPlayer1().getName());
+                }
 
             }
         });
 
-
-      //  cartman = new Texture("Animation/cartman.png");
+       // cartman = new Texture("Animation/cartman.png");
        // cartmanAnimatiom = new Animation(new TextureRegion(cartman), 4, 0.5f);
-        //sb.draw(cartmanAnimatiom.getFrame(), (camera.viewportWidth/2), camera.viewportHeight/2+50);
+       // sb.draw(cartmanAnimatiom.getFrame(), (camera.viewportWidth/2), camera.viewportHeight/2+50);
 
-         // avatarUri = "http://10.0.2.2:8081/getAvatar/?name=";
+            // avatarUri = "http://10.0.2.2:8081/getAvatar/?name=";
            // avatarUri = "http://localhost:8081/getAvatar/?name=";
-          avatarUri = "http://64.250.115.155/getAvatar/?name=";
+           avatarUri = "http://64.250.115.155/getAvatar/?name=";
 
 
           Gdx.app.log("Hariotika API"," Get from Server Enemy avatar "+enemy.getName());
           HttpRequestBuilder requestBuilder = new HttpRequestBuilder();
           Net.HttpRequest httpRequest = requestBuilder.newRequest().method(Net.HttpMethods.GET).url(avatarUri+enemy.getName()).build();
           Gdx.net.sendHttpRequest(httpRequest, enemyListener);
+    }
+
+    public void printLog(RoundLogs roundLogs, String namePlayer, String enemyName){
 
 
+        logWindow.add(namePlayer+" Hit ");
+        logWindow.add().row();
+
+        if (!roundLogs.isEnemyBlock()) {
+       if (roundLogs.isEnemyDodge()) {
+        if (roundLogs.isEnemyParry()) {
+            if (roundLogs.isPlayerCritkal()) {
+                //Крит прошел
+                logWindow.add(namePlayer+" deal Critickal damage "+roundLogs.getPlayerDamaged());
+                logWindow.add().row();
+            }
+            else{
+               logWindow.add(namePlayer+" deal damage "+roundLogs.getPlayerDamaged());
+                logWindow.add().row();
+            }
+
+        } else {
+            logWindow.add(enemyName+" Parried hit ");
+            logWindow.add().row();
+        //    System.out.println(enemy.getName() + " parried "+"  \n");
+        }
+    } else {
+
+           logWindow.add(enemyName+" Dodged hit ");
+           logWindow.add().row();
+    }
+    }
+   else   {
+            logWindow.add(enemyName+" Blocked hit");
+            logWindow.add().row();
+            //   s+=enemyName+" Blocked hit"+"\n";
+        }
+        logWindow.add("\n");
+        logWindow.add().row();
 
 
     }
+
 
     @Override
     protected void handleInput() {
@@ -367,15 +413,14 @@ public class BattleState extends State {
     @Override
     public void update(float dt) {
 
-        //checkboxGroupDef.setChecked(String.valueOf(checkboxGroupDef.getButtons().get(checkboxGroupDef.getCheckedIndex()+1)));
         addDefPart();
 
-       //   cartmanAnimatiom.update(dt);
-
-     //   Gdx.app.log("Hariotika",character.getName()+" "+Gdx.files.local("avatar/"+character.getName()+".png").exists());
-     //   Gdx.app.log("Hariotika",enemy.getName()+" "+Gdx.files.local("avatar/"+enemy.getName()+".png").exists());
+      //  Gdx.app.log("Hariotika",character.getName()+" "+Gdx.files.local("avatar/"+character.getName()+".png").exists());
+      //  Gdx.app.log("Hariotika",enemy.getName()+" "+Gdx.files.local("avatar/"+enemy.getName()+".png").exists());
      //   Gdx.app.log("Hariotika", String.valueOf(playerAvatar == null));
-     //   Gdx.app.log("Hariotika", String.valueOf(enemyAvatar==null));
+      //  Gdx.app.log("Hariotika", String.valueOf(enemyAvatar==null));
+
+
 
 
         if(Gdx.files.local("avatar/"+enemy.getName()+".png").exists() && enemyAvatar==null){
@@ -383,7 +428,8 @@ public class BattleState extends State {
             enemyAvatar = new Texture(Gdx.files.local("avatar/"+enemy.getName()+".png"));
                }
             catch (Exception e){
-                Gdx.app.log("Battle","Can't load avatar");
+                e.printStackTrace();
+                Gdx.app.log("Battle","Can't load enemy avatar");
             }
         }
 
@@ -397,7 +443,6 @@ public class BattleState extends State {
             }
 
 
-
         if (battle!=null) {
             timer.setText(String.valueOf(battle.getTimer()));
             initEnemy();
@@ -406,11 +451,11 @@ public class BattleState extends State {
                 enemyhealth.setValue(enemy.getHP());
                 // System.out.println(enemy.getName());
                 enemyName.setText(enemy.getName());
-                logWindow.clear();
-                logWindow.add(client.getBattle().getLog());
+            //   logWindow.clear();
+            //   logWindow.add(client.getBattle().getLog());
+
                 if (battleButton.isVisible() && (getBattle().isFinished() || getBattle() == null)) {
                     battleButton.setVisible(false);
-
                     // sm.set(new MainState(sm));
                 }
             }
@@ -440,10 +485,10 @@ public class BattleState extends State {
             sb.draw(background, 0, 0, camera.viewportWidth, camera.viewportHeight);
             sb.draw(playerAvatar, camera.viewportWidth/2-400,camera.viewportHeight/2+50, 250, 220);
             sb.draw(enemyAvatar, (camera.viewportWidth/2),camera.viewportHeight/2+50, 250, 220);
+
             if (battle!=null && battle.getPlayer1DefanceList().size()>0 && checkBoxMap !=null && checkBoxMap.size()>0) {
                 for (int i = 0; i <battle.getPlayer1DefanceList().size() ; i++) {
                               sb.draw(shield, checkBoxMap.get(String.valueOf(battle.getPlayer1DefanceList().get(i))).getX(), checkBoxMap.get(String.valueOf(battle.getPlayer1DefanceList().get(i))).getY()+50, 20, 20);
-                //    sb.draw(shield, checkBoxMap.get(String.valueOf(battle.getPlayer1DefanceList().get(i+1))).getX(), checkBoxMap.get(String.valueOf(battle.getPlayer1DefanceList().get(i+1))).getY(), 40, 40);
 
 
                 }
@@ -470,8 +515,8 @@ public class BattleState extends State {
         statusEnemy.add(enemyName);
         statusEnemy.row();
         statusEnemy.add(new Label("HP", skin));
-        enemyhealth = new ProgressBar(0, 100, 1, false, skin);
-        enemyhealth.setValue(0);
+        enemyhealth = new ProgressBar(0, 60, 1, false, skin);
+        enemyhealth.setValue(enemy.getHP());
         enemyhealth.setColor(Color.FOREST);
         statusEnemy.add(enemyhealth).width(500);
 
@@ -484,13 +529,13 @@ public class BattleState extends State {
         statusEnemy.add(enemymana).width(500);
         statusEnemy.setPosition(420,510);
 
-        statusEnemy.row();
+     //   statusEnemy.row();
 
-        statusEnemy.add(new Label("SP", skin));
-        enemysp = new ProgressBar(0, 100, 1, false, skin);
-        enemysp.setValue(50);
-        enemysp.setColor(Color.CHARTREUSE);
-        statusEnemy.add(enemysp).width(500);
+     //   statusEnemy.add(new Label("SP", skin));
+     //   enemysp = new ProgressBar(0, 100, 1, false, skin);
+     //   enemysp.setValue(50);
+     //   enemysp.setColor(Color.CHARTREUSE);
+    //    statusEnemy.add(enemysp).width(500);
         statusEnemy.setPosition(camera.viewportWidth/2+400,camera.viewportHeight/1.08f);
         stage.addActor(statusEnemy);
       //Gdx.app.log("HariotikaBattleState", "createEnemyBar");
@@ -501,14 +546,14 @@ public class BattleState extends State {
 
     private void initEnemy(){
 
-        if (getBattle()!=null) {
-           // System.out.println(getBattle().getPlayer1().getName().equals(Client.character.getName()));
-          //  System.out.println(getBattle().getPlayer1().getName().equals(Client.character.getName()));
-            if (!(getBattle().getPlayer1().getName().equals(Client.character.getName()))) {
+        if (battle !=null) {
+       //     System.out.println(getBattle().getPlayer1().getName().equals(Client.character.getName()));
+       //     System.out.println(getBattle().getPlayer1().getName().equals(Client.character.getName()));
+            if (!(battle.getPlayer1().getName().equals(Client.character.getName()))) {
                 setEnemy(getBattle().getPlayer1());
              }
-            if (!(getBattle().getPlayer2().getName().equals(Client.character.getName()))) {
-                setEnemy(getBattle().getPlayer2());
+            if (!(battle.getPlayer2().getName().equals(Client.character.getName()))) {
+                setEnemy(battle.getPlayer2());
              }
         }
     //    Gdx.app.log("HariotikaBattleState", "initEnemy()");
@@ -532,10 +577,9 @@ public class BattleState extends State {
             HttpStatus status = httpResponse.getStatus();
             if (status.getStatusCode() >= 200 && status.getStatusCode() < 300) {
                 // it was successful
-                //    System.out.println(httpResponse.getResult());
-                //  client.getCharacter().setAvatar(httpResponse.getResult());
+                 //  System.out.println(httpResponse.getResult());
+                   //client.getCharacter().setAvatar(httpResponse.getResult());
                 try {
-
 
                     Gdx.app.log("Hariotika API"," Get Enemy avatar "+enemy.getName());
                     InputStream in = new ByteArrayInputStream(httpResponse.getResult());
@@ -554,7 +598,7 @@ public class BattleState extends State {
 
             } else {
                 // do something else
-
+                Gdx.files.local("avatar/"+enemy.getName()+".png").delete();
                 Gdx.app.log("Hariotika API","Bad code "+status.getStatusCode());
             }
 

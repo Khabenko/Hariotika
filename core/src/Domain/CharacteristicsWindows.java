@@ -21,6 +21,7 @@ public class CharacteristicsWindows extends Window {
 
         characteristics.put("Strange",client.getCharacter().getStrength());
         characteristics.put("Agility",client.getCharacter().getAgility());
+        characteristics.put("Intuition",client.getCharacter().getIntuition());
         characteristics.put("Vitality",client.getCharacter().getVitality());
         characteristics.put("Armor",client.getCharacter().getArmor());
 

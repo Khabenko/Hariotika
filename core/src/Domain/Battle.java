@@ -21,8 +21,17 @@ public class Battle {
     private boolean player1IsReady = false;
     private boolean player2IsReady = false;
 
+
+
+    private ArrayList<PartOfBody> player1Hitting;
+    private ArrayList<PartOfBody> player2Hitting;
+
     private ArrayList<PartOfBody> player1Defance;
     private ArrayList<PartOfBody> player2Defance;
+
+
+    private RoundLogs player1LogHit;
+    private RoundLogs player2LogHit;
 
     private int player1Damaged;
     private int player2Damaged;
@@ -170,5 +179,21 @@ public class Battle {
 
     public ArrayList<PartOfBody> getPlayer2DefanceList() {
         return player2Defance;
+    }
+
+    public RoundLogs getPlayer1LogHit() {
+        return player1LogHit;
+    }
+
+    public void setPlayer1LogHit(RoundLogs player1LogHit) {
+        this.player1LogHit = player1LogHit;
+    }
+
+    public RoundLogs getPlayer2LogHit() {
+        return player2LogHit;
+    }
+
+    public void setPlayer2LogHit(RoundLogs player2LogHit) {
+        this.player2LogHit = player2LogHit;
     }
 }

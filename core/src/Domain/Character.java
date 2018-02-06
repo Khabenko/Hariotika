@@ -35,6 +35,23 @@ public class Character {
     private int experience;
     private int expnextlvl;
 
+
+    private int decreasePower_Crit;
+    private int decreasePersen_Crit;
+    private int evesion;
+    private int decreaseEnemyEvesion;
+    private int armor_penetration;
+    private int chance_сriticalPhyAttack;
+    private int power_сriticalPhyAttack;
+    private int chance_counterattack;
+    private int chance_parry;
+    private double hp_perSec;
+    private int mp_perSec;
+
+
+
+
+
     public Character(String name, String login) {
         this.name = name;
         this.login = login;
@@ -180,5 +197,8 @@ public class Character {
 
     public void setExpnextlvl(int expnextlvl) {
         this.expnextlvl = expnextlvl;
+    }
+
+    public void setAvatar(byte[] result) {
     }
 }

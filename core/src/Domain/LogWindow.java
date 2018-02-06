@@ -12,8 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Window;
 public class LogWindow extends Window {
 
     public LogWindow(Skin skin) {
-        super("Log", skin);
-
+        super("", skin);
 
         pack();
         setKeepWithinStage(true);

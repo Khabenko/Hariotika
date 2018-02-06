@@ -88,10 +88,13 @@ public class MainState extends State {
     static ProgressBar health;
     static ProgressBar mana;
     static ProgressBar exp;
+    static Label expLable;
+
     HariotikaMessage hariotikaMessage;
     private boolean registrationInBattl =false;
     String locRoot = Gdx.files.getLocalStoragePath();
     private Texture playerAvatar;
+
 
       // String avatarUri = "http://localhost:8081/getAvatar/?name=";
     //String avatarUri = "http://10.0.2.2:8081/getAvatar/?name=";
@@ -157,8 +160,8 @@ public class MainState extends State {
         status.setPosition(420,510);
 
         status.row();
-
-        status.add(new Label("EXP (lvl "+character.getLvl()+")", skin2));
+        expLable = new Label("EXP (lvl "+character.getLvl()+")", skin2);
+        status.add(expLable);
         exp = new ProgressBar(0, character.getExpnextlvl(), 1, false, skin2);
         exp.setValue(character.getExperience());
         exp.setColor(Color.WHITE);
