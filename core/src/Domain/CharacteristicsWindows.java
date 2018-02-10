@@ -14,16 +14,29 @@ import static API.Reconect.client;
  */
 
 public class CharacteristicsWindows extends Window {
+    ArrayMap<String,Integer> characteristics;
+
     public CharacteristicsWindows (Skin skin) {
         super("Characteristics", skin);
         Array<String> namesArray = new Array<String>();
-        ArrayMap<String,Integer> characteristics = new ArrayMap();
 
+        characteristics = new ArrayMap();
         characteristics.put("Strange",client.getCharacter().getStrength());
         characteristics.put("Agility",client.getCharacter().getAgility());
         characteristics.put("Intuition",client.getCharacter().getIntuition());
         characteristics.put("Vitality",client.getCharacter().getVitality());
+        characteristics.put("Intelligence",client.getCharacter().getIntelligence());
+        characteristics.put("Armor penetration",client.getCharacter().getArmor_penetration());
         characteristics.put("Armor",client.getCharacter().getArmor());
+        characteristics.put("Critical chance",client.getCharacter().getChance_сriticalPhyAttack());
+        characteristics.put("Critical power",client.getCharacter().getPower_сriticalPhyAttack());
+        characteristics.put("Parry chance",client.getCharacter().getChance_parry());
+        characteristics.put("Counterattack chance",client.getCharacter().getChance_counterattack());
+        characteristics.put("Evesion chance",client.getCharacter().getEvesion());
+        characteristics.put("Decrease Enemy Evesion",client.getCharacter().getDecreaseEnemyEvesion());
+        characteristics.put("Decrease Persen Crit",client.getCharacter().getDecreasePersen_Crit());
+        characteristics.put("Decrease Power Crit",client.getCharacter().getDecreasePower_Crit());
+
 
 
         for (int i = 0; i < characteristics.size; i++) {

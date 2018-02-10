@@ -11,7 +11,7 @@ public class Battle {
     long number;
     boolean finished = false;
     long timer;
-    String log = null;
+    int round;
 
     private Character winner;
 
@@ -137,14 +137,6 @@ public class Battle {
         this.finished = finished;
     }
 
-    public String getLog() {
-        return log;
-    }
-
-    public void setLog(String log) {
-        this.log = log;
-    }
-
     public long getTimer() {
         return timer;
     }
@@ -195,5 +187,13 @@ public class Battle {
 
     public void setPlayer2LogHit(RoundLogs player2LogHit) {
         this.player2LogHit = player2LogHit;
+    }
+
+    public int getRound() {
+        return round;
+    }
+
+    public void setRound(int round) {
+        this.round = round;
     }
 }

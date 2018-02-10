@@ -63,7 +63,11 @@ import static API.Reconect.client;
 import static State.MainState.exp;
 import static State.MainState.expLable;
 import static State.MainState.getHealth;
+import static State.MainState.getMana;
+import static State.MainState.mana;
 import static com.badlogic.gdx.graphics.Color.BLUE;
+import static com.badlogic.gdx.graphics.Color.RED;
+import static java.lang.Thread.enumerate;
 
 
 /**
@@ -96,7 +100,6 @@ public class BattleState extends State {
     private int checkBoxDistance = 80;
     private float oneX = camera.viewportWidth/100;
     private float oneY = camera.viewportWidth/100;
-
     HashMap<String,CheckBox> checkBoxMap = new HashMap<String, CheckBox>();
 
 
@@ -117,7 +120,7 @@ public class BattleState extends State {
     private Texture enemyAvatar;
 
 
-    public BattleState(final StateManager sm, Skin skin, TextButton backButton) {
+    public BattleState(final StateManager sm, final Skin skin, TextButton backButton) {
         super(sm);
         skinChebox = new Skin(Gdx.files.internal("data/visui1/uiskin.json"));
         shield= new Texture("src/Battle/shield-icon.png");
@@ -127,10 +130,16 @@ public class BattleState extends State {
         stage = new Stage();
         Gdx.input.setInputProcessor(stage);
 
-        timer = new Label("30",  skinChebox);
-        timer.setPosition(oneX*45,oneY*40);
-        stage.addActor(timer);
 
+      //  Skin timerSkin = new  TimerSkin();
+
+        BitmapFont fount = new BitmapFont(new FileHandle("data\\Battel\\TimerBattel\\Timer.fnt"));
+
+        Label.LabelStyle LabelStyle =  new Label.LabelStyle(fount,new Color(95));
+
+        timer = new Label("30",  LabelStyle);
+        timer.setPosition(oneX*45,oneY*50);
+        stage.addActor(timer);
 
 
         for (int i = 0; i < 2 ; i++) {
@@ -141,14 +150,19 @@ public class BattleState extends State {
         }
 
 
-        enemy = new Character();
+
         this.table = MainState.status;
         this.table.removeActor(exp);
         this.table.removeActor(expLable);
-        createEnemyBar();
+      //  this.enemy = getEnemy();
         initEnemy();
+        createEnemyBar();
+
+       
+
         backgroundLoading = new Texture("loadBattl1.png");
-        background = new Texture("fon2.png");
+      //  background = new Texture("fon2.png");
+        background = new Texture("arena.jpg");
         Gdx.app.log("HariotikaBattleState", "Loaded background");
 
         skinChebox = new Skin(Gdx.files.internal("data/visui1/uiskin.json"));
@@ -282,8 +296,8 @@ public class BattleState extends State {
         Gdx.app.log("HariotikaBattleState", "Loaded ChekBox");
 
         logWindow = new LogWindow(skinChebox);
-        logWindow .setPosition(oneX*10,oneY*5);
-        logWindow.setSize(oneX*40,oneY*15);
+        logWindow .setPosition(oneX*20,oneY*25);
+        logWindow.setSize(oneX*45,oneY*20);
         stage.addActor(logWindow);
 
         battleButton = new TextButton("Battle",skin);
@@ -332,6 +346,11 @@ public class BattleState extends State {
             @Override
             public void changed(ChangeEvent changeEvent, Actor actor) {
 
+                if (battle.getPlayer1()!=null && battle.getPlayer2()!=null && enemy == null) {
+                    createEnemyBar();
+                    initEnemy();
+                }
+
                 if (battle.isFinished()){
                     AfterBattleWindow afterBattleWindow = new AfterBattleWindow(finalSkin, sm);
                     afterBattleWindow.setPosition(oneX*35,oneY*25);
@@ -363,9 +382,14 @@ public class BattleState extends State {
           Gdx.net.sendHttpRequest(httpRequest, enemyListener);
     }
 
+
+
     public void printLog(RoundLogs roundLogs, String namePlayer, String enemyName){
 
 
+
+
+        logWindow.add().row();
         logWindow.add(namePlayer+" Hit ");
         logWindow.add().row();
 
@@ -385,7 +409,6 @@ public class BattleState extends State {
         } else {
             logWindow.add(enemyName+" Parried hit ");
             logWindow.add().row();
-        //    System.out.println(enemy.getName() + " parried "+"  \n");
         }
     } else {
 
@@ -396,7 +419,6 @@ public class BattleState extends State {
    else   {
             logWindow.add(enemyName+" Blocked hit");
             logWindow.add().row();
-            //   s+=enemyName+" Blocked hit"+"\n";
         }
         logWindow.add("\n");
         logWindow.add().row();
@@ -419,7 +441,6 @@ public class BattleState extends State {
       //  Gdx.app.log("Hariotika",enemy.getName()+" "+Gdx.files.local("avatar/"+enemy.getName()+".png").exists());
      //   Gdx.app.log("Hariotika", String.valueOf(playerAvatar == null));
       //  Gdx.app.log("Hariotika", String.valueOf(enemyAvatar==null));
-
 
 
 
@@ -447,13 +468,13 @@ public class BattleState extends State {
             timer.setText(String.valueOf(battle.getTimer()));
             initEnemy();
             getHealth().setValue(client.getCharacter().getHP());
+            getMana().setValue(client.getCharacter().getMP());
             if (enemy.getName() != null) {
                 enemyhealth.setValue(enemy.getHP());
-                // System.out.println(enemy.getName());
+                enemymana.setValue(enemy.getMP());
                 enemyName.setText(enemy.getName());
             //   logWindow.clear();
             //   logWindow.add(client.getBattle().getLog());
-
                 if (battleButton.isVisible() && (getBattle().isFinished() || getBattle() == null)) {
                     battleButton.setVisible(false);
                     // sm.set(new MainState(sm));
@@ -483,8 +504,10 @@ public class BattleState extends State {
             Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
             sb.begin();
             sb.draw(background, 0, 0, camera.viewportWidth, camera.viewportHeight);
-            sb.draw(playerAvatar, camera.viewportWidth/2-400,camera.viewportHeight/2+50, 250, 220);
-            sb.draw(enemyAvatar, (camera.viewportWidth/2),camera.viewportHeight/2+50, 250, 220);
+          //  sb.draw(playerAvatar, camera.viewportWidth/2-400,camera.viewportHeight/2+50, 250, 220);
+          //  sb.draw(enemyAvatar, (camera.viewportWidth/2),camera.viewportHeight/2+50, 250, 220);
+              sb.draw(playerAvatar,oneX*20,oneY*3) ;
+              sb.draw(enemyAvatar, oneX*40,oneY*3);
 
             if (battle!=null && battle.getPlayer1DefanceList().size()>0 && checkBoxMap !=null && checkBoxMap.size()>0) {
                 for (int i = 0; i <battle.getPlayer1DefanceList().size() ; i++) {
@@ -510,35 +533,30 @@ public class BattleState extends State {
 
 
     private void createEnemyBar(){
-        statusEnemy = new Table(skin);
-        enemyName = new Label("Enemy",skin);
-        statusEnemy.add(enemyName);
-        statusEnemy.row();
-        statusEnemy.add(new Label("HP", skin));
-        enemyhealth = new ProgressBar(0, 60, 1, false, skin);
-        enemyhealth.setValue(enemy.getHP());
-        enemyhealth.setColor(Color.FOREST);
-        statusEnemy.add(enemyhealth).width(500);
+        if (enemy.getName()!=null) {
+            statusEnemy = new Table(skin);
+            enemyName = new Label("Enemy", skin);
+            statusEnemy.add(enemyName);
+            statusEnemy.row();
+            statusEnemy.add(new Label("HP", skin));
+            enemyhealth = new ProgressBar(0, enemy.getMaxHP(), 1, false, skin);
+            enemyhealth.setValue(enemy.getHP());
+            enemyhealth.setColor(Color.FOREST);
+            statusEnemy.add(enemyhealth).width(500);
 
-        statusEnemy.row();
+            statusEnemy.row();
 
-        statusEnemy.add(new Label("MP", skin));
-        enemymana = new ProgressBar(0, 100, 1, false, skin);
-        enemymana.setValue(24);
-        enemymana.setColor(BLUE);
-        statusEnemy.add(enemymana).width(500);
-        statusEnemy.setPosition(420,510);
+            statusEnemy.add(new Label("MP", skin));
+            enemymana = new ProgressBar(0, enemy.getMaxMP(), 1, false, skin);
+            enemymana.setValue(enemy.getMP());
+            enemymana.setColor(BLUE);
+            statusEnemy.add(enemymana).width(500);
+            statusEnemy.setPosition(420, 510);
 
-     //   statusEnemy.row();
-
-     //   statusEnemy.add(new Label("SP", skin));
-     //   enemysp = new ProgressBar(0, 100, 1, false, skin);
-     //   enemysp.setValue(50);
-     //   enemysp.setColor(Color.CHARTREUSE);
-    //    statusEnemy.add(enemysp).width(500);
-        statusEnemy.setPosition(camera.viewportWidth/2+400,camera.viewportHeight/1.08f);
-        stage.addActor(statusEnemy);
-      //Gdx.app.log("HariotikaBattleState", "createEnemyBar");
+            statusEnemy.setPosition(camera.viewportWidth / 2 + 400, camera.viewportHeight / 1.08f);
+            stage.addActor(statusEnemy);
+            //Gdx.app.log("HariotikaBattleState", "createEnemyBar");
+        }
 
 
     }

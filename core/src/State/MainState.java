@@ -153,8 +153,8 @@ public class MainState extends State {
         status.row();
 
         status.add(new Label("MP", skin2));
-        mana = new ProgressBar(0, 100, 1, false, skin2);
-        mana.setValue(24);
+        mana = new ProgressBar(0, character.getMaxMP(), 1, false, skin2);
+        mana.setValue(character.getMP());
         mana.setColor(BLUE);
         status.add(mana).width(500);
         status.setPosition(420,510);
@@ -209,9 +209,6 @@ public class MainState extends State {
         final SearchBattleWindow searchBattleWindow = new SearchBattleWindow(skin2,backButton);
         searchBattleWindow.setPosition(400,400);
         searchBattleWindow.setSize(400,300);
-
-
-
 
 
 
@@ -305,6 +302,7 @@ public class MainState extends State {
         handleInput();
         if (load) {
             health.setValue(client.getCharacter().getHP());
+            mana.setValue(client.getCharacter().getMP());
             playerName.setText(client.getCharacter().getName());
         }
     }
@@ -377,10 +375,16 @@ public class MainState extends State {
 
 
 
-
-
     public static ProgressBar getHealth() {
         return health;
+    }
+
+    public static ProgressBar getMana() {
+        return mana;
+    }
+
+    public static void setMana(ProgressBar mana) {
+        MainState.mana = mana;
     }
 
     public static void setHealth(ProgressBar health) {

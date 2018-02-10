@@ -46,8 +46,8 @@ public class Client  {
 
     private MessageHandler messageHandler;
 
-         // URI uri = URI.create("ws://localhost:8081/");
-            URI uri = URI.create("ws://64.250.115.155");
+            URI uri = URI.create("ws://localhost:8081/");
+          //  URI uri = URI.create("ws://64.250.115.155");
           //URI uri = URI.create("ws://10.0.2.2:8081/");
 
 
@@ -236,6 +236,9 @@ public class Client  {
                 break;
             case UpdateTimer:
                 battle.setTimer(message.getTimer());
+                break;
+            case RemoveBattle:
+                 battle=null;
                 break;
             default:
                 System.out.println("Invalid Command Battle Code "+message.getCode());

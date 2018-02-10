@@ -30,6 +30,8 @@ public class Character {
 
     private int maxHP;
     private int HP;
+    private int maxMP;
+    private int MP;
     private String login;
     private int lvl;
     private int experience;
@@ -47,6 +49,8 @@ public class Character {
     private int chance_parry;
     private double hp_perSec;
     private int mp_perSec;
+    private int pointCharacteristics;
+
 
 
 
@@ -200,5 +204,117 @@ public class Character {
     }
 
     public void setAvatar(byte[] result) {
+    }
+
+    public int getDecreasePower_Crit() {
+        return decreasePower_Crit;
+    }
+
+    public void setDecreasePower_Crit(int decreasePower_Crit) {
+        this.decreasePower_Crit = decreasePower_Crit;
+    }
+
+    public int getDecreasePersen_Crit() {
+        return decreasePersen_Crit;
+    }
+
+    public void setDecreasePersen_Crit(int decreasePersen_Crit) {
+        this.decreasePersen_Crit = decreasePersen_Crit;
+    }
+
+    public int getEvesion() {
+        return evesion;
+    }
+
+    public void setEvesion(int evesion) {
+        this.evesion = evesion;
+    }
+
+    public int getDecreaseEnemyEvesion() {
+        return decreaseEnemyEvesion;
+    }
+
+    public void setDecreaseEnemyEvesion(int decreaseEnemyEvesion) {
+        this.decreaseEnemyEvesion = decreaseEnemyEvesion;
+    }
+
+    public int getArmor_penetration() {
+        return armor_penetration;
+    }
+
+    public void setArmor_penetration(int armor_penetration) {
+        this.armor_penetration = armor_penetration;
+    }
+
+    public int getChance_сriticalPhyAttack() {
+        return chance_сriticalPhyAttack;
+    }
+
+    public void setChance_сriticalPhyAttack(int chance_сriticalPhyAttack) {
+        this.chance_сriticalPhyAttack = chance_сriticalPhyAttack;
+    }
+
+    public int getPower_сriticalPhyAttack() {
+        return power_сriticalPhyAttack;
+    }
+
+    public void setPower_сriticalPhyAttack(int power_сriticalPhyAttack) {
+        this.power_сriticalPhyAttack = power_сriticalPhyAttack;
+    }
+
+    public int getChance_counterattack() {
+        return chance_counterattack;
+    }
+
+    public void setChance_counterattack(int chance_counterattack) {
+        this.chance_counterattack = chance_counterattack;
+    }
+
+    public int getChance_parry() {
+        return chance_parry;
+    }
+
+    public void setChance_parry(int chance_parry) {
+        this.chance_parry = chance_parry;
+    }
+
+    public double getHp_perSec() {
+        return hp_perSec;
+    }
+
+    public void setHp_perSec(double hp_perSec) {
+        this.hp_perSec = hp_perSec;
+    }
+
+    public int getMp_perSec() {
+        return mp_perSec;
+    }
+
+    public void setMp_perSec(int mp_perSec) {
+        this.mp_perSec = mp_perSec;
+    }
+
+    public int getPointCharacteristics() {
+        return pointCharacteristics;
+    }
+
+    public void setPointCharacteristics(int pointCharacteristics) {
+        this.pointCharacteristics = pointCharacteristics;
+    }
+
+    public int getMaxMP() {
+        return maxMP;
+    }
+
+    public void setMaxMP(int maxMP) {
+        this.maxMP = maxMP;
+    }
+
+    public int getMP() {
+        return MP;
+    }
+
+    public void setMP(int MP) {
+        this.MP = MP;
     }
 }

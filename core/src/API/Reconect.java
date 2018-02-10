@@ -32,11 +32,10 @@ public class Reconect extends Thread{
     public static Client getClient() {
         if (client == null || !(client.getUserSession().isOpen())) {
             try {
-
                 client = new Client();
-
+                Thread.sleep(1000);
             } catch (Exception e) {
-                // e.printStackTrace();
+                //e.printStackTrace();
                 Gdx.app.log("HariotikaLogsInfo", "Try conection... ");
             }
 

@@ -12,5 +12,8 @@ public enum WsCode {
     RegistrationToBattle,
     CancelRegistrationToBattle,
     UpdateBattle,
-    UpdateTimer
+    UpdateTimer,
+    RemoveBattle,
+    UpdateCharacter
+
 }
