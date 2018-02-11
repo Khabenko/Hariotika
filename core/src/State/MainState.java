@@ -16,6 +16,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.net.HttpRequestBuilder;
 import com.badlogic.gdx.net.HttpStatus;
 import com.badlogic.gdx.net.Socket;
@@ -35,6 +36,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.google.gson.Gson;
+import com.hariotika.Animation;
 import com.hariotika.Hariotika;
 
 
@@ -102,6 +104,9 @@ public class MainState extends State {
 
 
     //  private ImageButton button = new ImageButton();
+
+    private Texture cartman;
+    private Animation cartmanAnimatiom;
 
 
     public MainState(final StateManager sm) {
@@ -266,6 +271,11 @@ public class MainState extends State {
 
       //  System.out.printf(gson.toJson(client));
 
+     //    cartman = new Texture("Animation/cartman.png");
+     //    cartmanAnimatiom = new Animation(new TextureRegion(cartman), 4, 1.5f);
+
+
+
     }
 
     @Override
@@ -280,8 +290,7 @@ public class MainState extends State {
 
     @Override
     public void update(float dt) {
-
-
+      //  cartmanAnimatiom.update(dt);
             if(Gdx.files.local("avatar/"+character.getName()+".png").exists() && character.getAvatar() == null){
                 try {
                     playerAvatar =  new Texture(Gdx.files.local("avatar/"+character.getName()+".png"));
@@ -313,6 +322,7 @@ public class MainState extends State {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         sb.begin();
         sb.draw(background, 0, 0, camera.viewportWidth, camera.viewportHeight);
+      //  sb.draw(cartmanAnimatiom.getFrame(), (camera.viewportWidth/2), camera.viewportHeight/2+50);
         sb.end();
         stage.draw();
 

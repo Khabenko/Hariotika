@@ -10,6 +10,7 @@ public class RoundLogs{
     private boolean playerCounterattack;
     private boolean playerCritkal;
 
+
     public int getPlayerDamaged() {
         return playerDamaged;
     }

@@ -19,7 +19,7 @@ public class CharacteristicsWindows extends Window {
     public CharacteristicsWindows (Skin skin) {
         super("Characteristics", skin);
         Array<String> namesArray = new Array<String>();
-
+/*
         characteristics = new ArrayMap();
         characteristics.put("Strange",client.getCharacter().getStrength());
         characteristics.put("Agility",client.getCharacter().getAgility());
@@ -37,7 +37,7 @@ public class CharacteristicsWindows extends Window {
         characteristics.put("Decrease Persen Crit",client.getCharacter().getDecreasePersen_Crit());
         characteristics.put("Decrease Power Crit",client.getCharacter().getDecreasePower_Crit());
 
-
+*/
 
         for (int i = 0; i < characteristics.size; i++) {
             String key = characteristics.getKeyAt(i);

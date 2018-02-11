@@ -7,5 +7,6 @@ package API;
 public enum Command {
     Login,
     Battle,
+    Characteristic
 
 }

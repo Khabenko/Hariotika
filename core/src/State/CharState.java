@@ -44,6 +44,7 @@ import static API.Client.character;
 import static API.Reconect.client;
 import static State.MainState.exp;
 import static State.MainState.getHealth;
+import static State.MainState.getMana;
 import static State.MainState.playerName;
 import static com.hariotika.Hariotika.HEIGHT;
 import static com.hariotika.Hariotika.WIDTH;
@@ -87,6 +88,20 @@ public class CharState extends State {
 
 
 
+    Label labelPhy_attack;
+    Label labelArmor_penetration;
+    Label labelArmor;
+    Label labelCriticalchance;
+    Label labelCriticalpower;
+    Label labelParryChance;
+    Label labelCounterattackChance;
+    Label labelEvesionChance;
+    Label labelDecreaseEnemyEvesion;
+    Label labelDecreasePersenCrit;
+    Label labelDecreasePowerCrit;
+
+
+
     private Texture background;
 
     public CharState(final StateManager sm , final Skin skin) {
@@ -113,31 +128,34 @@ public class CharState extends State {
 
         addStrength = new TextButton("Add",skin);;
         labelStrength = new Label("Strength " +character.getStrength(),skinChar);
-        labelStrength.setPosition(oneX*70,oneY*35);
-        addStrength.setPosition(labelStrength.getX()+oneX*20,labelStrength.getY());
+        labelStrength.setPosition(oneX*70,oneY*45);
+        addStrength.setPosition(labelStrength.getX()+oneX*15,labelStrength.getY()-oneY);
+        addStrength.setSize(oneX*5,oneY*3);
 
         addAgility = new TextButton("Add",skin);
         labelAgility = new Label("Agility " +character.getAgility(),skinChar);
-        labelAgility.setPosition(labelStrength.getX(),labelStrength.getY()-oneY*2);
-        addAgility.setPosition(labelAgility.getX()+oneX*20,labelAgility.getY());
+        labelAgility.setPosition(labelStrength.getX(),labelStrength.getY()-oneY*4);
+        addAgility.setPosition(labelAgility.getX()+oneX*15,labelAgility.getY()-oneY);
+        addAgility.setSize(oneX*5,oneY*3);
 
         addIntuition = new TextButton("Add",skin);
         labelIntuition= new Label("Intuition " +character.getIntuition(),skinChar);
-        labelIntuition.setPosition(labelStrength.getX(),labelAgility.getY()-oneY*2);
-        addIntuition.setPosition(labelIntuition.getX()+oneX*20,labelIntuition.getY());
+        labelIntuition.setPosition(labelStrength.getX(),labelAgility.getY()-oneY*4);
+        addIntuition.setPosition(labelIntuition.getX()+oneX*15,labelIntuition.getY()-oneY);
+        addIntuition.setSize(oneX*5,oneY*3);
 
         addWisdom = new TextButton("Add",skin);
         labelWisdom = new Label("Wisdom"+character.getWisdom(),skinChar);
-        labelWisdom.setPosition(labelIntuition.getX(),labelIntuition.getY()-oneY*2);
-        addWisdom.setPosition(labelWisdom.getX()+oneX*20,labelWisdom.getY());
-
+        labelWisdom.setPosition(labelStrength.getX(),labelIntuition.getY()-oneY*4);
+        addWisdom.setPosition(labelWisdom.getX()+oneX*15,labelWisdom.getY()-oneY);
+        addWisdom.setSize(oneX*5,oneY*3);
 
 
         labelVitality= new Label("Vitality " +character.getVitality(),skinChar);
-        labelVitality.setPosition(labelStrength.getX(),labelIntuition.getY()-oneY*2);
+        labelVitality.setPosition(labelStrength.getX(),labelWisdom.getY()-oneY*4);
 
         labelIntelligence= new Label("Intelligence " +character.getIntelligence(),skinChar);
-        labelIntelligence.setPosition(labelStrength.getX(),labelVitality.getY()-oneY*2);
+        labelIntelligence.setPosition(labelStrength.getX(),labelVitality.getY()-oneY*4);
 
 
 
@@ -148,6 +166,7 @@ public class CharState extends State {
         stage.addActor(labelAgility);
         stage.addActor(labelIntuition);
         stage.addActor(labelVitality);
+        stage.addActor(labelWisdom);
         stage.addActor(labelIntelligence);
         stage.addActor(labelStrength);
         stage.addActor(addStrength);
@@ -159,6 +178,65 @@ public class CharState extends State {
             setAddButtunVisible(false);
         }
 
+        labelPhy_attack = new Label("Damage "+client.getCharacter().getPhy_attack(),skinChar);
+        labelArmor = new Label("Armor "+client.getCharacter().getArmor(),skinChar);
+        labelDecreasePersenCrit  = new Label("Decrease Persen Crit "+client.getCharacter().getDecreasePersen_Crit(),skinChar);
+        labelDecreasePowerCrit = new Label("Decrease Power Crit "+client.getCharacter().getDecreasePower_Crit(),skinChar);
+        labelArmor_penetration = new Label("Armor penetration "+client.getCharacter().getArmor_penetration(),skinChar);
+        labelCriticalchance = new Label("Critical chance "+client.getCharacter().getChance_criticalPhyAttack(),skinChar);
+        labelCriticalpower = new Label("Critical power "+client.getCharacter().getPower_criticalPhyAttack(),skinChar);
+        labelParryChance = new Label("Parry chance "+client.getCharacter().getChance_parry(),skinChar);
+        labelCounterattackChance = new Label("Counterattack chance "+client.getCharacter().getChance_counterattack(),skinChar);
+        labelEvesionChance  = new Label("Evesion chance "+client.getCharacter().getEvesion(),skinChar);
+        labelDecreaseEnemyEvesion = new Label("Decrease Enemy Evesion " +client.getCharacter().getDecreaseEnemyEvesion(),skinChar);
+
+
+        labelPhy_attack.setPosition(labelStrength.getX()-oneX*40, labelStrength.getY());
+        labelArmor.setPosition(labelStrength.getX()-oneX*40, labelPhy_attack.getY()-oneY*2);
+        labelDecreasePersenCrit.setPosition(labelStrength.getX()-oneX*40, labelArmor.getY()-oneY*2);
+        labelDecreasePowerCrit.setPosition(labelStrength.getX()-oneX*40, labelDecreasePersenCrit.getY()-oneY*2);
+
+
+        labelEvesionChance.setPosition(labelStrength.getX()-oneX*40, labelDecreasePowerCrit.getY()-oneY*2);
+        labelDecreaseEnemyEvesion .setPosition(labelStrength.getX()-oneX*40, labelEvesionChance.getY()-oneY*2);
+        labelArmor_penetration.setPosition(labelStrength.getX()-oneX*40, labelDecreaseEnemyEvesion.getY()-oneY*2);
+
+
+        labelCriticalchance.setPosition(labelStrength.getX()-oneX*40, labelArmor_penetration.getY()-oneY*2);
+        labelCriticalpower.setPosition(labelStrength.getX()-oneX*40, labelCriticalchance.getY()-oneY*2);
+        labelCounterattackChance.setPosition(labelStrength.getX()-oneX*40, labelCriticalpower.getY()-oneY*2);
+        labelParryChance.setPosition(labelStrength.getX()-oneX*40, labelCounterattackChance.getY()-oneY*2);
+
+
+
+
+ /*
+        labelArmor_penetration.setPosition(labelStrength.getX()-oneX*40, labelStrength.getY());
+        labelArmor.setPosition(labelStrength.getX()-oneX*40,labelArmor_penetration.getY()-oneY*2);
+
+        labelArmor_penetration.setPosition(labelStrength.getX()-oneX*40, labelStrength.getY());
+        labelArmor.setPosition(labelStrength.getX()-oneX*40,labelArmor_penetration.getY()-oneY*2);
+        labelCriticalchance.setPosition(labelStrength.getX()-oneX*40,labelArmor.getY()-oneY*2);
+        labelCriticalpower.setPosition(labelStrength.getX()-oneX*40,labelCriticalchance.getY()-oneY*2);
+        labelParryChance.setPosition(labelStrength.getX()-oneX*40,labelCriticalpower.getY()-oneY*2);
+        labelCounterattackChance.setPosition(labelStrength.getX()-oneX*40,labelParryChance.getY()-oneY*2);
+        labelEvesionChance.setPosition(labelStrength.getX()-oneX*40,labelCounterattackChance.getY()-oneY*2);
+        labelDecreaseEnemyEvesion.setPosition(labelStrength.getX()-oneX*40,labelEvesionChance.getY()-oneY*2);
+        labelDecreasePersenCrit.setPosition(labelStrength.getX()-oneX*40,labelDecreaseEnemyEvesion.getY()-oneY*2);
+        labelDecreasePowerCrit.setPosition(labelStrength.getX()-oneX*40,labelDecreasePersenCrit.getY()-oneY*2);
+*/
+
+        stage.addActor(labelPhy_attack);
+        stage.addActor(labelArmor_penetration);
+        stage.addActor(labelArmor);
+        stage.addActor(labelCriticalchance);
+        stage.addActor(labelCriticalpower);
+        stage.addActor(labelParryChance);
+        stage.addActor(labelCounterattackChance);
+        stage.addActor(labelEvesionChance);
+        stage.addActor(labelDecreaseEnemyEvesion);
+        stage.addActor(labelDecreasePersenCrit);
+        stage.addActor(labelDecreasePowerCrit);
 
 
 
@@ -180,7 +258,7 @@ public class CharState extends State {
 
         TextButton resetPoint = new TextButton("Reset",skin);
         resetPoint.setSize(oneX*7,oneY*5);
-        resetPoint.setPosition(oneX*70,oneY*10);
+        resetPoint.setPosition(oneX*75,oneY*10);
 
         freePoint = new Label("Point "+point,skinChar);
         freePoint.setPosition(oneX*75,oneY*17);
@@ -192,25 +270,17 @@ public class CharState extends State {
 
 
 
-
-
-
-
         addStrength.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 if (character.getPointCharacteristics()>0) {
-                    character.setPointCharacteristics(character.getPointCharacteristics() - 1);
-                    character.setStrength(character.getStrength() + 1);
-                    hariotikaMessage = new HariotikaMessage(Command.Login, WsCode.UpdateCharacter, character);
+                    hariotikaMessage = new HariotikaMessage(Command.Characteristic, WsCode.Strength,character);
                     client.sendMessage(gson.toJson(hariotikaMessage));
-                    if (character.getPointCharacteristics()<=0){
-                        setAddButtunVisible(false);
-                    }
                 }
-                else {
+                if (character.getPointCharacteristics()<=0){
                     setAddButtunVisible(false);
                 }
+
 
             };
         });
@@ -220,15 +290,10 @@ public class CharState extends State {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 if (character.getPointCharacteristics()>0) {
-                    character.setPointCharacteristics(character.getPointCharacteristics() - 1);
-                    character.setAgility(character.getAgility() + 1);
-                    hariotikaMessage = new HariotikaMessage(Command.Login, WsCode.UpdateCharacter, character);
+                    hariotikaMessage = new HariotikaMessage(Command.Characteristic, WsCode.Agility,character);
                     client.sendMessage(gson.toJson(hariotikaMessage));
-                    if (character.getPointCharacteristics()<=0){
-                        setAddButtunVisible(false);
-                    }
                 }
-                else {
+                if (character.getPointCharacteristics()<=0){
                     setAddButtunVisible(false);
                 }
 
@@ -240,16 +305,12 @@ public class CharState extends State {
         addIntuition.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+
                 if (character.getPointCharacteristics()>0) {
-                    character.setPointCharacteristics(character.getPointCharacteristics() - 1);
-                    character.setIntuition(character.getIntuition() + 1);
-                    hariotikaMessage = new HariotikaMessage(Command.Login, WsCode.UpdateCharacter, character);
+                    hariotikaMessage = new HariotikaMessage(Command.Characteristic, WsCode.Intuition,character);
                     client.sendMessage(gson.toJson(hariotikaMessage));
-                    if (character.getPointCharacteristics()<=0){
-                        setAddButtunVisible(false);
-                    }
                 }
-                else {
+                if (character.getPointCharacteristics()<=0){
                     setAddButtunVisible(false);
                 }
 
@@ -261,24 +322,15 @@ public class CharState extends State {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 if (character.getPointCharacteristics()>0) {
-                    character.setPointCharacteristics(character.getPointCharacteristics() - 1);
-                    character.setWisdom(character.getWisdom() + 1);
-                    hariotikaMessage = new HariotikaMessage(Command.Login, WsCode.UpdateCharacter, character);
+                    hariotikaMessage = new HariotikaMessage(Command.Characteristic, WsCode.Wisdom,character);
                     client.sendMessage(gson.toJson(hariotikaMessage));
-                    if (character.getPointCharacteristics()<=0){
-                        setAddButtunVisible(false);
-                    }
                 }
-                else {
+                if (character.getPointCharacteristics()<=0){
                     setAddButtunVisible(false);
                 }
 
             };
         });
-
-
-
-
 
 
         backButton.addListener( new ClickListener() {
@@ -293,16 +345,10 @@ public class CharState extends State {
         resetPoint.addListener( new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                  int total =0 ;
-                  total = character.getAgility()+character.getStrength()+character.getIntuition();
-                  character.setStrength(0);
-                  character.setAgility(0);
-                  character.setIntuition(0);
-                  character.setPointCharacteristics(total);
-                  hariotikaMessage = new HariotikaMessage(Command.Login, WsCode.UpdateCharacter, character);
-                 client.sendMessage(gson.toJson(hariotikaMessage));
 
-                setAddButtunVisible(true);
+                hariotikaMessage = new HariotikaMessage(Command.Characteristic, WsCode.Reset,character);
+                client.sendMessage(gson.toJson(hariotikaMessage));
+       //         setAddButtunVisible(true);
 
 
             };
@@ -336,6 +382,7 @@ public class CharState extends State {
     @Override
     public void update(float dt) {
          getHealth().setValue(client.getCharacter().getHP());
+         getMana().setValue(client.getCharacter().getMP());
 
         labelStrength.setText("Strength " +character.getStrength());
         labelAgility.setText("Agility " +character.getAgility());
@@ -345,8 +392,23 @@ public class CharState extends State {
         labelIntelligence.setText("Intelligence " +character.getIntelligence());
 
 
+        labelArmor_penetration.setText("Armor penetration "+client.getCharacter().getArmor_penetration());;
+        labelArmor.setText("Armor "+client.getCharacter().getArmor());
+        labelCriticalchance.setText("Critical chance "+client.getCharacter().getChance_criticalPhyAttack());
+        labelCriticalpower.setText("Critical power "+client.getCharacter().getPower_criticalPhyAttack());
+        labelParryChance.setText("Parry chance "+client.getCharacter().getChance_parry());
+        labelCounterattackChance.setText("Counterattack chance "+client.getCharacter().getChance_counterattack());
+        labelEvesionChance.setText("Evesion chance "+client.getCharacter().getEvesion());
+        labelDecreaseEnemyEvesion.setText("Decrease Enemy Evesion " +client.getCharacter().getDecreaseEnemyEvesion());
+        labelDecreasePersenCrit.setText("Decrease Persen Crit "+client.getCharacter().getDecreasePersen_Crit());
+        labelDecreasePowerCrit.setText("Decrease Power Crit "+client.getCharacter().getDecreasePower_Crit());
+        labelPhy_attack.setText("Damage "+client.getCharacter().getPhy_attack());
 
 
+
+
+        if (character.getPointCharacteristics()>0)
+        setAddButtunVisible(true);
 
         freePoint.setText("Points "+String.valueOf(character.getPointCharacteristics()));
 

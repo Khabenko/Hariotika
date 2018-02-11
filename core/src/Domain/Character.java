@@ -43,14 +43,14 @@ public class Character {
     private int evesion;
     private int decreaseEnemyEvesion;
     private int armor_penetration;
-    private int chance_сriticalPhyAttack;
-    private int power_сriticalPhyAttack;
+    private int chance_criticalPhyAttack;
+    private int power_criticalPhyAttack;
     private int chance_counterattack;
     private int chance_parry;
     private double hp_perSec;
     private int mp_perSec;
     private int pointCharacteristics;
-
+    private int phy_attack;
 
 
 
@@ -246,20 +246,20 @@ public class Character {
         this.armor_penetration = armor_penetration;
     }
 
-    public int getChance_сriticalPhyAttack() {
-        return chance_сriticalPhyAttack;
+    public int getChance_criticalPhyAttack() {
+        return chance_criticalPhyAttack;
     }
 
-    public void setChance_сriticalPhyAttack(int chance_сriticalPhyAttack) {
-        this.chance_сriticalPhyAttack = chance_сriticalPhyAttack;
+    public void setChance_criticalPhyAttack(int chance_criticalPhyAttack) {
+        this.chance_criticalPhyAttack = chance_criticalPhyAttack;
     }
 
-    public int getPower_сriticalPhyAttack() {
-        return power_сriticalPhyAttack;
+    public int getPower_criticalPhyAttack() {
+        return power_criticalPhyAttack;
     }
 
-    public void setPower_сriticalPhyAttack(int power_сriticalPhyAttack) {
-        this.power_сriticalPhyAttack = power_сriticalPhyAttack;
+    public void setPower_criticalPhyAttack(int power_criticalPhyAttack) {
+        this.power_criticalPhyAttack = power_criticalPhyAttack;
     }
 
     public int getChance_counterattack() {
@@ -316,5 +316,13 @@ public class Character {
 
     public void setMP(int MP) {
         this.MP = MP;
+    }
+
+    public int getPhy_attack() {
+        return phy_attack;
+    }
+
+    public void setPhy_attack(int phy_attack) {
+        this.phy_attack = phy_attack;
     }
 }

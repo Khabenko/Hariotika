@@ -19,7 +19,7 @@ public class Animation {
         frames = new Array<TextureRegion>();
         int frameWidth = region.getRegionWidth() / frameCount;
         for (int i = 0; i < frameCount; i++){
-            frames.add(new TextureRegion(region, i * 262, 5, 20, 20));
+            frames.add(new TextureRegion(region, i * 76, 5, 200, 200));
 
         }
         this.frameCount = frameCount;

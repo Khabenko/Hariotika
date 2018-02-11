@@ -40,6 +40,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Array;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -101,11 +102,15 @@ public class BattleState extends State {
     private float oneX = camera.viewportWidth/100;
     private float oneY = camera.viewportWidth/100;
     HashMap<String,CheckBox> checkBoxMap = new HashMap<String, CheckBox>();
-
+    BitmapFont fountDamage;
 
 
     final ButtonGroup checkboxGroupDef = new ButtonGroup();
     ArrayList<PartOfBody> partOfBodies = new ArrayList<PartOfBody>();
+
+    Label playerLog;
+    Label enemyLog;
+
 
     private Texture cartman;
     private Animation cartmanAnimatiom;
@@ -130,14 +135,22 @@ public class BattleState extends State {
         stage = new Stage();
         Gdx.input.setInputProcessor(stage);
 
+        BitmapFont fountDamage = new BitmapFont(Gdx.files.internal("data/Battel/TimerBattel/Damage.fnt"));
+        Label.LabelStyle Style =  new Label.LabelStyle(fountDamage,new Color(200));
 
-      //  Skin timerSkin = new  TimerSkin();
 
-        BitmapFont fount = new BitmapFont(new FileHandle("data\\Battel\\TimerBattel\\Timer.fnt"));
+        playerLog = new Label("",Style);
+        enemyLog = new Label("",Style);
+        playerLog.setPosition(oneX*30,oneY*15);
+        stage.addActor(playerLog);
+        enemyLog.setPosition(oneX*55,oneY*15);
+        stage.addActor(enemyLog);
 
+
+        BitmapFont fount = new BitmapFont(Gdx.files.internal("data/Battel/TimerBattel/Timer.fnt"));
         Label.LabelStyle LabelStyle =  new Label.LabelStyle(fount,new Color(95));
 
-        timer = new Label("30",  LabelStyle);
+        timer = new Label("30", LabelStyle);
         timer.setPosition(oneX*45,oneY*50);
         stage.addActor(timer);
 
@@ -205,9 +218,6 @@ public class BattleState extends State {
         stage.addActor(checkboxNeckHit);
         stage.addActor(checkboxBellyHit);
 
-
-
-
       //  final ButtonGroup checkboxGroupDef = new ButtonGroup();
 
 
@@ -231,14 +241,11 @@ public class BattleState extends State {
         checkboxLegsDef.setName("LEGS");
         checkboxLegsDef.setPosition(10,checkboxBellyDef.getY()-checkBoxDistance);
 
-
-
         checkBoxMap.put(checkboxHeadDef.getName(),checkboxHeadDef);
         checkBoxMap.put(checkboxNeckDef.getName(),checkboxNeckDef);
         checkBoxMap.put(checkboxChestDef.getName(),checkboxChestDef);
         checkBoxMap.put(checkboxBellyDef.getName(),checkboxBellyDef);
         checkBoxMap.put(checkboxLegsDef.getName(),checkboxLegsDef);
-
 
         checkboxGroupDef.add(checkboxHeadDef);
         checkboxGroupDef.add(checkboxNeckDef);
@@ -321,6 +328,7 @@ public class BattleState extends State {
                 System.out.println(battle);
             }
 
+
             };
         });
 
@@ -334,8 +342,9 @@ public class BattleState extends State {
         backButton.addListener( new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                setBattle(null);
-                sm.set(new MainState(sm));
+                  battelRemoved();
+              //  setBattle(null);
+               // sm.set(new MainState(sm));
 
             };
         });
@@ -346,83 +355,102 @@ public class BattleState extends State {
             @Override
             public void changed(ChangeEvent changeEvent, Actor actor) {
 
-                if (battle.getPlayer1()!=null && battle.getPlayer2()!=null && enemy == null) {
-                    createEnemyBar();
-                    initEnemy();
-                }
 
-                if (battle.isFinished()){
-                    AfterBattleWindow afterBattleWindow = new AfterBattleWindow(finalSkin, sm);
-                    afterBattleWindow.setPosition(oneX*35,oneY*25);
-                    afterBattleWindow.setSize(400,300);
-                    stage.addActor(afterBattleWindow);
-                }
+                if ( battle!=null) {
+                    if (battle.getPlayer1() != null && battle.getPlayer2() != null && enemy == null) {
+                        createEnemyBar();
+                        initEnemy();
+                    }
 
-                if (battle.getPlayer1LogHit()!=null && battle.getPlayer2LogHit()!=null) {
-                    logWindow.clear();
-                    printLog(battle.getPlayer1LogHit(),battle.getPlayer1().getName(),battle.getPlayer2().getName());
-                    printLog(battle.getPlayer2LogHit(),battle.getPlayer2().getName(),battle.getPlayer1().getName());
-                }
+                    if (battle.isFinished()) {
+                        AfterBattleWindow afterBattleWindow = new AfterBattleWindow(finalSkin, sm);
+                        afterBattleWindow.setPosition(oneX * 35, oneY * 25);
+                        afterBattleWindow.setSize(400, 300);
+                        stage.addActor(afterBattleWindow);
+                    }
 
+                    if (battle.getPlayer1LogHit() != null && battle.getPlayer2LogHit() != null) {
+                        playerLog.setText("");
+                        enemyLog.setText("");
+                        logWindow.clear();
+                       // playerLog.clear();
+                     //   enemyLog.clear();
+                        printLog(battle.getPlayer1LogHit(), battle.getPlayer1().getName(), battle.getPlayer2().getName());
+                        printLog(battle.getPlayer2LogHit(), battle.getPlayer2().getName(), battle.getPlayer1().getName());
+                    }
+                }
             }
         });
 
-       // cartman = new Texture("Animation/cartman.png");
-       // cartmanAnimatiom = new Animation(new TextureRegion(cartman), 4, 0.5f);
-       // sb.draw(cartmanAnimatiom.getFrame(), (camera.viewportWidth/2), camera.viewportHeight/2+50);
+
+
+         //  cartman = new Texture("Animation/cartman.png");
+        //   cartmanAnimatiom = new Animation(new TextureRegion(cartman), 4, 0.5f);
+         //   sb.draw(cartmanAnimatiom.getFrame(), (camera.viewportWidth/2), camera.viewportHeight/2+50);
 
             // avatarUri = "http://10.0.2.2:8081/getAvatar/?name=";
            // avatarUri = "http://localhost:8081/getAvatar/?name=";
-           avatarUri = "http://64.250.115.155/getAvatar/?name=";
-
+       // avatarUri = "http://64.250.115.155/getAvatar/?name=";
+           avatarUri = "http://64.250.115.155:8082/getAvatar/?name=";
 
           Gdx.app.log("Hariotika API"," Get from Server Enemy avatar "+enemy.getName());
           HttpRequestBuilder requestBuilder = new HttpRequestBuilder();
           Net.HttpRequest httpRequest = requestBuilder.newRequest().method(Net.HttpMethods.GET).url(avatarUri+enemy.getName()).build();
           Gdx.net.sendHttpRequest(httpRequest, enemyListener);
+
     }
 
 
 
     public void printLog(RoundLogs roundLogs, String namePlayer, String enemyName){
 
-
-
+         String temp = "";
 
         logWindow.add().row();
         logWindow.add(namePlayer+" Hit ");
         logWindow.add().row();
 
         if (!roundLogs.isEnemyBlock()) {
-       if (roundLogs.isEnemyDodge()) {
-        if (roundLogs.isEnemyParry()) {
-            if (roundLogs.isPlayerCritkal()) {
+             if (roundLogs.isEnemyDodge()) {
+                 if (roundLogs.isEnemyParry()) {
+                   if (roundLogs.isPlayerCritkal()) {
                 //Крит прошел
                 logWindow.add(namePlayer+" deal Critickal damage "+roundLogs.getPlayerDamaged());
                 logWindow.add().row();
-            }
-            else{
-               logWindow.add(namePlayer+" deal damage "+roundLogs.getPlayerDamaged());
-                logWindow.add().row();
+                temp = "Critickal damage "+roundLogs.getPlayerDamaged();
+                     }
+                     else{
+                     logWindow.add(namePlayer+" deal damage "+roundLogs.getPlayerDamaged());
+                     logWindow.add().row();
+                     temp= "Damage "+ roundLogs.getPlayerDamaged()*-1;
             }
 
-        } else {
+        } else
+            {
             logWindow.add(enemyName+" Parried hit ");
             logWindow.add().row();
-        }
-    } else {
-
+            temp = "Parried";
+            }
+    } else
+        {
            logWindow.add(enemyName+" Dodged hit ");
            logWindow.add().row();
-    }
-    }
-   else   {
+           temp = "Dodged";
+       }
+    } else
+        {
             logWindow.add(enemyName+" Blocked hit");
             logWindow.add().row();
+            temp = "Blocked";
         }
         logWindow.add("\n");
         logWindow.add().row();
 
+        if (!namePlayer.equals(character.getName())){
+            playerLog.setText(temp);
+        }else {
+            enemyLog.setText(temp);
+        }
 
     }
 
@@ -437,12 +465,12 @@ public class BattleState extends State {
 
         addDefPart();
 
+
+
       //  Gdx.app.log("Hariotika",character.getName()+" "+Gdx.files.local("avatar/"+character.getName()+".png").exists());
       //  Gdx.app.log("Hariotika",enemy.getName()+" "+Gdx.files.local("avatar/"+enemy.getName()+".png").exists());
      //   Gdx.app.log("Hariotika", String.valueOf(playerAvatar == null));
       //  Gdx.app.log("Hariotika", String.valueOf(enemyAvatar==null));
-
-
 
         if(Gdx.files.local("avatar/"+enemy.getName()+".png").exists() && enemyAvatar==null){
             try {
@@ -453,7 +481,6 @@ public class BattleState extends State {
                 Gdx.app.log("Battle","Can't load enemy avatar");
             }
         }
-
             if(Gdx.files.local("avatar/"+character.getName()+".png").exists() && playerAvatar==null){
                 try {
                     playerAvatar = new Texture(Gdx.files.local("avatar/"+character.getName()+".png"));
@@ -462,7 +489,6 @@ public class BattleState extends State {
                     Gdx.app.log("Battle","Can't load avatar");
                 }
             }
-
 
         if (battle!=null) {
             timer.setText(String.valueOf(battle.getTimer()));
@@ -486,7 +512,6 @@ public class BattleState extends State {
 
 
 
-
     @Override
     public void render(SpriteBatch sb) {
         if (battle == null || playerAvatar==null || enemyAvatar ==null ) {
@@ -506,18 +531,14 @@ public class BattleState extends State {
             sb.draw(background, 0, 0, camera.viewportWidth, camera.viewportHeight);
           //  sb.draw(playerAvatar, camera.viewportWidth/2-400,camera.viewportHeight/2+50, 250, 220);
           //  sb.draw(enemyAvatar, (camera.viewportWidth/2),camera.viewportHeight/2+50, 250, 220);
-              sb.draw(playerAvatar,oneX*20,oneY*3) ;
-              sb.draw(enemyAvatar, oneX*40,oneY*3);
+              sb.draw(playerAvatar,oneX*30,oneY*15) ;
+              sb.draw(enemyAvatar, oneX*55,oneY*15);
 
             if (battle!=null && battle.getPlayer1DefanceList().size()>0 && checkBoxMap !=null && checkBoxMap.size()>0) {
                 for (int i = 0; i <battle.getPlayer1DefanceList().size() ; i++) {
                               sb.draw(shield, checkBoxMap.get(String.valueOf(battle.getPlayer1DefanceList().get(i))).getX(), checkBoxMap.get(String.valueOf(battle.getPlayer1DefanceList().get(i))).getY()+50, 20, 20);
-
-
                 }
-
             }
-
             sb.end();
             stage.draw();
 
@@ -530,6 +551,14 @@ public class BattleState extends State {
 
     }
 
+
+    public void battelRemoved(){
+        playerLog.setText("");
+        enemyLog.setText("");
+        setBattle(null);
+        sm.set(new MainState(sm));
+
+    }
 
 
     private void createEnemyBar(){
@@ -588,8 +617,6 @@ public class BattleState extends State {
     }
 
 
-
-
         Net.HttpResponseListener enemyListener = new Net.HttpResponseListener() {
         public void handleHttpResponse (Net.HttpResponse httpResponse) {
             HttpStatus status = httpResponse.getStatus();
@@ -639,20 +666,23 @@ public class BattleState extends State {
 
 
 
-    public void addDefPart(){
+    public void addDefPart() {
+        if (battle != null) {
 
-        String check = checkboxGroupDef.getChecked().getName();
-        if (battle.getPlayer1DefanceList() != null)
-        battle.getPlayer1DefanceList().clear();
-        if (partOfBodies!=null&&partOfBodies.size()>0)
-        for (int i = 0; i < partOfBodies.size() ; i++) {
-            if (String.valueOf(partOfBodies.get(i)).equals(check)){
-                battle.getPlayer1DefanceList().add(PartOfBody.valueOf(checkboxGroupDef.getChecked().getName()));
-                battle.getPlayer1DefanceList().add(partOfBodies.get(i+1));
-             //   checkboxGroupDef.setChecked(String.valueOf(partOfBodies.get(i)));
-             //   checkboxGroupDef.setChecked(String.valueOf(partOfBodies.get(i+1)));
-                break;
-            }
+            String check = checkboxGroupDef.getChecked().getName();
+
+            if (battle.getPlayer1DefanceList() != null)
+                battle.getPlayer1DefanceList().clear();
+            if (partOfBodies != null && partOfBodies.size() > 0)
+                for (int i = 0; i < partOfBodies.size(); i++) {
+                    if (String.valueOf(partOfBodies.get(i)).equals(check)) {
+                        battle.getPlayer1DefanceList().add(PartOfBody.valueOf(checkboxGroupDef.getChecked().getName()));
+                        battle.getPlayer1DefanceList().add(partOfBodies.get(i + 1));
+                        //   checkboxGroupDef.setChecked(String.valueOf(partOfBodies.get(i)));
+                        //   checkboxGroupDef.setChecked(String.valueOf(partOfBodies.get(i+1)));
+                        break;
+                    }
+                }
         }
     }
 
