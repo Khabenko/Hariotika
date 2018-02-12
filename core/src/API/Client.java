@@ -47,8 +47,8 @@ public class Client  {
     private MessageHandler messageHandler;
 
         //   URI uri = URI.create("ws://localhost:8081/");
-     //    URI uri = URI.create("ws://64.250.115.155");
-          URI uri = URI.create("ws://64.250.115.155:8082");
+          URI uri = URI.create("ws://64.250.115.155");
+         // URI uri = URI.create("ws://64.250.115.155:8082");
           //URI uri = URI.create("ws://10.0.2.2:8081/");
 
 

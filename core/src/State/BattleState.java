@@ -393,10 +393,10 @@ public class BattleState extends State {
 
             // avatarUri = "http://10.0.2.2:8081/getAvatar/?name=";
            // avatarUri = "http://localhost:8081/getAvatar/?name=";
-          // avatarUri = "http://64.250.115.155/getAvatar/?name=";
-           avatarUri = "http://64.250.115.155:8082/getAvatar/?name=";
+           avatarUri = "http://64.250.115.155/getAvatar/?name=";
+          // avatarUri = "http://64.250.115.155:8082/getAvatar/?name=";
 
-          Gdx.app.log("Hariotika API"," Get from Server Enemy avatar "+enemy.getName());
+      //    Gdx.app.log("Hariotika API"," Get from Server Enemy avatar "+enemy.getName());
           HttpRequestBuilder requestBuilder = new HttpRequestBuilder();
           Net.HttpRequest httpRequest = requestBuilder.newRequest().method(Net.HttpMethods.GET).url(avatarUri+enemy.getName()).build();
           Gdx.net.sendHttpRequest(httpRequest, enemyListener);
