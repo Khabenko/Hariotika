@@ -150,22 +150,17 @@ public class CharState extends State {
         addWisdom.setPosition(labelWisdom.getX()+oneX*15,labelWisdom.getY()-oneY);
         addWisdom.setSize(oneX*5,oneY*3);
 
-        addVitality = new TextButton("Add",skin);
+
         labelVitality= new Label("Vitality " +character.getVitality(),skinChar);
         labelVitality.setPosition(labelStrength.getX(),labelWisdom.getY()-oneY*4);
-        addVitality.setPosition(labelVitality.getX()+oneX*15,labelVitality.getY()-oneY);
-        addVitality.setSize(oneX*5,oneY*3);
 
-
-
-        addIntelligence = new TextButton("Add",skin);
         labelIntelligence= new Label("Intelligence " +character.getIntelligence(),skinChar);
         labelIntelligence.setPosition(labelStrength.getX(),labelVitality.getY()-oneY*4);
-        addIntelligence.setPosition(labelIntelligence.getX()+oneX*15,labelIntelligence.getY()-oneY);
-        addIntelligence.setSize(oneX*5,oneY*3);
 
 
 
+        TextButton addVitality;
+        TextButton addIntelligence;
 
 
         stage.addActor(labelAgility);
@@ -178,8 +173,6 @@ public class CharState extends State {
         stage.addActor(addAgility);
         stage.addActor(addIntuition);
         stage.addActor(addWisdom);
-        stage.addActor(addVitality);
-        stage.addActor(addIntelligence);
 
         if (character.getPointCharacteristics()<=0){
             setAddButtunVisible(false);
@@ -217,6 +210,21 @@ public class CharState extends State {
 
 
 
+ /*
+        labelArmor_penetration.setPosition(labelStrength.getX()-oneX*40, labelStrength.getY());
+        labelArmor.setPosition(labelStrength.getX()-oneX*40,labelArmor_penetration.getY()-oneY*2);
+
+        labelArmor_penetration.setPosition(labelStrength.getX()-oneX*40, labelStrength.getY());
+        labelArmor.setPosition(labelStrength.getX()-oneX*40,labelArmor_penetration.getY()-oneY*2);
+        labelCriticalchance.setPosition(labelStrength.getX()-oneX*40,labelArmor.getY()-oneY*2);
+        labelCriticalpower.setPosition(labelStrength.getX()-oneX*40,labelCriticalchance.getY()-oneY*2);
+        labelParryChance.setPosition(labelStrength.getX()-oneX*40,labelCriticalpower.getY()-oneY*2);
+        labelCounterattackChance.setPosition(labelStrength.getX()-oneX*40,labelParryChance.getY()-oneY*2);
+        labelEvesionChance.setPosition(labelStrength.getX()-oneX*40,labelCounterattackChance.getY()-oneY*2);
+        labelDecreaseEnemyEvesion.setPosition(labelStrength.getX()-oneX*40,labelEvesionChance.getY()-oneY*2);
+        labelDecreasePersenCrit.setPosition(labelStrength.getX()-oneX*40,labelDecreaseEnemyEvesion.getY()-oneY*2);
+        labelDecreasePowerCrit.setPosition(labelStrength.getX()-oneX*40,labelDecreasePersenCrit.getY()-oneY*2);
+*/
 
         stage.addActor(labelPhy_attack);
         stage.addActor(labelArmor_penetration);
@@ -325,41 +333,6 @@ public class CharState extends State {
         });
 
 
-
-
-        addVitality.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                if (character.getPointCharacteristics()>0) {
-                    hariotikaMessage = new HariotikaMessage(Command.Characteristic, WsCode.Vitality,character);
-                    client.sendMessage(gson.toJson(hariotikaMessage));
-                }
-                if (character.getPointCharacteristics()<=0){
-                    setAddButtunVisible(false);
-                }
-
-            };
-        });
-
-
-        addIntelligence.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                if (character.getPointCharacteristics()>0) {
-                    hariotikaMessage = new HariotikaMessage(Command.Characteristic, WsCode.Intelligence,character);
-                    client.sendMessage(gson.toJson(hariotikaMessage));
-                }
-                if (character.getPointCharacteristics()<=0){
-                    setAddButtunVisible(false);
-                }
-
-            };
-        });
-
-
-
-
-
         backButton.addListener( new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -390,8 +363,6 @@ public class CharState extends State {
         addAgility.setVisible(visible);
         addIntuition.setVisible(visible);
         addWisdom.setVisible(visible);
-        addVitality.setVisible(visible);
-        addIntelligence.setVisible(visible);
 
     }
 

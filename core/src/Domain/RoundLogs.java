@@ -9,7 +9,7 @@ public class RoundLogs{
     private boolean enemyParry;
     private boolean playerCounterattack;
     private boolean playerCritkal;
-    private PartOfBody hit;
+
 
     public int getPlayerDamaged() {
         return playerDamaged;
@@ -21,14 +21,6 @@ public class RoundLogs{
 
     public boolean isEnemyDodge() {
         return enemyDodge;
-    }
-
-    public PartOfBody getHit() {
-        return hit;
-    }
-
-    public void setHit(PartOfBody hit) {
-        this.hit = hit;
     }
 
     public void setEnemyDodge(boolean enemyDodge) {
