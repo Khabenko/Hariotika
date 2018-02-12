@@ -388,8 +388,8 @@ public class BattleState extends State {
 
 
 
-        knightWalk = new Texture(Gdx.files.internal("Animation/Knight/Knight1/WALK.png"));
-        knightwalkAnimation = new Animation(new TextureRegion(knightWalk), 7, 1f);
+//        knightWalk = new Texture(Gdx.files.internal("Animation/Knight/Knight1/WALK.png"));
+ //       knightwalkAnimation = new Animation(new TextureRegion(knightWalk), 7, 1f);
 
             // avatarUri = "http://10.0.2.2:8081/getAvatar/?name=";
            // avatarUri = "http://localhost:8081/getAvatar/?name=";
@@ -426,7 +426,6 @@ public class BattleState extends State {
                      else{
                      logWindow.add(namePlayer+" deal damage "+roundLogs.getPlayerDamaged()+" to " +roundLogs.getHit());
                      logWindow.add().row();
-                     knightwalkAnimation.setPlay(true);
                      temp= "Damage "+ roundLogs.getPlayerDamaged()*-1+" to " +roundLogs.getHit();
             }
 
@@ -471,8 +470,8 @@ public class BattleState extends State {
 
 
 
-         knightwalkAnimation.update(dt);
-         addDefPart();
+/*         knightwalkAnimation.update(dt);
+
 
         if (knightwalkAnimation.isPlay()) {
             walk += 0.05/dt;
@@ -483,8 +482,9 @@ public class BattleState extends State {
             knightwalkAnimation.setPlay(false);
             walk =0;
         }
+        */
 
-
+        addDefPart();
 
 
         if (battle.getPlayer1LogHit() != null && battle.getPlayer2LogHit() != null) {
