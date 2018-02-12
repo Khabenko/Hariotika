@@ -1,0 +1,54 @@
+Walk.png
+size: 4096, 265
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+_WALK
+  rotate: false
+  xy: 1, 1
+  size: 367, 263
+  orig: 370, 265
+  offset: 0, 0
+  index: 0
+_WALK
+  rotate: false
+  xy: 370, 1
+  size: 366, 260
+  orig: 370, 265
+  offset: 0, 3
+  index: 1
+_WALK
+  rotate: false
+  xy: 1106, 1
+  size: 364, 260
+  orig: 370, 265
+  offset: 0, 3
+  index: 2
+_WALK
+  rotate: false
+  xy: 1838, 1
+  size: 360, 262
+  orig: 370, 265
+  offset: 0, 1
+  index: 3
+_WALK
+  rotate: false
+  xy: 2200, 1
+  size: 359, 262
+  orig: 370, 265
+  offset: 0, 1
+  index: 4
+_WALK
+  rotate: false
+  xy: 1472, 1
+  size: 364, 260
+  orig: 370, 265
+  offset: 0, 3
+  index: 5
+_WALK
+  rotate: false
+  xy: 738, 1
+  size: 366, 260
+  orig: 370, 265
+  offset: 0, 3
+  index: 6

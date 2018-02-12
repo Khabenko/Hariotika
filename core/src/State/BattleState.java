@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -62,6 +63,7 @@ import static API.Client.getBattle;
 import static API.Client.setBattle;
 import static API.Reconect.client;
 import static State.MainState.exp;
+import static State.MainState.expCount;
 import static State.MainState.expLable;
 import static State.MainState.getHealth;
 import static State.MainState.getMana;
@@ -93,7 +95,6 @@ public class BattleState extends State {
     static Label enemyName;
     static ProgressBar enemyhealth;
     static ProgressBar enemymana;
-    static ProgressBar enemysp;
     TextButton backButton;
     LogWindow logWindow;
     AfterBattleWindow afterBattleWindow;
@@ -105,22 +106,18 @@ public class BattleState extends State {
     BitmapFont fountDamage;
 
 
+    float walk = 0;
+
     final ButtonGroup checkboxGroupDef = new ButtonGroup();
     ArrayList<PartOfBody> partOfBodies = new ArrayList<PartOfBody>();
 
     Label playerLog;
     Label enemyLog;
 
+    private Texture knightWalk;
+    private Animation knightwalkAnimation;
 
-    private Texture cartman;
-    private Animation cartmanAnimatiom;
-
-
-
-
-    String avatarUri;
-
-
+    private String avatarUri;
     private Texture playerAvatar;
     private Texture enemyAvatar;
 
@@ -167,6 +164,7 @@ public class BattleState extends State {
         this.table = MainState.status;
         this.table.removeActor(exp);
         this.table.removeActor(expLable);
+        this.table.removeActor(expCount);
       //  this.enemy = getEnemy();
         initEnemy();
         createEnemyBar();
@@ -305,12 +303,12 @@ public class BattleState extends State {
         logWindow = new LogWindow(skinChebox);
         logWindow .setPosition(oneX*20,oneY*25);
         logWindow.setSize(oneX*45,oneY*20);
-        stage.addActor(logWindow);
+       // stage.addActor(logWindow);
 
         battleButton = new TextButton("Battle",skin);
         battleButton.setSize(oneX*14,oneY*8);
         battleButton.setPosition(oneX*75,oneY*5);
-        stage.addActor(battleButton);
+       stage.addActor(battleButton);
 
 
 
@@ -388,9 +386,14 @@ public class BattleState extends State {
         //   cartmanAnimatiom = new Animation(new TextureRegion(cartman), 4, 0.5f);
          //   sb.draw(cartmanAnimatiom.getFrame(), (camera.viewportWidth/2), camera.viewportHeight/2+50);
 
+
+
+        knightWalk = new Texture(Gdx.files.internal("Animation/Knight/Knight1/WALK.png"));
+        knightwalkAnimation = new Animation(new TextureRegion(knightWalk), 7, 1f);
+
             // avatarUri = "http://10.0.2.2:8081/getAvatar/?name=";
            // avatarUri = "http://localhost:8081/getAvatar/?name=";
-       // avatarUri = "http://64.250.115.155/getAvatar/?name=";
+          // avatarUri = "http://64.250.115.155/getAvatar/?name=";
            avatarUri = "http://64.250.115.155:8082/getAvatar/?name=";
 
           Gdx.app.log("Hariotika API"," Get from Server Enemy avatar "+enemy.getName());
@@ -404,6 +407,7 @@ public class BattleState extends State {
 
     public void printLog(RoundLogs roundLogs, String namePlayer, String enemyName){
 
+
          String temp = "";
 
         logWindow.add().row();
@@ -415,33 +419,34 @@ public class BattleState extends State {
                  if (roundLogs.isEnemyParry()) {
                    if (roundLogs.isPlayerCritkal()) {
                 //Крит прошел
-                logWindow.add(namePlayer+" deal Critickal damage "+roundLogs.getPlayerDamaged());
+                 logWindow.add(namePlayer+" deal Critickal damage "+roundLogs.getPlayerDamaged());
                 logWindow.add().row();
-                temp = "Critickal damage "+roundLogs.getPlayerDamaged();
+                temp = "Critickal damage "+roundLogs.getPlayerDamaged()+" to " +roundLogs.getHit();
                      }
                      else{
-                     logWindow.add(namePlayer+" deal damage "+roundLogs.getPlayerDamaged());
+                     logWindow.add(namePlayer+" deal damage "+roundLogs.getPlayerDamaged()+" to " +roundLogs.getHit());
                      logWindow.add().row();
-                     temp= "Damage "+ roundLogs.getPlayerDamaged()*-1;
+                     knightwalkAnimation.setPlay(true);
+                     temp= "Damage "+ roundLogs.getPlayerDamaged()*-1+" to " +roundLogs.getHit();
             }
 
         } else
             {
             logWindow.add(enemyName+" Parried hit ");
             logWindow.add().row();
-            temp = "Parried";
+            temp = "Parried hit to " +roundLogs.getHit();
             }
     } else
         {
-           logWindow.add(enemyName+" Dodged hit ");
+           logWindow.add(enemyName+" Dodged hit to " +roundLogs.getHit());
            logWindow.add().row();
-           temp = "Dodged";
+           temp = "Dodged hit to " +roundLogs.getHit();
        }
     } else
         {
             logWindow.add(enemyName+" Blocked hit");
             logWindow.add().row();
-            temp = "Blocked";
+            temp = "Blocked hit to " +roundLogs.getHit();
         }
         logWindow.add("\n");
         logWindow.add().row();
@@ -463,8 +468,33 @@ public class BattleState extends State {
     @Override
     public void update(float dt) {
 
-        addDefPart();
 
+
+
+         knightwalkAnimation.update(dt);
+         addDefPart();
+
+        if (knightwalkAnimation.isPlay()) {
+            walk += 0.05/dt;
+
+        }
+
+        if ((oneX*30)+walk > oneX*55){
+            knightwalkAnimation.setPlay(false);
+            walk =0;
+        }
+
+
+
+
+        if (battle.getPlayer1LogHit() != null && battle.getPlayer2LogHit() != null) {
+            playerLog.setText("");
+            enemyLog.setText("");
+             playerLog.clear();
+             enemyLog.clear();
+            printLog(battle.getPlayer1LogHit(), battle.getPlayer1().getName(), battle.getPlayer2().getName());
+            printLog(battle.getPlayer2LogHit(), battle.getPlayer2().getName(), battle.getPlayer1().getName());
+        }
 
 
       //  Gdx.app.log("Hariotika",character.getName()+" "+Gdx.files.local("avatar/"+character.getName()+".png").exists());
@@ -529,8 +559,17 @@ public class BattleState extends State {
             Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
             sb.begin();
             sb.draw(background, 0, 0, camera.viewportWidth, camera.viewportHeight);
-          //  sb.draw(playerAvatar, camera.viewportWidth/2-400,camera.viewportHeight/2+50, 250, 220);
-          //  sb.draw(enemyAvatar, (camera.viewportWidth/2),camera.viewportHeight/2+50, 250, 220);
+
+/*
+            if (knightwalkAnimation.isPlay()) {
+
+                sb.draw(knightwalkAnimation.getFrame(), (oneX*30)+walk,oneY*15);
+            }
+            else {
+                sb.draw(playerAvatar,oneX*30,oneY*15) ;
+            }
+
+*/
               sb.draw(playerAvatar,oneX*30,oneY*15) ;
               sb.draw(enemyAvatar, oneX*55,oneY*15);
 
@@ -539,6 +578,7 @@ public class BattleState extends State {
                               sb.draw(shield, checkBoxMap.get(String.valueOf(battle.getPlayer1DefanceList().get(i))).getX(), checkBoxMap.get(String.valueOf(battle.getPlayer1DefanceList().get(i))).getY()+50, 20, 20);
                 }
             }
+
             sb.end();
             stage.draw();
 
@@ -562,7 +602,7 @@ public class BattleState extends State {
 
 
     private void createEnemyBar(){
-        if (enemy.getName()!=null) {
+        if (enemy!=null && enemy.getName()!=null) {
             statusEnemy = new Table(skin);
             enemyName = new Label("Enemy", skin);
             statusEnemy.add(enemyName);
