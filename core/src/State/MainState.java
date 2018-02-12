@@ -91,12 +91,14 @@ public class MainState extends State {
     static ProgressBar mana;
     static ProgressBar exp;
     static Label expLable;
+    static Label expCount;
 
     HariotikaMessage hariotikaMessage;
     private boolean registrationInBattl =false;
     String locRoot = Gdx.files.getLocalStoragePath();
     private Texture playerAvatar;
-
+    private float oneX = camera.viewportWidth/100;
+    private float oneY = camera.viewportWidth/100;
 
       // String avatarUri = "http://localhost:8081/getAvatar/?name=";
     //String avatarUri = "http://10.0.2.2:8081/getAvatar/?name=";
@@ -172,7 +174,8 @@ public class MainState extends State {
         exp.setColor(Color.WHITE);
         status.add(exp).width(500);
         status.setPosition(450,camera.viewportHeight/1.08f);
-        status.add(new Label("("+character.getExperience()+"/"+character.getExpnextlvl()+")", skin2));
+        expCount = new Label("("+character.getExperience()+"/"+character.getExpnextlvl()+")",skin2);
+        status.add(expCount);
 
         stage.addActor(status);
         //------------------
@@ -274,6 +277,9 @@ public class MainState extends State {
      //    cartman = new Texture("Animation/cartman.png");
      //    cartmanAnimatiom = new Animation(new TextureRegion(cartman), 4, 1.5f);
 
+         //   cartman = new Texture("Animation/Knight/Knight1/WALK.png");
+          //  cartmanAnimatiom = new Animation(new TextureRegion(cartman), 7, 2f);
+
 
 
     }
@@ -290,7 +296,7 @@ public class MainState extends State {
 
     @Override
     public void update(float dt) {
-      //  cartmanAnimatiom.update(dt);
+
             if(Gdx.files.local("avatar/"+character.getName()+".png").exists() && character.getAvatar() == null){
                 try {
                     playerAvatar =  new Texture(Gdx.files.local("avatar/"+character.getName()+".png"));
@@ -322,7 +328,6 @@ public class MainState extends State {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         sb.begin();
         sb.draw(background, 0, 0, camera.viewportWidth, camera.viewportHeight);
-      //  sb.draw(cartmanAnimatiom.getFrame(), (camera.viewportWidth/2), camera.viewportHeight/2+50);
         sb.end();
         stage.draw();
 
