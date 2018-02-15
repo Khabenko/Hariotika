@@ -20,7 +20,8 @@ public class Battle {
 
     private boolean player1IsReady = false;
     private boolean player2IsReady = false;
-
+    private int player1EXP;
+    private int player2EXP;
 
 
     private ArrayList<PartOfBody> player1Hitting;
@@ -195,5 +196,21 @@ public class Battle {
 
     public void setRound(int round) {
         this.round = round;
+    }
+
+    public int getPlayer1EXP() {
+        return player1EXP;
+    }
+
+    public void setPlayer1EXP(int player1EXP) {
+        this.player1EXP = player1EXP;
+    }
+
+    public int getPlayer2EXP() {
+        return player2EXP;
+    }
+
+    public void setPlayer2EXP(int player2EXP) {
+        this.player2EXP = player2EXP;
     }
 }

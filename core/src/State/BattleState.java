@@ -102,11 +102,11 @@ public class BattleState extends State {
     private int checkBoxDistance = 80;
     private float oneX = camera.viewportWidth/100;
     private float oneY = camera.viewportWidth/100;
-    HashMap<String,CheckBox> checkBoxMap = new HashMap<String, CheckBox>();
-    BitmapFont fountDamage;
-
-
-    float walk = 0;
+    private HashMap<String,CheckBox> checkBoxMap = new HashMap<String, CheckBox>();
+    private BitmapFont fountDamage;
+    private Label.LabelStyle Style;
+    private Label round;
+    private float walk = 0;
 
     final ButtonGroup checkboxGroupDef = new ButtonGroup();
     ArrayList<PartOfBody> partOfBodies = new ArrayList<PartOfBody>();
@@ -133,7 +133,7 @@ public class BattleState extends State {
         Gdx.input.setInputProcessor(stage);
 
         BitmapFont fountDamage = new BitmapFont(Gdx.files.internal("data/Battel/TimerBattel/Damage.fnt"));
-        Label.LabelStyle Style =  new Label.LabelStyle(fountDamage,new Color(200));
+        Style =  new Label.LabelStyle(fountDamage,new Color(200));
 
 
         playerLog = new Label("",Style);
@@ -148,8 +148,11 @@ public class BattleState extends State {
         Label.LabelStyle LabelStyle =  new Label.LabelStyle(fount,new Color(95));
 
         timer = new Label("30", LabelStyle);
-        timer.setPosition(oneX*45,oneY*50);
+        timer.setPosition(camera.viewportWidth/2,oneY*50);
         stage.addActor(timer);
+        round = new Label("Round "+battle.getRound(),Style);
+        round.setPosition(camera.viewportWidth/2,oneY*48);
+        stage.addActor(round);
 
 
         for (int i = 0; i < 2 ; i++) {
@@ -393,10 +396,10 @@ public class BattleState extends State {
 
             // avatarUri = "http://10.0.2.2:8081/getAvatar/?name=";
            // avatarUri = "http://localhost:8081/getAvatar/?name=";
-           avatarUri = "http://64.250.115.155/getAvatar/?name=";
+            avatarUri = "http://64.250.115.155/getAvatar/?name=";
           // avatarUri = "http://64.250.115.155:8082/getAvatar/?name=";
 
-      //    Gdx.app.log("Hariotika API"," Get from Server Enemy avatar "+enemy.getName());
+          Gdx.app.log("Hariotika API"," Get from Server Enemy avatar "+enemy.getName());
           HttpRequestBuilder requestBuilder = new HttpRequestBuilder();
           Net.HttpRequest httpRequest = requestBuilder.newRequest().method(Net.HttpMethods.GET).url(avatarUri+enemy.getName()).build();
           Gdx.net.sendHttpRequest(httpRequest, enemyListener);
@@ -447,8 +450,7 @@ public class BattleState extends State {
             logWindow.add().row();
             temp = "Blocked hit to " +roundLogs.getHit();
         }
-        logWindow.add("\n");
-        logWindow.add().row();
+
 
         if (!namePlayer.equals(character.getName())){
             playerLog.setText(temp);
@@ -466,18 +468,11 @@ public class BattleState extends State {
 
     @Override
     public void update(float dt) {
-
-
-
-
+        round.setText("Round "+battle.getRound());
 /*         knightwalkAnimation.update(dt);
-
-
         if (knightwalkAnimation.isPlay()) {
             walk += 0.05/dt;
-
         }
-
         if ((oneX*30)+walk > oneX*55){
             knightwalkAnimation.setPlay(false);
             walk =0;
@@ -485,8 +480,6 @@ public class BattleState extends State {
         */
 
         addDefPart();
-
-
         if (battle.getPlayer1LogHit() != null && battle.getPlayer2LogHit() != null) {
             playerLog.setText("");
             enemyLog.setText("");
@@ -519,6 +512,7 @@ public class BattleState extends State {
                     Gdx.app.log("Battle","Can't load avatar");
                 }
             }
+
 
         if (battle!=null) {
             timer.setText(String.valueOf(battle.getTimer()));
@@ -611,7 +605,7 @@ public class BattleState extends State {
             enemyhealth = new ProgressBar(0, enemy.getMaxHP(), 1, false, skin);
             enemyhealth.setValue(enemy.getHP());
             enemyhealth.setColor(Color.FOREST);
-            statusEnemy.add(enemyhealth).width(500);
+            statusEnemy.add(enemyhealth).width(oneX*30);
 
             statusEnemy.row();
 
@@ -619,10 +613,10 @@ public class BattleState extends State {
             enemymana = new ProgressBar(0, enemy.getMaxMP(), 1, false, skin);
             enemymana.setValue(enemy.getMP());
             enemymana.setColor(BLUE);
-            statusEnemy.add(enemymana).width(500);
+            statusEnemy.add(enemymana).width(oneX*30);
             statusEnemy.setPosition(420, 510);
 
-            statusEnemy.setPosition(camera.viewportWidth / 2 + 400, camera.viewportHeight / 1.08f);
+            statusEnemy.setPosition(camera.viewportWidth / 2 + oneX*25, camera.viewportHeight / 1.08f);
             stage.addActor(statusEnemy);
             //Gdx.app.log("HariotikaBattleState", "createEnemyBar");
         }

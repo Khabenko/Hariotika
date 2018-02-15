@@ -45,6 +45,11 @@ public class AfterBattleWindow extends Window {
         Label Damage2 = new Label(battle.getPlayer2().getName()+" damaged " + battle.getPlayer2Damaged(), skin);
         add(Damage2).setActorX(50);
         add().row();
+        Label EXP1 = new Label(battle.getPlayer1().getName()+" Exp " + battle.getPlayer1EXP(), skin);
+        add(EXP1).setActorX(50);
+        add().row();
+        Label EXP2 = new Label(battle.getPlayer2().getName()+" Exp " + battle.getPlayer2EXP(), skin);
+        add(EXP2).setActorX(50);
         add().row();
         add().row();
 

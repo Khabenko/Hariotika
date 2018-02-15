@@ -46,8 +46,8 @@ public class Client  {
 
     private MessageHandler messageHandler;
 
-        //   URI uri = URI.create("ws://localhost:8081/");
-          URI uri = URI.create("ws://64.250.115.155");
+            URI uri = URI.create("ws://localhost:8081");
+         //   URI uri = URI.create("ws://64.250.115.155");
          // URI uri = URI.create("ws://64.250.115.155:8082");
           //URI uri = URI.create("ws://10.0.2.2:8081/");
 
@@ -83,7 +83,7 @@ public class Client  {
         if (this.messageHandler != null) {
             this.messageHandler.handleMessage(message);
         }
-     //  Gdx.app.log("HariotikaLogsInfo", "Server sended  "+message);
+  //    Gdx.app.log("HariotikaLogsInfo", "Server sended  "+message);
 
         parsingHariotikaMessage(message);
         this.userSession.getMessageHandlers().clear();
@@ -106,12 +106,14 @@ public class Client  {
     public void sendMessage(String message) {
         synchronized (userSession) {
             userSession.getMessageHandlers().clear();
-            //this.userSession.getAsyncRemote().sendText(message);
+         //   this.userSession.getAsyncRemote().sendText(message);
+
             try {
                 this.userSession.getBasicRemote().sendText(message);
             } catch (IOException e) {
                 System.out.println("Шота репунло++++++++++++++++++++++++++++++++++++++");
             }
+
         }
     }
     public static interface MessageHandler {
@@ -179,7 +181,6 @@ public class Client  {
             case Login: commandLoginCode(hariotikaMessage);
                 break;
             case Battle: commandBattleCode(hariotikaMessage);
-                Gdx.app.log("HariotikaLogsInfo", "Server sended  "+message);
                 break;
             default:
                  Gdx.app.error("Invalid command","Server sended "+message);
@@ -221,6 +222,7 @@ public class Client  {
             case CancelRegistrationToBattle:
                 break;
             case UpdateBattle:
+                Gdx.app.log("HariotikaLogsInfo", "Server sended  "+message);
                 setBattle(message.getBattle());
                 if (getBattle().getPlayer1().getName().equals(Client.character.getName())){
                     character = getBattle().getPlayer1();

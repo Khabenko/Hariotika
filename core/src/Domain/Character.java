@@ -51,6 +51,12 @@ public class Character {
     private int mp_perSec;
     private int pointCharacteristics;
     private int phy_attack;
+    private int magic_armor;
+    private int magic_attack;
+    private int chance_criticalMagicAttack;
+    private int power_criticalMagicAttack;
+    private int cooldown_speed;
+    private int magic_penetration;
 
 
 
@@ -325,4 +331,53 @@ public class Character {
     public void setPhy_attack(int phy_attack) {
         this.phy_attack = phy_attack;
     }
+
+    public int getMagic_armor() {
+        return magic_armor;
+    }
+
+    public void setMagic_armor(int magic_armor) {
+        this.magic_armor = magic_armor;
+    }
+
+    public int getMagic_attack() {
+        return magic_attack;
+    }
+
+    public void setMagic_attack(int magic_attack) {
+        this.magic_attack = magic_attack;
+    }
+
+    public int getChance_criticalMagicAttack() {
+        return chance_criticalMagicAttack;
+    }
+
+    public void setChance_criticalMagicAttack(int chance_criticalMagicAttack) {
+        this.chance_criticalMagicAttack = chance_criticalMagicAttack;
+    }
+
+    public int getPower_criticalMagicAttack() {
+        return power_criticalMagicAttack;
+    }
+
+    public void setPower_criticalMagicAttack(int power_criticalMagicAttack) {
+        this.power_criticalMagicAttack = power_criticalMagicAttack;
+    }
+
+    public int getCooldown_speed() {
+        return cooldown_speed;
+    }
+
+    public void setCooldown_speed(int cooldown_speed) {
+        this.cooldown_speed = cooldown_speed;
+    }
+
+    public int getMagic_penetration() {
+        return magic_penetration;
+    }
+
+    public void setMagic_penetration(int magic_penetration) {
+        this.magic_penetration = magic_penetration;
+    }
+
 }

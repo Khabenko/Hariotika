@@ -99,6 +99,12 @@ public class CharState extends State {
     Label labelDecreaseEnemyEvesion;
     Label labelDecreasePersenCrit;
     Label labelDecreasePowerCrit;
+    Label labelmagic_armor;
+    Label labelMagic_attack;
+    Label labelChance_criticalMagicAttack;
+    Label labelPower_criticalMagicAttack;
+    Label labelCooldown_speed;
+    Label labelMagic_penetration;
 
 
 
@@ -157,7 +163,6 @@ public class CharState extends State {
         addVitality.setSize(oneX*5,oneY*3);
 
 
-
         addIntelligence = new TextButton("Add",skin);
         labelIntelligence= new Label("Intelligence " +character.getIntelligence(),skinChar);
         labelIntelligence.setPosition(labelStrength.getX(),labelVitality.getY()-oneY*4);
@@ -185,34 +190,51 @@ public class CharState extends State {
             setAddButtunVisible(false);
         }
 
-        labelPhy_attack = new Label("Damage "+client.getCharacter().getPhy_attack(),skinChar);
+        labelPhy_attack = new Label("Attack "+client.getCharacter().getPhy_attack(),skinChar);
         labelArmor = new Label("Armor "+client.getCharacter().getArmor(),skinChar);
-        labelDecreasePersenCrit  = new Label("Decrease Persen Crit "+client.getCharacter().getDecreasePersen_Crit(),skinChar);
-        labelDecreasePowerCrit = new Label("Decrease Power Crit "+client.getCharacter().getDecreasePower_Crit(),skinChar);
-        labelArmor_penetration = new Label("Armor penetration "+client.getCharacter().getArmor_penetration(),skinChar);
-        labelCriticalchance = new Label("Critical chance "+client.getCharacter().getChance_criticalPhyAttack(),skinChar);
+        labelDecreasePersenCrit  = new Label("Critical reduction "+client.getCharacter().getDecreasePersen_Crit(),skinChar);
+        labelDecreasePowerCrit = new Label("Critical power reduction "+client.getCharacter().getDecreasePower_Crit(),skinChar);
+        labelArmor_penetration = new Label("Armor reduction "+client.getCharacter().getArmor_penetration(),skinChar);
+        labelCriticalchance = new Label("Critical "+client.getCharacter().getChance_criticalPhyAttack(),skinChar);
         labelCriticalpower = new Label("Critical power "+client.getCharacter().getPower_criticalPhyAttack(),skinChar);
-        labelParryChance = new Label("Parry chance "+client.getCharacter().getChance_parry(),skinChar);
-        labelCounterattackChance = new Label("Counterattack chance "+client.getCharacter().getChance_counterattack(),skinChar);
-        labelEvesionChance  = new Label("Evesion chance "+client.getCharacter().getEvesion(),skinChar);
-        labelDecreaseEnemyEvesion = new Label("Decrease Enemy Evesion " +client.getCharacter().getDecreaseEnemyEvesion(),skinChar);
+        labelParryChance = new Label("Parry "+client.getCharacter().getChance_parry(),skinChar);
+        labelCounterattackChance = new Label("Countеrattack "+client.getCharacter().getChance_counterattack(),skinChar);
+        labelEvesionChance  = new Label("Evesion "+client.getCharacter().getEvesion(),skinChar);
+        labelDecreaseEnemyEvesion = new Label("Accuracy " +client.getCharacter().getDecreaseEnemyEvesion(),skinChar);
+
+        labelmagic_armor = new Label("M. Armor "+client.getCharacter().getMagic_armor(),skinChar);
+        labelMagic_attack = new Label("M.Attack "+client.getCharacter().getMagic_attack(),skinChar);
+        labelChance_criticalMagicAttack = new Label("М. Critical "+client.getCharacter().getChance_criticalMagicAttack(),skinChar);
+        labelPower_criticalMagicAttack = new Label("M. Critical power "+client.getCharacter().getPower_criticalMagicAttack(),skinChar);
+        labelCooldown_speed = new Label("Renewal skills "+client.getCharacter().getCooldown_speed(),skinChar);
+        labelMagic_penetration = new Label("M. Armor reduction "+client.getCharacter().getMagic_penetration(),skinChar);
+
+
 
 
         labelPhy_attack.setPosition(labelStrength.getX()-oneX*40, labelStrength.getY());
-        labelArmor.setPosition(labelStrength.getX()-oneX*40, labelPhy_attack.getY()-oneY*2);
-        labelDecreasePersenCrit.setPosition(labelStrength.getX()-oneX*40, labelArmor.getY()-oneY*2);
+        labelMagic_attack.setPosition(labelStrength.getX()-oneX*40, labelPhy_attack.getY()-oneY*2);
+
+
+        labelArmor.setPosition(labelStrength.getX()-oneX*40, labelMagic_attack.getY()-oneY*4);
+        labelmagic_armor.setPosition(labelStrength.getX()-oneX*40, labelArmor.getY()-oneY*2);
+        labelDecreasePersenCrit.setPosition(labelStrength.getX()-oneX*40, labelmagic_armor.getY()-oneY*2);
         labelDecreasePowerCrit.setPosition(labelStrength.getX()-oneX*40, labelDecreasePersenCrit.getY()-oneY*2);
 
-
-        labelEvesionChance.setPosition(labelStrength.getX()-oneX*40, labelDecreasePowerCrit.getY()-oneY*2);
+        labelArmor_penetration.setPosition(labelStrength.getX()-oneX*40, labelDecreasePowerCrit.getY()-oneY*2);
+        labelEvesionChance.setPosition(labelStrength.getX()-oneX*40, labelArmor_penetration.getY()-oneY*2);
         labelDecreaseEnemyEvesion .setPosition(labelStrength.getX()-oneX*40, labelEvesionChance.getY()-oneY*2);
-        labelArmor_penetration.setPosition(labelStrength.getX()-oneX*40, labelDecreaseEnemyEvesion.getY()-oneY*2);
 
 
-        labelCriticalchance.setPosition(labelStrength.getX()-oneX*40, labelArmor_penetration.getY()-oneY*2);
+        labelCriticalchance.setPosition(labelStrength.getX()-oneX*40, labelDecreaseEnemyEvesion.getY()-oneY*4);
         labelCriticalpower.setPosition(labelStrength.getX()-oneX*40, labelCriticalchance.getY()-oneY*2);
         labelCounterattackChance.setPosition(labelStrength.getX()-oneX*40, labelCriticalpower.getY()-oneY*2);
         labelParryChance.setPosition(labelStrength.getX()-oneX*40, labelCounterattackChance.getY()-oneY*2);
+
+        labelChance_criticalMagicAttack.setPosition(labelStrength.getX()-oneX*40, labelParryChance.getY()-oneY*4);
+        labelPower_criticalMagicAttack.setPosition(labelStrength.getX()-oneX*40, labelChance_criticalMagicAttack.getY()-oneY*2);
+        labelMagic_penetration.setPosition(labelStrength.getX()-oneX*40, labelPower_criticalMagicAttack.getY()-oneY*2);
+        labelCooldown_speed.setPosition(labelStrength.getX()-oneX*40, labelMagic_penetration.getY()-oneY*2);
 
 
 
@@ -229,6 +251,14 @@ public class CharState extends State {
         stage.addActor(labelDecreaseEnemyEvesion);
         stage.addActor(labelDecreasePersenCrit);
         stage.addActor(labelDecreasePowerCrit);
+
+        stage.addActor(labelmagic_armor);
+        stage.addActor(labelMagic_attack);
+        stage.addActor(labelChance_criticalMagicAttack);
+        stage.addActor(labelPower_criticalMagicAttack);
+        stage.addActor(labelCooldown_speed);
+        stage.addActor(labelMagic_penetration);
+
 
 
 
@@ -248,7 +278,7 @@ public class CharState extends State {
         stage.addActor(backButton);
 
 
-        TextButton resetPoint = new TextButton("Reset",skin);
+        resetPoint = new TextButton("Reset",skin);
         resetPoint.setSize(oneX*7,oneY*5);
         resetPoint.setPosition(oneX*75,oneY*10);
 
@@ -375,7 +405,6 @@ public class CharState extends State {
 
                 hariotikaMessage = new HariotikaMessage(Command.Characteristic, WsCode.Reset,character);
                 client.sendMessage(gson.toJson(hariotikaMessage));
-       //         setAddButtunVisible(true);
 
 
             };
@@ -436,11 +465,38 @@ public class CharState extends State {
 
 
 
+
+        labelPhy_attack.setText("Attack "+client.getCharacter().getPhy_attack());
+        labelArmor.setText("Armor "+client.getCharacter().getArmor());
+        labelDecreasePersenCrit .setText("Critical reduction "+client.getCharacter().getDecreasePersen_Crit());
+        labelDecreasePowerCrit.setText("Critical power reduction "+client.getCharacter().getDecreasePower_Crit());
+        labelArmor_penetration.setText("Armor reduction "+client.getCharacter().getArmor_penetration());
+        labelCriticalchance.setText("Critical "+client.getCharacter().getChance_criticalPhyAttack());
+        labelCriticalpower.setText("Critical power "+client.getCharacter().getPower_criticalPhyAttack());
+        labelParryChance.setText("Parry "+client.getCharacter().getChance_parry());
+        labelCounterattackChance.setText("Countеrattack "+client.getCharacter().getChance_counterattack());
+        labelEvesionChance .setText("Evesion "+client.getCharacter().getEvesion());
+        labelDecreaseEnemyEvesion.setText("Accuracy " +client.getCharacter().getDecreaseEnemyEvesion());
+
+        labelmagic_armor.setText("M. Armor "+client.getCharacter().getMagic_armor());
+        labelMagic_attack.setText("M.Attack "+client.getCharacter().getMagic_attack());
+        labelChance_criticalMagicAttack.setText("М. Critical "+client.getCharacter().getChance_criticalMagicAttack());
+        labelPower_criticalMagicAttack.setText("M. Critical power "+client.getCharacter().getPower_criticalMagicAttack());
+        labelCooldown_speed.setText("Renewal skills "+client.getCharacter().getCooldown_speed());
+        labelMagic_penetration.setText("M. Armor reduction "+client.getCharacter().getMagic_penetration());
+
+
+
+
+
+
         if (character.getPointCharacteristics()>0)
         setAddButtunVisible(true);
 
         freePoint.setText("Points "+String.valueOf(character.getPointCharacteristics()));
-
+        if (character.getPointCharacteristics()<=0){
+            setAddButtunVisible(false);
+        }
 
 
 

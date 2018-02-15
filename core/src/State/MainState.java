@@ -155,7 +155,7 @@ public class MainState extends State {
         health = new ProgressBar(0, character.getMaxHP(), 1, false, skin2);
         health.setValue(0);
         health.setColor(Color.FOREST);
-        status.add(health).width(500);
+        status.add(health).width(oneX*30);
 
         status.row();
 
@@ -163,7 +163,7 @@ public class MainState extends State {
         mana = new ProgressBar(0, character.getMaxMP(), 1, false, skin2);
         mana.setValue(character.getMP());
         mana.setColor(BLUE);
-        status.add(mana).width(500);
+        status.add(mana).width(oneX*30);
         status.setPosition(420,510);
 
         status.row();
@@ -172,8 +172,8 @@ public class MainState extends State {
         exp = new ProgressBar(0, character.getExpnextlvl(), 1, false, skin2);
         exp.setValue(character.getExperience());
         exp.setColor(Color.WHITE);
-        status.add(exp).width(500);
-        status.setPosition(450,camera.viewportHeight/1.08f);
+        status.add(exp).width(oneX*30);
+        status.setPosition(oneX*25,camera.viewportHeight/1.08f);
         expCount = new Label("("+character.getExperience()+"/"+character.getExpnextlvl()+")",skin2);
         status.add(expCount);
 
