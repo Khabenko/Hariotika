@@ -92,6 +92,8 @@ public class MainState extends State {
     static ProgressBar exp;
     static Label expLable;
     static Label expCount;
+    static Label hpCount;
+    static Label mpCount;
 
     HariotikaMessage hariotikaMessage;
     private boolean registrationInBattl =false;
@@ -156,7 +158,8 @@ public class MainState extends State {
         health.setValue(0);
         health.setColor(Color.FOREST);
         status.add(health).width(oneX*30);
-
+        hpCount = new Label("("+character.getHP()+"/"+character.getMaxHP()+")",skin2);
+        status.add(hpCount);
         status.row();
 
         status.add(new Label("MP", skin2));
@@ -165,6 +168,8 @@ public class MainState extends State {
         mana.setColor(BLUE);
         status.add(mana).width(oneX*30);
         status.setPosition(420,510);
+        mpCount = new Label("("+character.getMP()+"/"+character.getMaxMP()+")",skin2);
+        status.add(mpCount);
 
         status.row();
         expLable = new Label("EXP (lvl "+character.getLvl()+")", skin2);

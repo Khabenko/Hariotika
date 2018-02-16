@@ -221,7 +221,7 @@ public class CharState extends State {
         labelDecreasePersenCrit.setPosition(labelStrength.getX()-oneX*40, labelmagic_armor.getY()-oneY*2);
         labelDecreasePowerCrit.setPosition(labelStrength.getX()-oneX*40, labelDecreasePersenCrit.getY()-oneY*2);
 
-        labelArmor_penetration.setPosition(labelStrength.getX()-oneX*40, labelDecreasePowerCrit.getY()-oneY*2);
+        labelArmor_penetration.setPosition(labelStrength.getX()-oneX*40, labelDecreasePowerCrit.getY()-oneY*4);
         labelEvesionChance.setPosition(labelStrength.getX()-oneX*40, labelArmor_penetration.getY()-oneY*2);
         labelDecreaseEnemyEvesion .setPosition(labelStrength.getX()-oneX*40, labelEvesionChance.getY()-oneY*2);
 
